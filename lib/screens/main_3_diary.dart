@@ -67,10 +67,10 @@ class MainDiaryState extends State<MainDiary> {
             return isSameDay(selectedDay, day);
           },
           headerStyle: const HeaderStyle(
-              formatButtonTextStyle: const TextStyle(color: Colors.white),
-              formatButtonDecoration: const BoxDecoration(
+              formatButtonTextStyle: TextStyle(color: Colors.white),
+              formatButtonDecoration: BoxDecoration(
                 color: Color(0xfffa625f),
-                borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                borderRadius: BorderRadius.all(Radius.circular(12.0)),
               )
           ),
           calendarFormat: _calendarFormat,
@@ -105,9 +105,7 @@ class MainDiaryState extends State<MainDiary> {
         ),
         const SizedBox(height: 30),
         Expanded(
-          child: Container(
-            child: Text(DateFormat('yyyy-MM-dd').format(focusedDay)),
-          ),
+          child: Text(DateFormat('yyyy-MM-dd').format(focusedDay)),
         ),
       ],
     );
