@@ -13,7 +13,7 @@ class _BaseWidget extends State<BaseWidget>{
   final List<Widget> _widgetOptions = <Widget>[
     Main_Home(),
     Main_Cctv(),
-    MainDiary(),
+    const MainDiary(),
     Main_Mypage()
   ];
   void _onItemTapped(int index) {
