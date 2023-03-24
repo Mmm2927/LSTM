@@ -3,8 +3,11 @@ import 'package:bob/screens/main_1_home.dart';
 import 'package:bob/screens/main_2_cctv.dart';
 import 'package:bob/screens/main_3_diary.dart';
 import 'package:bob/screens/main_4_mypage.dart';
+import '../models/model.dart';
 
 class BaseWidget extends StatefulWidget{
+  BaseWidget(User? userInfo);
+
   @override
   _BaseWidget createState() => _BaseWidget();
 }
