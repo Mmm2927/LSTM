@@ -56,7 +56,7 @@ class _SignUp extends State<SignUp>{
                   const SizedBox(height: 15),
                   CupertinoTextField(
                     controller: passController,
-                    placeholder: "패스원드",
+                    placeholder: "패스워드",
                     padding: EdgeInsets.all(15),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),

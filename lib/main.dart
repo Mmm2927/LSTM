@@ -64,9 +64,11 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
   _asyncMethod() async {
-    Map<String,dynamic> jsonData = jsonDecode((await storage.read(key: "user"))!);
+    var tmp = (await storage.read(key: "user"));
 
-    if (jsonData != null) {
+    if (tmp != null) {
+
+      Map<String,dynamic> jsonData = jsonDecode(tmp!);
       logger.i("자동 login");
       User uinfo = User.fromJson(jsonData);
       Navigator.pushReplacement(
