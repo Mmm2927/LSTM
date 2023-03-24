@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../database/database.dart';
 import '../database/diaryDB.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class MainDiary extends StatefulWidget {
   const MainDiary({super.key});
@@ -34,7 +36,7 @@ class MainDiaryState extends State<MainDiary> {
                     child: writeDiary(selectedDay),
                   ),
                   insetPadding: const EdgeInsets.fromLTRB(15, 30, 15, 30),
-                  backgroundColor: const Color(0xffffffff),
+                  backgroundColor: const Color(0xfffffdfd),
                 ),
               );
             }
@@ -123,42 +125,36 @@ class MainDiaryState extends State<MainDiary> {
           ),
         ),
         const SizedBox(height: 20),
-        Center(
-          child: FutureBuilder<Diary>(
-            future: DatabaseHelper.instance.getDiary(selectedDay),
-            builder: (BuildContext context, AsyncSnapshot<Diary> snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: Text('No Today Diary')
-                );
-              }
-              return snapshot.data == null
-                  ? const Center(child: Text('No Today Diary'))
-                  : SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                    child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 5),
-                      child: Text(snapshot.data!.title, style:const TextStyle(fontSize:18, fontWeight: FontWeight.bold))
-                    ),
-                    const SizedBox(height:10),
-                    Container(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 0, 5),
-                        child: Text(snapshot.data!.date, style:const TextStyle(fontSize:13, color:Colors.blueGrey))
-                    ),
-                    const SizedBox(height:10, width: double.infinity,),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 5),
-                      child: Text(snapshot.data!.content, style:const TextStyle(fontSize:16)),
-                    ),
-                ]
-              ),
-                  );
+        FutureBuilder<Diary>(
+          future: DatabaseHelper.instance.getDiary(selectedDay),
+          builder: (BuildContext context, AsyncSnapshot<Diary> snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: Text('No Today Diary')
+              );
             }
-          )
+            return snapshot.data == null
+                ? const Center(child: Text('No Today Diary'))
+                : Expanded(
+                  child: SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 5),
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(snapshot.data!.title, style:const TextStyle(fontSize:18, fontWeight: FontWeight.bold)),
+                            const SizedBox(height:10),
+                            Text(snapshot.data!.date, style:const TextStyle(fontSize:13, color:Colors.blueGrey)),
+                            const SizedBox(height:10, width: double.infinity,),
+                            Center(child: snapshot.data!.image == null? const SizedBox(height:10, width: double.infinity,) : Image.file(File(snapshot.data!.image ?? 'default'), width: MediaQuery.of(context).size.width/2) ,),
+                            const SizedBox(height:10, width: double.infinity,),
+                            Text(snapshot.data!.content, style:const TextStyle(fontSize:16)),
+                          ]
+                      )
+                  ),
+            );
+          }
         )
       ],
     );
@@ -170,7 +166,7 @@ class MainDiaryState extends State<MainDiary> {
   writeDiary(DateTime selectedDay) {
     String title = '';
     String content = '';
-    String image;
+    String? image;
     String selDay = DateFormat('yyyy.MM.dd').format(selectedDay);
 
     return Column(
@@ -187,6 +183,7 @@ class MainDiaryState extends State<MainDiary> {
           height: 5.0,
         ),
         TextFormField(
+          cursorColor: Color(0xfffa625f),
           controller: _titleController,
           onSaved: (value) {
             setState(() {
@@ -201,6 +198,10 @@ class MainDiaryState extends State<MainDiary> {
           },
           decoration: const InputDecoration(
             labelText: '제목',
+            floatingLabelStyle: TextStyle(color: Color(0xfffa625f)),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(width:1.5, color: Color(0xfffa625f))
+            ),
             border: OutlineInputBorder(),
           ),
           style: const TextStyle(fontSize: 15),
@@ -210,6 +211,7 @@ class MainDiaryState extends State<MainDiary> {
           width: 5000,
         ),
         TextFormField(
+          cursorColor: Color(0xfffa625f),
           maxLines: 15,
           keyboardType: TextInputType.multiline,
           controller: _contentController,
@@ -226,25 +228,42 @@ class MainDiaryState extends State<MainDiary> {
           },
           decoration: const InputDecoration(
             labelText: '내용',
+            floatingLabelStyle: TextStyle(color: Color(0xfffa625f)),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(width:1.5, color: Color(0xfffa625f))
+            ),
             border: OutlineInputBorder(),
           ),
           style: const TextStyle(fontSize: 15),
         ),
         const SizedBox(
           height: 16.0,
-          width: 5000,
         ),
-        ElevatedButton(onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            _formKey.currentState!.save();
-            DatabaseHelper.instance.add(Diary(date: selDay, title: title, content: content));
-            _formKey.currentState?.reset();
-            Navigator.of(context).pop();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('업로드 되었습니다.')),
-            );
-          }
-        }, child: const Text('업로드')),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(onPressed: (() async {
+              final _image = await ImagePicker().getImage(source: ImageSource.gallery);
+              image = _image!.path;
+              //setState(() {
+              //  _file = File(image!.path);
+              //});
+            }), child: const Text('사진 첨부', style: TextStyle(color: Color(0xff625ffa)))),
+            const SizedBox(width: 10),
+            ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    DatabaseHelper.instance.add(Diary(date: selDay, title: title, content: content, image: image));
+                    _formKey.currentState?.reset();
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('업로드 되었습니다.')),
+                    );
+                  }
+                  }, child: const Text('업로드', style: TextStyle(color: Color(0xfffa625f)))),
+          ],
+        ),
       ]
     );
   }
