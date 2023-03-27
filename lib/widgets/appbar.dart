@@ -5,6 +5,6 @@ AppBar renderAppbar(String title){
       backgroundColor: Colors.white,
       elevation: 0.5,
       iconTheme : const IconThemeData(color: Colors.black),
-      title: const Text('이메일 로그인',style: TextStyle(color: Colors.black,fontSize: 15))
+      title: Text(title,style: TextStyle(color: Colors.black,fontSize: 15))
   );
 }
