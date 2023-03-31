@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-bs7q18$%fc2r-2(1r@d@@4ooj6vh$j3f9uwl_wbfngh*3*^f7i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,9 +37,43 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'rest_framework',
+    
+    'rest_framework',
+    'rest_framework.authtoken',
+
+    'dj_rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'dj_rest_auth.registration',
+
     'lstm_api'
 ]
+
+#REST_USE_JWT = True
+JWT_AUTH_COOKIE = '529ca8050a00180790cf88b63468826a'
+JWT_AUTH_REFRESH_COOKIE = '7d88da7aeda9a5082c669bb636db1025'
+
+SITE_ID = 1
+REST_AUTH = {
+        'USE_JWT' : True
+    }
+REST_FRAMEWORK = {
+   'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    ),
+        }
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -137,3 +171,5 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'lstm_api.User'
