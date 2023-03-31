@@ -6,19 +6,15 @@ import 'package:bob/screens/main_4_mypage.dart';
 import '../models/model.dart';
 
 class BaseWidget extends StatefulWidget{
-  BaseWidget(User? userInfo);
+  final User userinfo;
+  BaseWidget(this.userinfo, {Key?key}):super(key:key);
 
   @override
   _BaseWidget createState() => _BaseWidget();
 }
 class _BaseWidget extends State<BaseWidget>{
+
   int _selectedIndex = 0; // 인덱싱
-  final List<Widget> _widgetOptions = <Widget>[
-    Main_Home(),
-    Main_Cctv(),
-    const MainDiary(),
-    Main_Mypage()
-  ];
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -26,6 +22,12 @@ class _BaseWidget extends State<BaseWidget>{
   }
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _widgetOptions = <Widget>[
+      Main_Home(),
+      Main_Cctv(),
+      const MainDiary(),
+      Main_Mypage(widget.userinfo)
+    ];
     return DefaultTabController(
       length: 3,
       initialIndex: 1, // 가운데에 있는 홈버튼을 기본값으로 설정
