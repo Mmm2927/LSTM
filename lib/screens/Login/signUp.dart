@@ -127,11 +127,13 @@ class _SignUp extends State<SignUp>{
       _showDialog('환영합니다');
       String token = response.data['access_token']; // response의 token키에 담긴 값을 token 변수에 담아서
       Map<dynamic, dynamic> payload = Jwt.parseJwt(token);
-      User userInfo= new User(token,payload['user_id'], response.data['email'], response.data['name']);
-      await storage.write(key: 'user', value: jsonEncode(userInfo));
+      // 로그인 정보 저장
+      User uinfo = User(response.data['email'], passController.text, response.data['name'], "01092982310");    // response.data['phone']
+      Login loginInfo = Login(token, payload['user_id'], uinfo);
+      await storage.write(key: 'login', value: jsonEncode(loginInfo));
       Navigator.pushReplacement(
-          context, 
-          CupertinoPageRoute(builder: (context)=> BaseWidget(userInfo))
+          context,
+          CupertinoPageRoute(builder: (context)=> BaseWidget(uinfo))
       );
     }else{
       print(response.statusCode.toString());
