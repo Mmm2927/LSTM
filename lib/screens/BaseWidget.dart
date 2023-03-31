@@ -4,13 +4,15 @@ import 'package:bob/screens/main_2_cctv.dart';
 import 'package:bob/screens/main_3_diary.dart';
 import 'package:bob/screens/main_4_mypage.dart';
 import '../models/model.dart';
+import 'package:bob/widgets/appbar.dart';
+import 'package:bob/screens/MyPage/manage_baby.dart';
+import 'package:flutter/cupertino.dart';
 
 class BaseWidget extends StatefulWidget{
   final User userinfo;
-  BaseWidget(this.userinfo, {Key?key}):super(key:key);
-
+  const BaseWidget(this.userinfo, {Key?key}):super(key:key);
   @override
-  _BaseWidget createState() => _BaseWidget();
+  State<BaseWidget> createState() => _BaseWidget();
 }
 class _BaseWidget extends State<BaseWidget>{
 
@@ -21,12 +23,37 @@ class _BaseWidget extends State<BaseWidget>{
     });
   }
   @override
+  void initState() {
+    super.initState();
+    // 1. user와 연결된 Baby-list 가져오기
+    //print('=>>>>>>>>>>>'+ DateTime.parse('10:30').toString());
+    List<Baby_relation> BabyRelations = [Baby_relation(11, 0, 255, '00:00', '23:59')];  //[];
+    if(BabyRelations.isEmpty){    // 아기가 없다면 아기 추가 페이지로 이동
+      /*Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => ManageBabyWidget()
+          )
+      );*/
+    }else{
+      BabyRelations.forEach((element) {
+        // dio 통해 받아오기
+        // Baby에서 해당 하는 Baby ID 가져 오기 - BabyRelations[0].id 에 해당 하는 Baby 정보 가져 오기
+        Baby b = Baby('nu1', DateTime.now(), 0, element);
+        MyBabies.add(b);
+      });
+    }
+    // 2.
+  }
+  late List<Baby> MyBabies;
+  late int c_baby = 0;
+  @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
       Main_Home(),
       Main_Cctv(),
       const MainDiary(),
-      Main_Mypage(widget.userinfo)
+      MainMyPage(widget.userinfo)
     ];
     return DefaultTabController(
       length: 3,
@@ -35,9 +62,10 @@ class _BaseWidget extends State<BaseWidget>{
       child: WillPopScope(
        onWillPop: () async => false,
        child: Scaffold(
-           body: SafeArea(
+         appBar: renderAppbar_with_alarm('BoB', context),
+         body: SafeArea(
              child: _widgetOptions.elementAt(_selectedIndex),
-           ),
+         ),
            bottomNavigationBar: BottomNavigationBar(
              items: const [
                BottomNavigationBarItem(

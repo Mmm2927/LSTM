@@ -11,7 +11,7 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
   void initState() {
     _tabController = TabController(
       length: 2,
-      vsync: this, //vsync에 this 형태로 전달해야 애니메이션이 정상 처리됨
+      vsync: this, // vsync에 this 형태로 전달 해야 애니메이션이 정상 처리됨
     );
     super.initState();
   }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:bob/screens/BaseWidget.dart';
 import 'package:bob/screens/Login/initPage.dart';
@@ -14,14 +13,11 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      //home : BaseWidget(),
-      //home : LoginInit()
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -45,17 +41,16 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
   _asyncMethod() async {
-    var tmp = (await storage.read(key: "user"));
-
+    var tmp = (await storage.read(key: "login"));
     if (tmp != null) {
-
       Map<String,dynamic> jsonData = jsonDecode(tmp!);
       logger.i("자동 login");
-      User uinfo = User.fromJson(jsonData);
+      print(jsonData['userInfo']);
+      Login loginInfo = Login.fromJson(jsonData);
       Navigator.pushReplacement(
           context,
           CupertinoPageRoute(
-              builder: (context) => BaseWidget(uinfo)
+              builder: (context) => BaseWidget(loginInfo.userInfo)
           )
       );
     }
