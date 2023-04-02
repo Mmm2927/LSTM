@@ -7,6 +7,7 @@ import '../models/model.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:bob/screens/MyPage/manage_baby.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:bob/widgets/bottomNav.dart';
 
 class BaseWidget extends StatefulWidget{
   final User userinfo;
@@ -15,7 +16,8 @@ class BaseWidget extends StatefulWidget{
   State<BaseWidget> createState() => _BaseWidget();
 }
 class _BaseWidget extends State<BaseWidget>{
-
+  late List<Baby> MyBabies = [];
+  late int c_baby = 0;
   int _selectedIndex = 0; // 인덱싱
   void _onItemTapped(int index) {
     setState(() {
@@ -25,6 +27,9 @@ class _BaseWidget extends State<BaseWidget>{
   @override
   void initState() {
     super.initState();
+    getBabyList();
+  }
+  getBabyList(){
     // 1. user와 연결된 Baby-list 가져오기
     //print('=>>>>>>>>>>>'+ DateTime.parse('10:30').toString());
     List<Baby_relation> BabyRelations = [Baby_relation(11, 0, 255, '00:00', '23:59')];  //[];
@@ -36,24 +41,27 @@ class _BaseWidget extends State<BaseWidget>{
           )
       );*/
     }else{
+      /*
       BabyRelations.forEach((element) {
         // dio 통해 받아오기
         // Baby에서 해당 하는 Baby ID 가져 오기 - BabyRelations[0].id 에 해당 하는 Baby 정보 가져 오기
         Baby b = Baby('nu1', DateTime.now(), 0, element);
         MyBabies.add(b);
-      });
+      });*/
     }
     // 2.
+    MyBabies.add(Baby('쑥이', DateTime.utc(2022,11,20), 0, Baby_relation(0, 0, 255, "00:00","23:59")));
+    MyBabies.add(Baby('콩이', DateTime.utc(2021,10,3), 0, Baby_relation(1, 0, 255, "00:00","23:59")));
+    MyBabies.add(Baby('얌얌', DateTime.utc(2011,5,20), 1, Baby_relation(2, 0, 255, "00:00","23:59")));
   }
-  late List<Baby> MyBabies;
-  late int c_baby = 0;
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
       Main_Home(),
       Main_Cctv(),
       const MainDiary(),
-      MainMyPage(widget.userinfo)
+      MainMyPage(widget.userinfo, MyBabies)
     ];
     return DefaultTabController(
       length: 3,
@@ -66,33 +74,9 @@ class _BaseWidget extends State<BaseWidget>{
          body: SafeArea(
              child: _widgetOptions.elementAt(_selectedIndex),
          ),
-           bottomNavigationBar: BottomNavigationBar(
-             items: const [
-               BottomNavigationBarItem(
-                 icon: Icon(Icons.home, size: 18,),
-                 label: '홈',
-               ),
-               BottomNavigationBarItem(
-                   icon: Icon( Icons.camera, size: 18,),
-                   label: 'cctv'
-               ),
-               BottomNavigationBarItem(
-                   icon: Icon(Icons.person_outline, size: 18,),
-                   label: '일기'
-               ),
-               BottomNavigationBarItem(
-                   icon: Icon(Icons.person_outline, size: 18,),
-                   label: '마이 자취'
-               ),
-             ],
-             currentIndex: _selectedIndex,
-             unselectedItemColor: Colors.grey,
-             selectedItemColor: const Color(0xfffa625f),
-             onTap: _onItemTapped,
-           )
+           bottomNavigationBar: bottomNavBar(_selectedIndex, _onItemTapped)
        ),
       )
     );
   }
-
 }

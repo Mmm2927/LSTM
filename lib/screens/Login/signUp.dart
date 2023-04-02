@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:bob/screens/Login/find_id.dart';
-import 'package:bob/screens/Login/find_password.dart';
+import 'package:bob/screens/Login/find_logininfo.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
@@ -32,7 +31,7 @@ class _SignUp extends State<SignUp>{
     return Scaffold(
       appBar: renderAppbar('이메일 로그인'),
       body: Container(
-        margin: EdgeInsets.all(30),
+        margin: const EdgeInsets.all(30),
         child:
             SingleChildScrollView(
               child: Column(
@@ -42,7 +41,7 @@ class _SignUp extends State<SignUp>{
                   CupertinoTextField(
                     controller: idController,
                     placeholder: "아이디",
-                    padding: EdgeInsets.all(15),
+                    padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                       border: Border.all(width: 0.5)
@@ -57,7 +56,7 @@ class _SignUp extends State<SignUp>{
                   CupertinoTextField(
                     controller: passController,
                     placeholder: "패스워드",
-                    padding: EdgeInsets.all(15),
+                    padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(width: 0.5)
@@ -83,7 +82,7 @@ class _SignUp extends State<SignUp>{
                       TextButton(onPressed: (){
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => FindId()),
+                          MaterialPageRoute(builder: (context) => const FindLogInfo(0)),
                         );
                       }, child: const Text('아이디 찾기',style: TextStyle(color: Colors.black))),
                       Container(
@@ -94,7 +93,7 @@ class _SignUp extends State<SignUp>{
                       TextButton(onPressed: (){
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => FindPassword()),
+                          MaterialPageRoute(builder: (context) => const FindLogInfo(1)),
                         );
                       }, child: const Text('비밀번호 찾기',style: TextStyle(color: Colors.black))),
                     ],

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:bob/screens/BaseWidget.dart';
 import 'package:bob/screens/Login/initPage.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
@@ -18,7 +19,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('ko', ''),
+        Locale('en', ''),
+      ],
+      theme: ThemeData(
+        fontFamily: 'basic',
+      ),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
