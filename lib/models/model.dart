@@ -2,19 +2,19 @@ import 'dart:convert';
 
 class User {
   late final String email;
-  late String password;
-  late String nickname;
+  late String password1;
+  late String name;
   late String phone;
-  User(this.email, this.password, this.nickname, this.phone);
+  User(this.email, this.password1, this.name, this.phone);
 
   User.fromJson(Map<dynamic, dynamic> json)
-      : email = json['email'], password = json['password'], nickname = json['nickname'], phone = json['phone'];
+      : email = json['email'], password1 = json['password1'], name = json['name'], phone = json['phone'];
 
   Map<String, dynamic> toJson() => {
-    'email': email,
-    'password': password,
-    'nickname': nickname,
-    'phone': phone
+    "email": email,
+    "password1": password1,
+    "name": name,
+    "phone": phone
   };
 }
 

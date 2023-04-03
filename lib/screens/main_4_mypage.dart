@@ -36,7 +36,7 @@ class _MainMyPage extends State<MainMyPage>{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 15),
-              Text(widget.userinfo.nickname, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+              Text(widget.userinfo.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
               const SizedBox(height: 15),
             ],
           )

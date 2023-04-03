@@ -8,6 +8,7 @@ import 'package:jwt_decode/jwt_decode.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:bob/models/model.dart';
 import 'package:bob/screens/BaseWidget.dart';
+import 'package:bob/httpservices/backend.dart';
 
 class SignUp extends StatefulWidget{
   @override
@@ -15,7 +16,6 @@ class SignUp extends StatefulWidget{
 }
 
 class _SignUp extends State<SignUp>{
-  final dio = Dio();    // 서버와 통신을 하기 위해 필요한 패키지
   late TextEditingController idController;
   late TextEditingController passController;
   static final storage = FlutterSecureStorage(); // 토큰 값과 로그인 유지 정보를 저장, SecureStorage 사용
@@ -54,6 +54,7 @@ class _SignUp extends State<SignUp>{
                   ),
                   const SizedBox(height: 15),
                   CupertinoTextField(
+                    obscureText: true,
                     controller: passController,
                     placeholder: "패스워드",
                     padding: const EdgeInsets.all(15),
@@ -120,8 +121,7 @@ class _SignUp extends State<SignUp>{
       return;
     }
     // 2. Login
-    //Response response = await dio.post('http://20.249.219.241:8000/api/user/login/', data:{'email' : "hehe@kyonggi.ac.kr", 'password': "qwe123!@#"});
-    Response response = await dio.post('http://20.249.219.241:8000/api/user/login/', data:{'email' : id, 'password': passController.text});
+    Response response = await loginService({'email' : id, 'password': passController.text});
     if(response.statusCode == 200){
       _showDialog('환영합니다');
       String token = response.data['access_token']; // response의 token키에 담긴 값을 token 변수에 담아서
@@ -134,7 +134,8 @@ class _SignUp extends State<SignUp>{
           context,
           CupertinoPageRoute(builder: (context)=> BaseWidget(uinfo))
       );
-    }else{
+    }
+    else{
       print(response.statusCode.toString());
       _showDialog("등록된 사용자가 아닙니다");
       idController.clear();
