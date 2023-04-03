@@ -8,6 +8,7 @@ import '../models/model.dart';
 import 'package:bob/screens/MyPage/invitation.dart';
 import 'package:bob/screens/MyPage/switchNotice.dart';
 import 'package:bob/screens/MyPage/withdraw.dart';
+
 class MainMyPage extends StatefulWidget{
   final User userinfo;
   final List<Baby> babies;
@@ -16,6 +17,7 @@ class MainMyPage extends StatefulWidget{
   State<MainMyPage> createState() => _MainMyPage();
 }
 class _MainMyPage extends State<MainMyPage>{
+  Map<String, dynamic> sidePageList = {'withdrawal': WithdrawService(), 'switch_notice': SwitchNotice(), 'invite' : Invitation()};
   static const storage = FlutterSecureStorage();
   @override
   void initState() {
@@ -98,9 +100,9 @@ class _MainMyPage extends State<MainMyPage>{
             child:  Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                getSettingScreen('양육자 / 베이비시터 초대', const Icon(Icons.diamond_outlined),()=> invite()),
+                getSettingScreen('양육자 / 베이비시터 초대', const Icon(Icons.diamond_outlined),()=> navigatorSide('invite')),
                 Divider(thickness: 1, color: Colors.grey[400]),
-                getSettingScreen('알림 ON / OFF', const Icon(Icons.notifications_off_outlined),()=> switch_notice()),
+                getSettingScreen('알림 ON / OFF', const Icon(Icons.notifications_off_outlined),()=> navigatorSide('switch_notice')),
                 Divider(thickness: 1, color: Colors.grey[400]),
                 const SizedBox(height: 50),
                 const Text('Common'),
@@ -109,7 +111,7 @@ class _MainMyPage extends State<MainMyPage>{
                 Divider(thickness: 1, color: Colors.grey[300]),
                 getSettingScreen('회원 정보 수정', const Icon(Icons.mode_edit_outlined),(){}),
                 Divider(thickness: 1, color: Colors.grey[300]),
-                getSettingScreen('서비스 탈퇴', const Icon(Icons.minimize),()=> withdrawal()),
+                getSettingScreen('서비스 탈퇴', const Icon(Icons.minimize),()=> navigatorSide('withdrawal')),
                 Divider(thickness: 1, color: Colors.grey[300]),
               ],
             ),
@@ -118,22 +120,10 @@ class _MainMyPage extends State<MainMyPage>{
       ],
     );
   }
-  withdrawal(){
+  navigatorSide(target){
     Navigator.push(
         context,
-        CupertinoPageRoute(builder: (context)=> withdrawal())
-    );
-  }
-  switch_notice(){
-    Navigator.push(
-        context,
-        CupertinoPageRoute(builder: (context)=> SwitchNotice())
-    );
-  }
-  invite(){
-    Navigator.push(
-        context,
-        CupertinoPageRoute(builder: (context)=> Invitation())
+        CupertinoPageRoute(builder: (context)=> sidePageList[target])
     );
   }
   logout() async{
