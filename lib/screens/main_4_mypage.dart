@@ -8,6 +8,7 @@ import '../models/model.dart';
 import 'package:bob/screens/MyPage/invitation.dart';
 import 'package:bob/screens/MyPage/switchNotice.dart';
 import 'package:bob/screens/MyPage/withdraw.dart';
+import 'package:bob/screens/MyPage/modifyUser.dart';
 
 class MainMyPage extends StatefulWidget{
   final User userinfo;
@@ -25,7 +26,7 @@ class _MainMyPage extends State<MainMyPage>{
   }
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return  Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
@@ -90,41 +91,47 @@ class _MainMyPage extends State<MainMyPage>{
                       }
                   )
               ),
+              getSettingScreen('양육자 / 베이비시터 초대', const Icon(Icons.diamond_outlined),()=> navigatorSide('invite')),
+              getSettingScreen('알림 ON / OFF', const Icon(Icons.notifications_off_outlined),()=> navigatorSide('switch_notice')),
             ],
           )
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-            child:  Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                getSettingScreen('양육자 / 베이비시터 초대', const Icon(Icons.diamond_outlined),()=> navigatorSide('invite')),
-                Divider(thickness: 1, color: Colors.grey[400]),
-                getSettingScreen('알림 ON / OFF', const Icon(Icons.notifications_off_outlined),()=> navigatorSide('switch_notice')),
-                Divider(thickness: 1, color: Colors.grey[400]),
-                const SizedBox(height: 50),
-                const Text('Common'),
-                const SizedBox(height: 10),
-                getSettingScreen('로그아웃', const Icon(Icons.logout),()=>logout()),
-                Divider(thickness: 1, color: Colors.grey[300]),
-                getSettingScreen('회원 정보 수정', const Icon(Icons.mode_edit_outlined),(){}),
-                Divider(thickness: 1, color: Colors.grey[300]),
-                getSettingScreen('서비스 탈퇴', const Icon(Icons.minimize),()=> navigatorSide('withdrawal')),
-                Divider(thickness: 1, color: Colors.grey[300]),
-              ],
+        Expanded(
+            child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Common'),
+                      const SizedBox(height: 10),
+                      getSettingScreen('로그아웃', const Icon(Icons.logout),()=>logout()),
+                      getSettingScreen('회원 정보 수정', const Icon(Icons.mode_edit_outlined),()=> navigatorSide('modify_user')),
+                      getSettingScreen('언어 모드 변경', const Icon(Icons.language),(){}),
+                      getSettingScreen('서비스 탈퇴', const Icon(Icons.minimize),()=> navigatorSide('withdrawal')),
+                    ],
+                  ),
+                )
             ),
-          ),
-        ),
+        )
+
       ],
     );
   }
   navigatorSide(target){
-    Navigator.push(
-        context,
-        CupertinoPageRoute(builder: (context)=> sidePageList[target])
-    );
+    if('modify_user'.compareTo(target) == 0){
+      Navigator.push(
+          context,
+          CupertinoPageRoute(builder: (context)=> ModifyUser(widget.userinfo))
+      );
+    }else{
+      Navigator.push(
+          context,
+          CupertinoPageRoute(builder: (context)=> sidePageList[target])
+      );
+    }
   }
   logout() async{
     await storage.delete(key: 'login');
@@ -135,11 +142,15 @@ class _MainMyPage extends State<MainMyPage>{
   }
   Container getSettingScreen(title, icon, func){
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(8),
       child: InkWell(
           onTap: func,
-          child: Row(
-            children: [icon, const SizedBox(width: 30), Text(title)],
+          child : Column(
+            children: [
+              Row(children: [icon, const SizedBox(width: 30), Text(title)]),
+              SizedBox(height: 8),
+              Divider(thickness: 1, color: Colors.grey[300]),
+            ],
           )
       )
     );

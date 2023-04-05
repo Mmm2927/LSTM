@@ -12,7 +12,6 @@ class SignIn extends StatefulWidget{
 }
 
 class _SignUp extends State<SignIn>{
-  //final dio = Dio();    // 서버와 통신을 하기 위해 필요한 패키지
   late TextEditingController idContoller;
   late TextEditingController passContoller;
   late TextEditingController pass2Contoller;
@@ -182,17 +181,14 @@ class _SignUp extends State<SignIn>{
       return;
     }
     // 2. check
-    Response response = await emailOverlapService({'email' : _id});
-    if(response.statusCode == 200){
-      if(response.data == "True"){
-        _isDuplicateCheck = true;
-        showDlg('중복되지 않은 아이디 입니다.', context);
-        logger.i("중복 체크 O");
-      }
-      else{
-        showDlg('아이디가 중복되었습니다. 다시 입력해주세요', context);
-        idContoller.clear();
-      }
+    String responseData = await emailOverlapService({'email' : _id});
+    if(responseData == "True"){
+      _isDuplicateCheck = true;
+      showDlg('중복되지 않은 아이디 입니다.', context);
+      logger.i("중복 체크 O");
+    }else{
+      showDlg('아이디가 중복되었습니다. 다시 입력해주세요', context);
+      idContoller.clear();
     }
   }
 }

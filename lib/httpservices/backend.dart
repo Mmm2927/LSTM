@@ -8,7 +8,9 @@ loginService(data) async{
 }
 emailOverlapService(data) async{
   Response response = await dio.post('http://20.249.219.241:8000/api/user/exist/', data: data);
-  return response;
+  if(response.statusCode == 200){
+    return response.data;
+  }
 }
 registerService(data) async{
   Response response = await dio.post('http://20.249.219.241:8000/api/user/registration/', data: data);
