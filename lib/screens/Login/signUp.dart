@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:bob/screens/Login/find_id.dart';
-import 'package:bob/screens/Login/find_password.dart';
+import 'package:bob/screens/Login/find_logininfo.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
@@ -9,6 +8,7 @@ import 'package:jwt_decode/jwt_decode.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:bob/models/model.dart';
 import 'package:bob/screens/BaseWidget.dart';
+import 'package:bob/httpservices/backend.dart';
 
 class SignUp extends StatefulWidget{
   @override
@@ -16,7 +16,6 @@ class SignUp extends StatefulWidget{
 }
 
 class _SignUp extends State<SignUp>{
-  final dio = Dio();    // 서버와 통신을 하기 위해 필요한 패키지
   late TextEditingController idController;
   late TextEditingController passController;
   static final storage = FlutterSecureStorage(); // 토큰 값과 로그인 유지 정보를 저장, SecureStorage 사용
@@ -32,7 +31,7 @@ class _SignUp extends State<SignUp>{
     return Scaffold(
       appBar: renderAppbar('이메일 로그인'),
       body: Container(
-        margin: EdgeInsets.all(30),
+        margin: const EdgeInsets.all(30),
         child:
             SingleChildScrollView(
               child: Column(
@@ -42,7 +41,7 @@ class _SignUp extends State<SignUp>{
                   CupertinoTextField(
                     controller: idController,
                     placeholder: "아이디",
-                    padding: EdgeInsets.all(15),
+                    padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                       border: Border.all(width: 0.5)
@@ -55,9 +54,10 @@ class _SignUp extends State<SignUp>{
                   ),
                   const SizedBox(height: 15),
                   CupertinoTextField(
+                    obscureText: true,
                     controller: passController,
                     placeholder: "패스워드",
-                    padding: EdgeInsets.all(15),
+                    padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(width: 0.5)
@@ -83,7 +83,7 @@ class _SignUp extends State<SignUp>{
                       TextButton(onPressed: (){
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => FindId()),
+                          MaterialPageRoute(builder: (context) => const FindLogInfo(0)),
                         );
                       }, child: const Text('아이디 찾기',style: TextStyle(color: Colors.black))),
                       Container(
@@ -94,7 +94,7 @@ class _SignUp extends State<SignUp>{
                       TextButton(onPressed: (){
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => FindPassword()),
+                          MaterialPageRoute(builder: (context) => const FindLogInfo(1)),
                         );
                       }, child: const Text('비밀번호 찾기',style: TextStyle(color: Colors.black))),
                     ],
@@ -121,19 +121,21 @@ class _SignUp extends State<SignUp>{
       return;
     }
     // 2. Login
-    //Response response = await dio.post('http://20.249.219.241:8000/api/user/login/', data:{'email' : "hehe@kyonggi.ac.kr", 'password': "qwe123!@#"});
-    Response response = await dio.post('http://20.249.219.241:8000/api/user/login/', data:{'email' : id, 'password': passController.text});
+    Response response = await loginService({'email' : id, 'password': passController.text});
     if(response.statusCode == 200){
       _showDialog('환영합니다');
       String token = response.data['access_token']; // response의 token키에 담긴 값을 token 변수에 담아서
       Map<dynamic, dynamic> payload = Jwt.parseJwt(token);
-      User userInfo= new User(token,payload['user_id'], response.data['email'], response.data['name']);
-      await storage.write(key: 'user', value: jsonEncode(userInfo));
+      // 로그인 정보 저장
+      User uinfo = User(response.data['email'], passController.text, response.data['name'], "01092982310");    // response.data['phone']
+      Login loginInfo = Login(token, payload['user_id'], uinfo);
+      await storage.write(key: 'login', value: jsonEncode(loginInfo));
       Navigator.pushReplacement(
-          context, 
-          CupertinoPageRoute(builder: (context)=> BaseWidget(userInfo))
+          context,
+          CupertinoPageRoute(builder: (context)=> BaseWidget(uinfo))
       );
-    }else{
+    }
+    else{
       print(response.statusCode.toString());
       _showDialog("등록된 사용자가 아닙니다");
       idController.clear();
