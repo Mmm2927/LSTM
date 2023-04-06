@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:dio/dio.dart';
-
+import 'package:bob/screens/MyPage/modifyBaby.dart';
+import '../../models/model.dart';
 class ManageBabyWidget extends StatefulWidget{
-  //ManageBabyWidget(User? userInfo);
+  final List<Baby> babies;
+  const ManageBabyWidget(this.babies, {Key?key}):super(key:key);
   @override
-  _ManageBabyWidget createState() => _ManageBabyWidget();
+  State<ManageBabyWidget> createState() => _ManageBabyWidget();
 }
 class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderStateMixin{
   final dio = Dio();    // 서버와 통신을 하기 위해 필요한 패키지
@@ -75,11 +77,52 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
                 controller: _tabController,
                 children: [
                   SingleChildScrollView(child: addBaby(),),
-                  SingleChildScrollView(child: modifyBaby()),
+                  SingleChildScrollView(child: modifyBaby(context)),
                 ],
               )
           )
         ],
+      )
+    );
+  }
+  Widget modifyBaby(BuildContext rootContext){
+    return Expanded(
+            child: GridView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: widget.babies.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1 / 1,
+                ),
+                itemBuilder: (BuildContext context, int index){
+                  return drawBaby(widget.babies[index], rootContext);
+                },
+            )
+    );
+  }
+  drawBaby(Baby baby, BuildContext rootContext){
+    return InkWell(
+      onTap: (){
+        Navigator.push(
+            rootContext,
+            CupertinoPageRoute(builder: (context)=> ModifyBaby(baby))
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            border: Border.all(color: Colors.grey)
+        ),
+        child: Column(
+          children: [
+            Image.asset('assets/images/baby.png',scale: 8),
+            SizedBox(width: 20),
+            Text(baby.name, style: TextStyle(fontSize: 24))
+          ],
+        ),
       )
     );
   }
@@ -198,9 +241,4 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
   }
 }
 
-Widget modifyBaby(){
-  return Container(
-      margin: const EdgeInsets.all(15),
-      child: Text('아이 수정')
-  );
-}
+

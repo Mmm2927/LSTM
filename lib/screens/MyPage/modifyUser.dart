@@ -68,7 +68,7 @@ class _ModifyUser extends State<ModifyUser> {
                         minimumSize: const Size.fromHeight(55),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))
                     ),
-                  child: const Text('회원가입')
+                  child: const Text('수정 완료')
                 )
               ],
             ),

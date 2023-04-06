@@ -11,7 +11,6 @@ class Main_Home extends StatefulWidget{
   _Main_home createState() => _Main_home();
 }
 class _Main_home extends State<Main_Home>{
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
