@@ -19,14 +19,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [
+      supportedLocales: const [
         Locale('ko', ''),
         Locale('en', ''),
       ],
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'basic',
       ),

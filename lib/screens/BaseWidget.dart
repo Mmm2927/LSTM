@@ -28,6 +28,7 @@ class _BaseWidget extends State<BaseWidget>{
   void initState() {
     super.initState();
     getBabyList();
+    print('bay');
   }
   getBabyList(){
     // 1. user와 연결된 Baby-list 가져오기

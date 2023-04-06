@@ -14,7 +14,6 @@ class MainDiary extends StatefulWidget {
 
 class MainDiaryState extends State<MainDiary> {
   final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
