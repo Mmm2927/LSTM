@@ -14,7 +14,6 @@ class MainDiary extends StatefulWidget {
 
 class MainDiaryState extends State<MainDiary> {
   final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +67,7 @@ class MainDiaryState extends State<MainDiary> {
     return Column(
       children: [
         TableCalendar(
+          locale: 'ko_KR',
           availableCalendarFormats: const{
             CalendarFormat.twoWeeks : 'month',
             CalendarFormat.month : 'month',
@@ -248,7 +248,14 @@ class MainDiaryState extends State<MainDiary> {
               //setState(() {
               //  _file = File(image!.path);
               //});
-            }), child: const Text('사진 첨부', style: TextStyle(color: Color(0xff625ffa)))),
+            }), style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(
+                  color: Color(0xff625ffa),
+                  width: 0.5,
+                )
+            ),
+                child: const Text('사진 첨부', style: TextStyle(color: Color(0xff625ffa)))),
             const SizedBox(width: 10),
             ElevatedButton(
                 onPressed: () {
@@ -261,7 +268,14 @@ class MainDiaryState extends State<MainDiary> {
                       const SnackBar(content: Text('업로드 되었습니다.')),
                     );
                   }
-                  }, child: const Text('업로드', style: TextStyle(color: Color(0xfffa625f)))),
+                  },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    side: const BorderSide(
+                      color: Color(0xfffa625f),
+                      width: 0.5,
+                    )
+                ),child: const Text('업로드', style: TextStyle(color: Color(0xfffa625f)))),
           ],
         ),
       ]

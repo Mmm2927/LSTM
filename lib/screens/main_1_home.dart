@@ -7,7 +7,7 @@ class Main_Home extends StatefulWidget{
 class _Main_home extends State<Main_Home>{
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text('1. HOME'),
     );
   }
