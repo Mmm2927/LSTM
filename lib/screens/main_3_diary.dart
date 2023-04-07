@@ -15,41 +15,52 @@ class MainDiary extends StatefulWidget {
 
 class MainDiaryState extends State<MainDiary> {
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: renderAppbar_with_alarm('BoB', context),
       resizeToAvoidBottomInset: false,
       body: diaryList(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (BuildContext context) {
-              return SingleChildScrollView(
-                child: AlertDialog(
-                  content: Form(
-                    key: _formKey,
-                    child: writeDiary(selectedDay),
-                  ),
-                  insetPadding: const EdgeInsets.fromLTRB(15, 30, 15, 30),
-                  backgroundColor: const Color(0xfffffdfd),
+      floatingActionButton: FutureBuilder<bool>(
+            future: DatabaseHelper.instance.isDiary(selectedDay),
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              if (snapshot.hasData) {
+                return const Center(
+                    child: null,
+                );
+              }
+              return FloatingActionButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (BuildContext context) {
+                        return SingleChildScrollView(
+                          child: AlertDialog(
+                            content: Form(
+                              key: _formKey,
+                              child: writeDiary(selectedDay),
+                            ),
+                            insetPadding: const EdgeInsets.fromLTRB(15, 30, 15, 30),
+                            backgroundColor: const Color(0xfffffdfd),
+                          ),
+                        );
+                      }
+                  );
+                },
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(100.0))
+
+                ),
+                backgroundColor: const Color(0xfffa625f),
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
                 ),
               );
             }
-          );
-        },
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(100.0))
-
-        ),
-        backgroundColor: const Color(0xfffa625f),
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-      ),
+        )
     );
   }
 
@@ -80,6 +91,7 @@ class MainDiaryState extends State<MainDiary> {
             setState(() {
               this.selectedDay = selectedDay;
               this.focusedDay = focusedDay;
+              DatabaseHelper.instance.isDiary(selectedDay);
             });
           },
           selectedDayPredicate: (DateTime day) {
@@ -136,7 +148,7 @@ class MainDiaryState extends State<MainDiary> {
                 ? const Center(child: Text('No Today Diary'))
                 : Expanded(
                   child: SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 5),
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
                       scrollDirection: Axis.vertical,
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -149,6 +161,62 @@ class MainDiaryState extends State<MainDiary> {
                             Center(child: snapshot.data!.image == null? const SizedBox(height:10, width: double.infinity,) : Image.file(File(snapshot.data!.image ?? 'default'), width: MediaQuery.of(context).size.width/2) ,),
                             const SizedBox(height:10, width: double.infinity,),
                             Text(snapshot.data!.content, style:const TextStyle(fontSize:16)),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ElevatedButton(onPressed: (() async {
+                                  showDialog(
+                                      context: context,
+                                      barrierDismissible: true,
+                                      builder: (BuildContext context) {
+                                        return SingleChildScrollView(
+                                          child: AlertDialog(
+                                            content: Form(
+                                              key: _formKey,
+                                              child: updateDiary(selectedDay, snapshot.data),
+                                            ),
+                                            insetPadding: const EdgeInsets.fromLTRB(15, 30, 15, 30),
+                                            backgroundColor: const Color(0xfffffdfd),
+                                          ),
+                                        );
+                                      }
+                                  );
+                                }), style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    side: const BorderSide(
+                                      color: Color(0xff625ffa),
+                                      width: 0.5,
+                                    )
+                                ),
+                                    child: const Text('수정', style: TextStyle(color: Color(0xff625ffa)))),
+                                const SizedBox(width: 10),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      showDialog(context: context, builder: (BuildContext context) => AlertDialog(
+                                        content: const Text('삭제하시겠습니까?'),
+                                        actions: [
+                                          ElevatedButton(
+                                              onPressed: () => Navigator.of(context).pop(), child: const Text('취소')),
+                                          ElevatedButton(
+                                            onPressed: (() async {
+                                              setState(() {
+                                                DatabaseHelper.instance.remove(selectedDay);
+                                              });
+                                              Navigator.of(context).pop();
+                                            }),
+                                            child: Text('삭제')),
+                                        ],
+                                      ));
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        side: const BorderSide(
+                                          color: Color(0xfffa625f),
+                                          width: 0.5,
+                                        )
+                                    ),child: const Text('삭제', style: TextStyle(color: Color(0xfffa625f)))),
+                              ],
+                            ),
                           ]
                       )
                   ),
@@ -161,6 +229,125 @@ class MainDiaryState extends State<MainDiary> {
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
+
+  updateDiary(DateTime selectedDay, Diary? diary) {
+    String title = diary!.title;
+    String content = diary!.content;
+    String? image = diary!.image;
+    String selDay = DateFormat('yyyy.MM.dd').format(selectedDay);
+
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          TextButton(
+            child: const Icon(Icons.clear, color: Color(0xfffa625f)),
+            onPressed: () {
+              _formKey.currentState?.reset();
+              Navigator.of(context).pop();
+            },
+          ),
+          const SizedBox(
+            height: 5.0,
+          ),
+          TextFormField(
+            cursorColor: Color(0xfffa625f),
+            initialValue: diary.title,
+            onSaved: (value) {
+              setState(() {
+                title = value as String;
+              });
+            },
+            validator: (value) {
+              if (value!.trim().isEmpty) {
+                return '제목을 입력하세요.';
+              }
+              return null;
+            },
+            decoration: const InputDecoration(
+              labelText: '제목',
+              floatingLabelStyle: TextStyle(color: Color(0xfffa625f)),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width:1.5, color: Color(0xfffa625f))
+              ),
+              border: OutlineInputBorder(),
+            ),
+            style: const TextStyle(fontSize: 15),
+          ),
+          const SizedBox(
+            height: 16.0,
+            width: 5000,
+          ),
+          TextFormField(
+            cursorColor: Color(0xfffa625f),
+            maxLines: 15,
+            keyboardType: TextInputType.multiline,
+            initialValue: diary.content,
+            onSaved: (value) {
+              setState(() {
+                content = value as String;
+              });
+            },
+            validator: (value) {
+              if (value!.trim().isEmpty) {
+                return '내용을 입력하세요.';
+              }
+              return null;
+            },
+            decoration: const InputDecoration(
+              labelText: '내용',
+              floatingLabelStyle: TextStyle(color: Color(0xfffa625f)),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width:1.5, color: Color(0xfffa625f))
+              ),
+              border: OutlineInputBorder(),
+            ),
+            style: const TextStyle(fontSize: 15),
+          ),
+          const SizedBox(
+            height: 16.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(onPressed: (() async {
+                final _image = await ImagePicker().getImage(source: ImageSource.gallery);
+                setState(() {
+                  image = _image!.path;
+                });
+              }), style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  side: const BorderSide(
+                    color: Color(0xff625ffa),
+                    width: 0.5,
+                  )
+              ),
+                  child: Text(image != null? '사진 바꾸기' : '사진 첨부', style: TextStyle(color: Color(0xff625ffa)))),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      DatabaseHelper.instance.update(Diary(date: selDay, title: title, content: content, image: image));
+                      _formKey.currentState?.reset();
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('수정 되었습니다.')),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(
+                        color: Color(0xfffa625f),
+                        width: 0.5,
+                      )
+                  ),child: const Text('수정', style: TextStyle(color: Color(0xfffa625f)))
+              ),
+            ],
+          ),
+        ]
+    );
+  }
 
   writeDiary(DateTime selectedDay) {
     String title = '';
@@ -243,10 +430,9 @@ class MainDiaryState extends State<MainDiary> {
           children: [
             ElevatedButton(onPressed: (() async {
               final _image = await ImagePicker().getImage(source: ImageSource.gallery);
-              image = _image!.path;
-              //setState(() {
-              //  _file = File(image!.path);
-              //});
+              setState(() {
+                image = _image!.path;
+              });
             }), style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 side: const BorderSide(
@@ -254,7 +440,7 @@ class MainDiaryState extends State<MainDiary> {
                   width: 0.5,
                 )
             ),
-                child: const Text('사진 첨부', style: TextStyle(color: Color(0xff625ffa)))),
+                child: Text(image != null? '사진 바꾸기' : '사진 첨부', style: TextStyle(color: Color(0xff625ffa)))),
             const SizedBox(width: 10),
             ElevatedButton(
                 onPressed: () {
@@ -274,7 +460,8 @@ class MainDiaryState extends State<MainDiary> {
                       color: Color(0xfffa625f),
                       width: 0.5,
                     )
-                ),child: const Text('업로드', style: TextStyle(color: Color(0xfffa625f)))),
+                ),child: const Text('업로드', style: TextStyle(color: Color(0xfffa625f)))
+            ),
           ],
         ),
       ]

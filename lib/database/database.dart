@@ -38,14 +38,21 @@ class DatabaseHelper {
     return Diary.fromMap(diaries[0]);
   }
 
+  Future<bool> isDiary(DateTime date) async {
+    Database db = await instance.database;
+    String selDate = DateFormat('yyyy.MM.dd').format(date);
+    List<Map<String, dynamic>> diaries = await db.query('diary', where: '"date" = ?', whereArgs: [selDate]);
+    return diaries[0].isEmpty;
+  }
+
   Future<int> update(Diary diary) async {
     Database db = await instance.database;
     return await db.update('diary', diary.toMap(),
         where: 'date = ?', whereArgs: [diary.date]);
   }
 
-  Future<int> remove(int id) async {
+  Future<int> remove(DateTime date) async {
     Database db = await instance.database;
-    return await db.delete('diary', where: 'id = ?', whereArgs: [id]);
+    return await db.delete('diary', where: 'date = ?', whereArgs: [DateFormat('yyyy.MM.dd').format(date)]);
   }
 }
