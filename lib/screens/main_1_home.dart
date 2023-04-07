@@ -15,6 +15,7 @@ class _Main_home extends State<Main_Home>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xF9F9F9FF),
       appBar: AppBar(
         backgroundColor: Color(0xffffc8c7),
         elevation: 0.0,
@@ -80,7 +81,6 @@ class _Main_home extends State<Main_Home>{
         ),
       ),
 
-      backgroundColor: Colors.white,
       body: Stack(
         children: [
           Positioned(
@@ -110,7 +110,157 @@ class _Main_home extends State<Main_Home>{
                   ),
                 ),
               ),
-          )
+          ),
+          Positioned(
+            top: 130,
+              child: Container(
+                height: 90,
+                width: MediaQuery.of(context).size.width-40,
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Color(0xfffdb1a5),
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 8,
+                      spreadRadius: 3
+                    )
+                  ]
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(right: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text('버튼을 길게 누르면 타이머가 작동합니다.',
+                            style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey[700]
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    Container(
+                      padding: EdgeInsets.only(left: 20,top: 10),
+                      child: Row(
+                        children: [
+                          SizedBox.fromSize(
+                            size: Size(50, 50),
+                            child: ClipOval(
+                              child: Material(
+                                color: Colors.red,
+                                child: InkWell(
+                                  splashColor: Colors.grey,
+                                  onTap: () {},
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(Icons.dining_outlined,), // <-- Icon
+                                      Text("수유",style: TextStyle(fontSize: 15),), // <-- Text
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          SizedBox.fromSize(
+                            size: Size(50, 50),
+                            child: ClipOval(
+                              child: Material(
+                                color: Colors.orange,
+                                child: InkWell(
+                                  splashColor: Colors.grey,
+                                  onTap: () {},
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(Icons.baby_changing_station,), // <-- Icon
+                                      Text("배변",style: TextStyle(fontSize: 15),), // <-- Text
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          SizedBox.fromSize(
+                            size: Size(50, 50),
+                            child: ClipOval(
+                              child: Material(
+                                color: Colors.yellow,
+                                child: InkWell(
+                                  splashColor: Colors.grey,
+                                  onTap: () {},
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(Icons.baby_changing_station,), // <-- Icon
+                                      Text("소변",style: TextStyle(fontSize: 15),), // <-- Text
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),SizedBox(
+                            width: 20,
+                          ),
+                          SizedBox.fromSize(
+                            size: Size(50, 50),
+                            child: ClipOval(
+                              child: Material(
+                                color: Colors.green,
+                                child: InkWell(
+                                  splashColor: Colors.grey,
+                                  onTap: () {},
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(Icons.bedroom_child_outlined,), // <-- Icon
+                                      Text("수면",style: TextStyle(fontSize: 15),), // <-- Text
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),SizedBox(
+                            width: 20,
+                          ),
+                          SizedBox.fromSize(
+                            size: Size(50, 50),
+                            child: ClipOval(
+                              child: Material(
+                                color: Colors.blue,
+                                child: InkWell(
+                                  splashColor: Colors.grey,
+                                  onTap: () {},
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(Icons.add_circle,), // <-- Icon
+                                      Text("직접 입력",style: TextStyle(fontSize: 13),), // <-- Text
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )
+          ),
         ],
       ),
     );
@@ -149,7 +299,6 @@ Widget drawBaby(String name, DateTime birth){
                 )
               ],
             )
-
           ]
       )
   );

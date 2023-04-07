@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
   _asyncMethod() async {
     var tmp = (await storage.read(key: "login"));
     if (tmp != null) {
-      Map<String,dynamic> jsonData = jsonDecode(tmp!);
+      Map<String,dynamic> jsonData = jsonDecode(tmp);
       logger.i("자동 login");
       print(jsonData['userInfo']);
       Login loginInfo = Login.fromJson(jsonData);
