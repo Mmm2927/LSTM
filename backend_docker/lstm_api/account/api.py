@@ -4,6 +4,8 @@ from rest_framework import viewsets, permissions, generics, status
 from lstm_api.models import User
 from lstm_api.user.serializers import UserSerializer
 
+from allauth.account.adapter import DefaultAccountAdapter
+
 class CustomLoginView(LoginView):
     def get_response(self):
         orginal_response = super().get_response()

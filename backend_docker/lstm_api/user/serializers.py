@@ -3,11 +3,22 @@ from lstm_api.models import User as UserProfile
 
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserChangeForm, ReadOnlyPasswordHashField
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['id', 'name', 'email']
+        fields = ['id', 'name', 'email', 'phone', 'password']
+
+class UserEditSerializer(UserChangeForm):
+    password = ReadOnlyPasswordHashField()
+
+    class Meta:
+        model = UserProfile
+        fields = ['name', 'phone', 'password']
+
+    def clean_password(self):
+        return self.initial["password"]
 
 class LoginSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
@@ -15,7 +26,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'password']
+        fields = ['email', 'password', 'name', 'phone']
 
     def validate_username(self, username):
         if not username:

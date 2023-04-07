@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -57,15 +58,31 @@ JWT_AUTH_REFRESH_COOKIE = '7d88da7aeda9a5082c669bb636db1025'
 
 SITE_ID = 1
 REST_AUTH = {
-        'USE_JWT' : True
+        'USE_JWT' : True,'JWT_AUTH_HTTPONLY':False
     }
+REST_AUTH_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'lstm_api.account.serializers.CustomRegisterSerializer',
+}
+
+JWT_AUTH = {
+    'JWT_SECRET_KEY': SECRET_KEY,
+    'JWT_ALGORITHM': 'HS256',
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),
+}
+
 REST_FRAMEWORK = {
    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+    #'DEFAULT_AUTHENTICATION_CLASSES': (
+    #    'rest_framework.authentication.SessionAuthentication',
+    #    'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    #),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
         }
 ACCOUNT_UNIQUE_EMAIL = True
@@ -173,3 +190,8 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'lstm_api.User'
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'lstm_api.account.serializers.CustomRegisterSerializer'
+}
+
+ACCOUNT_ADAPTER = 'lstm_api.account.adapters.CustomAccountAdapter'

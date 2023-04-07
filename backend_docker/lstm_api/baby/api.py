@@ -37,13 +37,18 @@ class BabyInfoViewSet(viewsets.ModelViewSet):
 
 class BabyRearer(viewsets.ModelViewSet):
     queryset = UserBabyRelationship.objects.all()
-    serializer_class = BabyInfoSerializer
+    serializer_class = BabyRearerSerializer
 
     def list(self, request, *args, **kwargs):
         #queryset = BabyProfile.objects.all()
         serializer = self.serializer_class(self.queryset, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def list_specific(self, request, *args, **kwargs):
+        babies_info = UserBabyRelationship.objects.filter(user_id=request.user.id)
+        serializer = self.serializer_class(babies_info, many=True)
+        return Response(serializer.data)
 
     def set(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
@@ -56,7 +61,7 @@ class BabyRearer(viewsets.ModelViewSet):
 
         obj = serializer.save()
         obj.user = request.user
-        obj.user_baby_rel.set([request.user])
+        obj.user_id = request.user.id
         obj.save()
 
         return Response({'result': 'success', 'success_id': obj.id}, status=status.HTTP_200_OK)

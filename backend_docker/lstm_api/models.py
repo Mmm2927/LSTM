@@ -2,22 +2,26 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password, **extra_fields):
+    def create_user(self, email, password,name,  **extra_fields):
         if not email:
             raise ValueError('must have user email')
-
+        
+        print(**extra_fields)
         user = self.model(
             email = self.normalize_email(email),
+            name=name,
             **extra_fields
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
-    def create_superuser(self, email, password, **extra_fields):        
+    def create_superuser(self, email, password, name, **extra_fields):        
        
         user = self.create_user(            
             email = self.normalize_email(email),            
-            password=password        
+            password=password,
+            name=name,
+            **extra_fields
         )        
         user.is_admin = True
         user.is_superuser = True        
@@ -38,7 +42,7 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['name', 'phone']
 
     def has_perm(self, perm, obj=None):
         return True
@@ -61,7 +65,13 @@ class BabyProfile(models.Model):
 class UserBabyRelationship(models.Model):
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE) 
     baby = models.ForeignKey(BabyProfile, blank=True, null=True, on_delete=models.CASCADE)
-    relation = models.CharField(default='N', max_length=1, null=True, blank=True)
+    #relation = models.CharField(default='N', max_length=1, null=True, blank=True)
+    
+    relation = models.IntegerField(verbose_name='관계',default=0, blank=True, null=True)
+    access_date = models.IntegerField(verbose_name='날짜', blank=True, null=True)
+
+    access_starttime = models.TimeField(verbose_name='시작시간', null=True)
+    access_endtime = models.TimeField(verbose_name='종료시간', null=True)
 
     class Meta:
         db_table = 'userBabyRelationship'
