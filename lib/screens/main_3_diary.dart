@@ -5,6 +5,7 @@ import '../database/database.dart';
 import '../database/diaryDB.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:bob/widgets/appbar.dart';
 
 class MainDiary extends StatefulWidget {
   const MainDiary({super.key});
@@ -17,9 +18,7 @@ class MainDiaryState extends State<MainDiary> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //appBar: AppBar(
-      //  title: const Text(''),
-      //),
+      appBar: renderAppbar_with_alarm('BoB', context),
       resizeToAvoidBottomInset: false,
       body: diaryList(),
       floatingActionButton: FloatingActionButton(

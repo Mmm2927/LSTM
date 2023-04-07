@@ -4,7 +4,6 @@ import 'package:bob/screens/main_2_cctv.dart';
 import 'package:bob/screens/main_3_diary.dart';
 import 'package:bob/screens/main_4_mypage.dart';
 import '../models/model.dart';
-import 'package:bob/widgets/appbar.dart';
 import 'package:bob/screens/MyPage/manage_baby.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bob/widgets/bottomNav.dart';
@@ -71,7 +70,6 @@ class _BaseWidget extends State<BaseWidget>{
       child: WillPopScope(
        onWillPop: () async => false,
        child: Scaffold(
-         appBar: renderAppbar_with_alarm('BoB', context),
          body: SafeArea(
              child: _widgetOptions.elementAt(_selectedIndex),
          ),
