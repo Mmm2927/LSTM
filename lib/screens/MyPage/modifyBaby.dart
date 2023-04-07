@@ -11,10 +11,13 @@ class ModifyBaby extends StatefulWidget{
   State<ModifyBaby> createState() => _ModifyBaby();
 }
 class _ModifyBaby extends State<ModifyBaby> {
-  DateTime date = DateTime(2016, 10, 26);
+  late int _valueGender;
+  late DateTime date;
   @override
   void initState() {
     super.initState();
+    _valueGender = widget.baby.gender;
+    date = widget.baby.birth;
   }
   @override
   Widget build(BuildContext context) {
@@ -52,11 +55,24 @@ class _ModifyBaby extends State<ModifyBaby> {
                 ),
               ),
               drawTitle('성별', 40),
-              TextFormField(
-                obscureText: true,
-                decoration: formDecoration('비밀번호 확인'),
-                onChanged: (val){setState(() {
-                });},
+              Wrap(
+                spacing: 10.0,
+                children: List<Widget>.generate(
+                    2, (int index){
+                  List<String> gender = ['남자', '여자'];
+                  return ChoiceChip(
+                      elevation: 6.0,
+                      padding: const EdgeInsets.all(10),
+                      selectedColor: const Color(0xffff846d),
+                      label: Text(gender[index]),
+                      selected: _valueGender == index,
+                      onSelected: (bool selected){
+                        setState((){
+                          _valueGender = (selected ? index : null)!;
+                        });
+                      }
+                  );
+                }).toList()
               ),
               const SizedBox(height: 100),
               ElevatedButton(

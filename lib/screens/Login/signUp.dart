@@ -126,9 +126,9 @@ class _SignUp extends State<SignUp>{
       _showDialog('환영합니다');
       String token = response.data['access_token']; // response의 token키에 담긴 값을 token 변수에 담아서
       Map<dynamic, dynamic> payload = Jwt.parseJwt(token);
+      User uinfo = User(response.data['email'], passController.text, response.data['name'], response.data['phone']);
       // 로그인 정보 저장
-      User uinfo = User(response.data['email'], passController.text, response.data['name'], "01092982310");    // response.data['phone']
-      Login loginInfo = Login(token, payload['user_id'], uinfo);
+      Login loginInfo = Login(token, response.data['refresh_token'], payload['user_id'],response.data['email'], passController.text);
       await storage.write(key: 'login', value: jsonEncode(loginInfo));
       Navigator.pushReplacement(
           context,

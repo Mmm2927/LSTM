@@ -16,25 +16,37 @@ class User {
     "name": name,
     "phone": phone
   };
+  modifyUserInfo(_pass, _name, _phone){
+    this.password1 = _pass;
+    this.name = _name;
+    this.phone = _phone;
+  }
 }
-
 class Login {
   final String token;
+  final String refreshtoken;
   final int loginID;
-  final User userInfo;
-
-  Login(this.token, this.loginID, this.userInfo);
-
+  final String userEmail;
+  String userPassword;
+  Login(this.token, this.refreshtoken, this.loginID, this.userEmail, this.userPassword);
+  changePassword(String newPass){
+    this.userPassword = newPass;
+  }
   Login.fromJson(Map<dynamic, dynamic> json)
-      : token = json['token'], loginID = json['loginID'], userInfo = User.fromJson(json['userInfo']);
+      : token = json['token'],
+        refreshtoken = json['refreshtoken'],
+        loginID = json['loginID'],
+        userEmail = json['userEmail'],
+        userPassword = json['userPassword'];
 
   Map<String, dynamic> toJson() => {
     'token': token,
+    'refreshtoken': refreshtoken,
     'loginID': loginID,
-    'userInfo': userInfo
+    'userEmail': userEmail,
+    'userPassword': userPassword,
   };
 }
-
 class Baby_relation{
   final int BabyId;
   final int relation; // 0:부모, 1: 가족 , 2 : 베이비시터

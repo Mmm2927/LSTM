@@ -2,6 +2,8 @@ import 'package:bob/models/model.dart';
 import 'package:flutter/material.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:bob/widgets/form.dart';
+import 'package:bob/httpservices/backend.dart';
+import 'package:bob/httpservices/storage.dart';
 
 class ModifyUser extends StatefulWidget{
   final User userinfo;
@@ -96,7 +98,15 @@ class _ModifyUser extends State<ModifyUser> {
       return;
     }
     // 2. modify
-
+    if(await editUserService({"password":_pass,"name": _name,"phone": _phone}) == "True"){
+      // 내부 저장소 변경
+      editPasswordLoginStorage(_pass);
+      // 리턴
+      Navigator.pop(context, {"password":_pass,"name": _name,"phone": _phone});
+    }
+    else{
+      showDlg('수정 실패');
+    }
   }
   void showDlg(String title){
     ScaffoldMessenger.of(context)

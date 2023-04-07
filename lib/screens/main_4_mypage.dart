@@ -95,9 +95,7 @@ class _MainMyPage extends State<MainMyPage>{
                           }
                       )
                   ),
-                  getSettingScreen('아이 수정', const Icon(Icons.diamond_outlined),(){
-
-                  }),
+                  getSettingScreen('아이 수정', const Icon(Icons.diamond_outlined),(){}),
                   getSettingScreen('양육자 / 베이비시터 초대', const Icon(Icons.diamond_outlined),()=> navigatorSide('invite')),
                   getSettingScreen('알림 ON / OFF', const Icon(Icons.notifications_off_outlined),()=> navigatorSide('switch_notice')),
                 ],
@@ -115,7 +113,20 @@ class _MainMyPage extends State<MainMyPage>{
                       const Text('Common'),
                       const SizedBox(height: 10),
                       getSettingScreen('로그아웃', const Icon(Icons.logout),()=>logout()),
-                      getSettingScreen('회원 정보 수정', const Icon(Icons.mode_edit_outlined),()=> navigatorSide('modify_user')),
+                      getSettingScreen('회원 정보 수정', const Icon(Icons.mode_edit_outlined),() async {
+                        var i = await Navigator.push(
+                            context,
+                            CupertinoPageRoute(builder: (context)=> ModifyUser(widget.userinfo))
+                        );
+                        Map<String,String> decoded = i;
+                        if( decoded!= null ){
+                          setState(() {
+                            widget.userinfo.modifyUserInfo(decoded["password"], decoded["name"], decoded["phone"]);
+                          });
+                        }else{
+                          print('null');
+                        }
+                      }),
                       getSettingScreen('언어 모드 변경', const Icon(Icons.language),(){}),
                       getSettingScreen('서비스 탈퇴', const Icon(Icons.minimize),()=> navigatorSide('withdrawal')),
                     ],
