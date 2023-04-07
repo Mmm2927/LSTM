@@ -12,12 +12,12 @@ class ModifyBaby extends StatefulWidget{
 }
 class _ModifyBaby extends State<ModifyBaby> {
   late int _valueGender;
-  late DateTime date;
+  late DateTime birth;
   @override
   void initState() {
     super.initState();
     _valueGender = widget.baby.gender;
-    date = widget.baby.birth;
+    birth = widget.baby.birth;
   }
   @override
   Widget build(BuildContext context) {
@@ -38,17 +38,17 @@ class _ModifyBaby extends State<ModifyBaby> {
                 // Display a CupertinoDatePicker in date picker mode.
                 onPressed: () => _showDialog(
                   CupertinoDatePicker(
-                    initialDateTime: date,
+                    initialDateTime: birth,
                     mode: CupertinoDatePickerMode.date,
                     use24hFormat: true,
                     // This is called when the user changes the date.
                     onDateTimeChanged: (DateTime newDate) {
-                      setState(() => date = newDate);
+                      setState(() => birth = newDate);
                     },
                   ),
                 ),
                 child: Text(
-                  '${date.year}년 ${date.month}월 ${date.day}일',
+                  '${birth.year}년 ${birth.month}월 ${birth.day}일',
                   style: const TextStyle(
                     fontSize: 22.0,
                   ),
@@ -76,7 +76,9 @@ class _ModifyBaby extends State<ModifyBaby> {
               ),
               const SizedBox(height: 100),
               ElevatedButton(
-                  onPressed: () async => await _ModifyBabyinfo(),
+                  onPressed: (){
+                    print(_valueGender);
+                  },
                   style:ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       foregroundColor: Colors.white,
@@ -110,7 +112,10 @@ class _ModifyBaby extends State<ModifyBaby> {
           ),
         ));
   }
-  _ModifyBabyinfo() async{
-    
+  _ModifyBabyinfo(){
+    print(';;ddd');
+    // validate
+    //print(_valueGender);
+    //print(birth);
   }
 }

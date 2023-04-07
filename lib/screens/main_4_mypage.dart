@@ -95,7 +95,12 @@ class _MainMyPage extends State<MainMyPage>{
                           }
                       )
                   ),
-                  getSettingScreen('아이 수정', const Icon(Icons.diamond_outlined),(){}),
+                  getSettingScreen('아이 추가 / 수정', const Icon(Icons.edit_attributes_sharp),(){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context)=> ManageBabyWidget(widget.babies))
+                    );
+                  }),
                   getSettingScreen('양육자 / 베이비시터 초대', const Icon(Icons.diamond_outlined),()=> navigatorSide('invite')),
                   getSettingScreen('알림 ON / OFF', const Icon(Icons.notifications_off_outlined),()=> navigatorSide('switch_notice')),
                 ],

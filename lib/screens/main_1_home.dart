@@ -12,6 +12,10 @@ class Main_Home extends StatefulWidget{
 }
 class _Main_home extends State<Main_Home>{
   @override
+  void initState() {
+    print(widget.babies.length);
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xF9F9F9FF),

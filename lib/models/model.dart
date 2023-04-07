@@ -61,13 +61,13 @@ class Baby_relation{
   }
   Baby_relation(this.BabyId, this.relation, this.Access_week, this.Access_startTime, this.Access_endTime);
   Baby_relation.fromJson(Map<dynamic, dynamic> json)
-      : BabyId = json['BabyId'], relation = json['relation'], Access_week = json['Access_week'], Access_startTime = json['Access_startTime'], Access_endTime = json['Access_endTime'];
+      : BabyId = json['baby'], relation = json['relation'], Access_week = json['access_date'], Access_startTime = json['access_starttime'], Access_endTime = json['access_endtime'];
   Map<String, dynamic> toJson() => {
-    'BabyId': BabyId,
+    'baby': BabyId,
     'relation': relation,
-    'Access_week': Access_week,
-    'Access_startTime': Access_startTime,
-    'Access_endTime': Access_endTime,
+    'access_date': Access_week,
+    'access_starttime': Access_startTime,
+    'access_endtime': Access_endTime,
   };
 
   void elif(bool bool) {}
@@ -81,13 +81,14 @@ class Baby {
   Baby(this.name, this.birth, this.gender, this.relationInfo);
 
   Baby.fromJson(Map<dynamic, dynamic> json)
-      : name = json['name'], birth = json['birth'], gender = json['gender'], relationInfo = Baby_relation.fromJson(json['relationInfo']);
+      : name = json['baby_name'], birth = DateTime.parse(json['birth']), gender = (json['gender']=='M'?0:1), relationInfo = Baby_relation.fromJson(json['relationInfo']);
   getGenderString(){
-    if(gender==0) return '여아';
-    if(gender==1) return '남아';
+    if(gender==0) return 'F';
+    if(gender==1) return 'M';
   }
+
   Map<String, dynamic> toJson() => {
-    'name': name,
+    'baby_name': name,
     'birth': birth,
     'gender': gender,
     'relationInfo': relationInfo

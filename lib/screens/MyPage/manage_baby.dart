@@ -3,7 +3,11 @@ import 'package:bob/widgets/appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:dio/dio.dart';
 import 'package:bob/screens/MyPage/modifyBaby.dart';
+import 'package:intl/intl.dart';
 import '../../models/model.dart';
+import 'package:bob/httpservices/backend.dart';
+import 'package:dio/dio.dart';
+
 class ManageBabyWidget extends StatefulWidget{
   final List<Baby> babies;
   const ManageBabyWidget(this.babies, {Key?key}):super(key:key);
@@ -14,7 +18,7 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
   final dio = Dio();    // 서버와 통신을 하기 위해 필요한 패키지
   late TabController _tabController;
   int _valueGender = 0;
-  DateTime date = DateTime(2016, 10, 26);
+  DateTime birth = DateTime(2016, 10, 26);
   var nameController = TextEditingController();
   void _showDialog(Widget child) {
     showCupertinoModalPopup<void>(
@@ -147,17 +151,17 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
               // Display a CupertinoDatePicker in date picker mode.
               onPressed: () => _showDialog(
                 CupertinoDatePicker(
-                  initialDateTime: date,
+                  initialDateTime: birth,
                   mode: CupertinoDatePickerMode.date,
                   use24hFormat: true,
                   // This is called when the user changes the date.
                   onDateTimeChanged: (DateTime newDate) {
-                    setState(() => date = newDate);
+                    setState(() => birth = newDate);
                   },
                 ),
               ),
               child: Text(
-                '${date.year}년 ${date.month}월 ${date.day}일',
+                '${birth.year}년 ${birth.month}월 ${birth.day}일',
                 style: const TextStyle(
                   fontSize: 22.0,
                 ),
@@ -203,9 +207,6 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
                       )
                   ),
                   onPressed: (){
-                    if(nameController.text.isEmpty && nameController.text.length < 5){
-                      return;
-                    }
                     _registerBaby();
                     //print(nameController.text + date.toString());
                   },
@@ -216,11 +217,20 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
     );
   }
   void _registerBaby() async{
+    // validate
+    if(nameController.text.isEmpty && nameController.text.length < 5){
+      return;
+    }
+    print(_valueGender);
+    print(birth);
+    print(nameController.text);
+    var response = await setBabyService({"baby_name":nameController.text, "birth":DateFormat('yyyy-MM-dd').format(birth), "gender":(_valueGender==0?'F':'M')});
+    print(response);
     // 2. Login
     //Response response = await dio.post('http://20.249.219.241:8000/api/user/login/', data:{'email' : "hehe@kyonggi.ac.kr", 'password': "qwe123!@#"});
-    Response response = await dio.post('http://20.249.219.241:8000/api/baby/set/', data:{'baby_name' : nameController.text, 'birth': date,'gender': _valueGender==0?'M':'F'});
-    if(response.statusCode == 200){
-      /*
+    //Response response = await dio.post('http://20.249.219.241:8000/api/baby/set/', data:{'baby_name' : nameController.text, 'birth': date,'gender': _valueGender==0?'M':'F'});
+    /*if(response.statusCode == 200){
+
       String token = response.data['access_token']; // response의 token키에 담긴 값을 token 변수에 담아서
       Map<dynamic, dynamic> payload = Jwt.parseJwt(token);
       // 로그인 정보 저장
@@ -230,14 +240,14 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
       Navigator.pushReplacement(
           context,
           CupertinoPageRoute(builder: (context)=> BaseWidget(uinfo))
-      );*/
+      );
     }else{
       /*
       print(response.statusCode.toString());
       _showDialog("등록된 사용자가 아닙니다");
       idController.clear();
       passController.clear();*/
-    }
+    }*/
   }
 }
 

@@ -3,7 +3,11 @@ import 'package:dio/dio.dart';
 import 'dart:convert';
 
 final dio = Dio();    // 서버와 통신을 하기 위해 필요한 패키지
-
+getToken() async{
+  var tmp = (await storage.read(key: "login"));
+  Map<String,dynamic> jsonData = jsonDecode(tmp!);
+  return "Bearer ${jsonData["token"]}";
+}
 loginService(data) async{
   Response response = await dio.post('http://20.249.219.241:8000/api/user/login/', data: data);
   return response;
@@ -15,21 +19,24 @@ emailOverlapService(data) async{
   }
 }
 getMyBabies() async{
-  var tmp = (await storage.read(key: "login"));
-  Map<String,dynamic> jsonData = jsonDecode(tmp!);
-  dio.options.headers['Authorization'] = "Bearer " + jsonData["token"];
+  dio.options.headers['Authorization'] = getToken();
   Response response = await dio.post('http://20.249.219.241:8000/api/baby/lists/');
-  print('getMyBabies');
   if(response.statusCode == 200){
+    //print(response.data);
     return response.data;
   }
 }
 getBaby(int id) async{
-  var tmp = (await storage.read(key: "login"));
-  Map<String,dynamic> jsonData = jsonDecode(tmp!);
-  dio.options.headers['Authorization'] = "Bearer " + jsonData["token"];
-  Response response = await dio.post('http://20.249.219.241:8000/api/baby/<int:babyid>/get');
-  print('getMyBabies');
+  dio.options.headers['Authorization'] = getToken();
+  Response response = await dio.post('http://20.249.219.241:8000/api/baby/${id}/get/');
+  if(response.statusCode == 200){
+    return response.data;
+  }
+}
+setBabyService(data) async{
+  print(data);
+  dio.options.headers['Authorization'] = getToken();
+  Response response = await dio.post('http://20.249.219.241:8000/api/baby/set/', data: data);
   if(response.statusCode == 200){
     return response.data;
   }
