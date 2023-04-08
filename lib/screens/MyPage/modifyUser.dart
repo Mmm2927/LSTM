@@ -2,8 +2,9 @@ import 'package:bob/models/model.dart';
 import 'package:flutter/material.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:bob/widgets/form.dart';
-import 'package:bob/httpservices/backend.dart';
-import 'package:bob/httpservices/storage.dart';
+import 'package:bob/services/backend.dart';
+import 'package:bob/services/storage.dart';
+import 'package:bob/models/validate.dart';
 
 class ModifyUser extends StatefulWidget{
   final User userinfo;
@@ -27,7 +28,7 @@ class _ModifyUser extends State<ModifyUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: renderAppbar('회원 정보 수정'),
+        appBar: renderAppbar('회원 정보 수정', true),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child:
@@ -77,32 +78,36 @@ class _ModifyUser extends State<ModifyUser> {
           )
     );
   }
-  _ModifyUserinfo() async{
-    // 1. validate
-    String _pass = passContoller.text.trim();
-    if(_pass.isEmpty || _pass.length<8){
+  bool validate(String pass, String name, String phone){
+    if(!validatePassword(pass)){
       showDlg('비밀번호 형식을 맞춰주세요(8자 이상)');
       passContoller.clear();
-      return;
+      return false;
     }
-    String _name = nameContoller.text.trim();
-    if(_name.isEmpty){
-      showDlg('비밀번호 형식을 맞춰주세요(8자 이상)');
+    if(!validateName(name)){
+      showDlg('이름 형식을 맞춰주세요(3자 이상)');
       nameContoller.clear();
-      return;
+      return false;
     }
-    String _phone = phoneContoller.text.trim();
-    if(_phone.isEmpty){
-      showDlg('비밀번호 형식을 맞춰주세요(8자 이상)');
+    if(!validatePhone(phone)){
+      showDlg('핸드폰 형식을 맞춰주세요(11자)');
       phoneContoller.clear();
+      return false;
+    }
+    return true;
+  }
+  _ModifyUserinfo() async{
+    // 1. validate
+    String pass = passContoller.text.trim();
+    String name = nameContoller.text.trim();
+    String phone = phoneContoller.text.trim();
+    if(!validate(pass, name, phone)){
       return;
     }
     // 2. modify
-    if(await editUserService({"password":_pass,"name": _name,"phone": _phone}) == "True"){
-      // 내부 저장소 변경
-      editPasswordLoginStorage(_pass);
-      // 리턴
-      Navigator.pop(context, {"password":_pass,"name": _name,"phone": _phone});
+    if(await editUserService({"password":pass,"name": name,"phone": phone}) == "True"){
+      editPasswordLoginStorage(pass);   // 내부 저장소 변경
+      Navigator.pop(context, {"password":pass,"name": name,"phone": phone}); // 리턴
     }
     else{
       showDlg('수정 실패');

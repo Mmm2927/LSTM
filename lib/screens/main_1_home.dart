@@ -3,24 +3,26 @@ import 'package:bob/models/model.dart';
 import 'package:bob/screens/MyPage/manage_baby.dart';
 
 class Main_Home extends StatefulWidget{
-
+  final User userinfo;
   final List<Baby> babies;
-  const Main_Home(this.babies, {Key? key}) : super(key: key);
+  const Main_Home(this.babies, this.userinfo, {Key? key}) : super(key: key);
 
   @override
   _Main_home createState() => _Main_home();
 }
 class _Main_home extends State<Main_Home>{
+  late int babyIdx;
   @override
   void initState() {
+    babyIdx = 0;
     print(widget.babies.length);
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xF9F9F9FF),
+      backgroundColor: const Color(0xF9F9F9FF),
       appBar: AppBar(
-        backgroundColor: Color(0xffffc8c7),
+        backgroundColor: const Color(0xffffc8c7),
         elevation: 0.0,
         iconTheme : const IconThemeData(color: Colors.black),
         title: const Text('BoB', style: TextStyle(color: Colors.black,fontSize: 15)),
@@ -34,16 +36,14 @@ class _Main_home extends State<Main_Home>{
                 backgroundImage: AssetImage('assets/images/logo.png'),
                 backgroundColor: Colors.white,
               ),
-              accountName: Text('User name',style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold,fontSize: 20),),
-              accountEmail: Text('useremail@naver.com',style: TextStyle(color: Colors.grey[800]),),
-              onDetailsPressed: (){
-
-              },
+              accountName: Text( widget.userinfo.name,style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold,fontSize: 20),),
+              accountEmail: Text(widget.userinfo.email,style: TextStyle(color: Colors.grey[800]),),
+              onDetailsPressed: (){},
               decoration: const BoxDecoration(
-                color: Color(0xffa8c1f3),
+                color: Color(0xfffa625f),
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(40),
-                  bottomRight: Radius.circular(40)
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20)
                 )
               ),
             ),
@@ -83,7 +83,6 @@ class _Main_home extends State<Main_Home>{
           ],
         ),
       ),
-
       body: Stack(
         children: [
           Positioned(
@@ -105,8 +104,8 @@ class _Main_home extends State<Main_Home>{
                       SizedBox(
                           height: 150,
                           child: drawBaby(
-                              widget.babies[0].name,
-                              widget.babies[0].birth
+                              widget.babies[babyIdx].name,
+                              widget.babies[babyIdx].birth
                           )
                       ),
                     ],
@@ -119,9 +118,9 @@ class _Main_home extends State<Main_Home>{
               child: Container(
                 height: 90,
                 width: MediaQuery.of(context).size.width-40,
-                margin: EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
-                  color: Color(0xfffdb1a5),
+                  color: const Color(0xfffdb1a5),
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
@@ -272,9 +271,7 @@ class _Main_home extends State<Main_Home>{
 
 
 Widget drawBaby(String name, DateTime birth){
-
   final now = DateTime.now();
-
   return Container(
       padding: const EdgeInsets.only(left: 40),
       child: Column(
@@ -287,12 +284,10 @@ Widget drawBaby(String name, DateTime birth){
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(name,style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold)),
-                    SizedBox(
-                      height: 5,
-                    ),
+                    const SizedBox(height: 5),
                     Text(
-                      birth.year.toString()+'.'+birth.month.toString()+'.'+birth.day.toString(),
-                      style: TextStyle(fontSize: 25),
+                      '${birth.year}.${birth.month}.${birth.day}',
+                      style: const TextStyle(fontSize: 25),
                     ),
                     Text(
                       'D+ ${DateTime(now.year, now.month, now.day).difference(birth).inDays+2}',

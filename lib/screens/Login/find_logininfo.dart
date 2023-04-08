@@ -29,7 +29,7 @@ class _FindLogInfo  extends State<FindLogInfo> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: renderAppbar('로그인 정보 찾기'),
+        appBar: renderAppbar('로그인 정보 찾기', true),
         body: Column(
           children: [
             Container(

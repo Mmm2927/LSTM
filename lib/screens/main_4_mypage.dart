@@ -40,9 +40,9 @@ class _MainMyPage extends State<MainMyPage>{
               child : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 10),
                   Text(widget.userinfo.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 10),
                 ],
               )
           ),
@@ -76,11 +76,14 @@ class _MainMyPage extends State<MainMyPage>{
                                             shape: BoxShape.circle,
                                           ),
                                           child: IconButton(
-                                              onPressed: (){
-                                                Navigator.push(
+                                              onPressed: () async{
+                                                Baby newbieInfo = await Navigator.push(
                                                     context,
                                                     MaterialPageRoute(builder: (context)=> ManageBabyWidget(widget.babies))
                                                 );
+                                                setState(() {
+                                                  widget.babies.add(newbieInfo);
+                                                });
                                               },
                                               iconSize: 40,
                                               color: Colors.grey,
@@ -172,7 +175,7 @@ class _MainMyPage extends State<MainMyPage>{
           child : Column(
             children: [
               Row(children: [icon, const SizedBox(width: 30), Text(title)]),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Divider(thickness: 1, color: Colors.grey[300]),
             ],
           )

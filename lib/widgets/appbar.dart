@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bob/screens/notice.dart';
 
-AppBar renderAppbar(String title){
+AppBar renderAppbar(String title, bool isBack){
   return AppBar(
+      automaticallyImplyLeading: isBack,
       backgroundColor: Colors.white,
       elevation: 0.5,
       iconTheme : const IconThemeData(color: Colors.black),
@@ -12,6 +13,7 @@ AppBar renderAppbar(String title){
 }
 AppBar renderAppbar_with_alarm(String title, BuildContext context){
   return AppBar(
+    automaticallyImplyLeading: false,
     actions: [
       IconButton(onPressed: (){
         Navigator.push(

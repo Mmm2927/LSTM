@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:bob/screens/MyPage/modifyBaby.dart';
 import 'package:intl/intl.dart';
 import '../../models/model.dart';
-import 'package:bob/httpservices/backend.dart';
+import 'package:bob/services/backend.dart';
 import 'package:dio/dio.dart';
 
 class ManageBabyWidget extends StatefulWidget{
@@ -40,6 +40,7 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
           ),
         ));
   }
+
   @override
   void initState() {
     _tabController = TabController(
@@ -51,7 +52,7 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar('아이 관리'),
+      appBar: renderAppbar('아이 관리', true),
       body: Column(
         children: [
           Container(
@@ -90,44 +91,61 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
     );
   }
   Widget modifyBaby(BuildContext rootContext){
+    List<Baby> myBabies = [];
+    widget.babies.forEach((value) {
+      if(value.relationInfo.relation == 0){
+        myBabies.add(value);
+      }
+    });
     return Expanded(
             child: GridView.builder(
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,
-                itemCount: widget.babies.length,
+                itemCount: myBabies.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: 1 / 1,
                 ),
                 itemBuilder: (BuildContext context, int index){
-                  return drawBaby(widget.babies[index], rootContext);
+                  return drawBaby(myBabies[index], rootContext);
                 },
             )
     );
   }
   drawBaby(Baby baby, BuildContext rootContext){
-    return InkWell(
-      onTap: (){
-        Navigator.push(
-            rootContext,
-            CupertinoPageRoute(builder: (context)=> ModifyBaby(baby))
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.all(10),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            border: Border.all(color: Colors.grey)
-        ),
-        child: Column(
-          children: [
-            Image.asset('assets/images/baby.png',scale: 8),
-            SizedBox(width: 20),
-            Text(baby.name, style: TextStyle(fontSize: 24))
-          ],
-        ),
-      )
+    return Container(
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          border: Border.all(color: Colors.grey)
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset('assets/images/baby.png',scale: 10),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+            child : Text(baby.name, style: TextStyle(fontSize: 24)),
+          ),
+          Row(
+            children: [
+              Expanded(
+                  child: OutlinedButton(onPressed: (){
+                    Navigator.push(
+                        rootContext,
+                        CupertinoPageRoute(builder: (context)=> ModifyBaby(baby))
+                    );
+                  }, child: const Text('수정', style: TextStyle(color: Color(0xfffa625f)))),
+              ),
+              Padding(padding: EdgeInsets.all(2)),
+              Expanded(
+                  child: OutlinedButton(onPressed: (){}, child: Text('삭제',style: TextStyle(color: Colors.black)))
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
   @override
@@ -221,33 +239,19 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
     if(nameController.text.isEmpty && nameController.text.length < 5){
       return;
     }
-    print(_valueGender);
-    print(birth);
-    print(nameController.text);
     var response = await setBabyService({"baby_name":nameController.text, "birth":DateFormat('yyyy-MM-dd').format(birth), "gender":(_valueGender==0?'F':'M')});
-    print(response);
-    // 2. Login
-    //Response response = await dio.post('http://20.249.219.241:8000/api/user/login/', data:{'email' : "hehe@kyonggi.ac.kr", 'password': "qwe123!@#"});
-    //Response response = await dio.post('http://20.249.219.241:8000/api/baby/set/', data:{'baby_name' : nameController.text, 'birth': date,'gender': _valueGender==0?'M':'F'});
-    /*if(response.statusCode == 200){
-
-      String token = response.data['access_token']; // response의 token키에 담긴 값을 token 변수에 담아서
-      Map<dynamic, dynamic> payload = Jwt.parseJwt(token);
-      // 로그인 정보 저장
-      User uinfo = User(response.data['email'], passController.text, response.data['name'], "01092982310");    // response.data['phone']
-      Login loginInfo = Login(token, payload['user_id'], uinfo);
-      await storage.write(key: 'login', value: jsonEncode(loginInfo));
-      Navigator.pushReplacement(
-          context,
-          CupertinoPageRoute(builder: (context)=> BaseWidget(uinfo))
-      );
-    }else{
-      /*
-      print(response.statusCode.toString());
-      _showDialog("등록된 사용자가 아닙니다");
-      idController.clear();
-      passController.clear();*/
-    }*/
+    if(response['result'] == 'success'){
+      // 1. 아이 정보 받아오기
+      Baby_relation relation = Baby_relation(response["success_id"], 0, 255,"","");
+      var newbieInfo = await getBaby(response["success_id"]);
+      newbieInfo['relationInfo'] = relation.toJson();
+      Baby newBaby = Baby.fromJson(newbieInfo);
+      // 2. return - pop
+      Navigator.pop(context, newBaby);
+    }
+    else{
+      print('errorr');
+    }
   }
 }
 

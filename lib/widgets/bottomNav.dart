@@ -12,7 +12,7 @@ Widget bottomNavBar(_selectedIndex, _onItemTapped){
             label: 'cctv'
         ),
         BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline, size: 18,),
+            icon: Icon(Icons.menu_book, size: 18,),
             label: '일기'
         ),
         BottomNavigationBarItem(

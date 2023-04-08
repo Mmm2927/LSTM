@@ -5,7 +5,7 @@ class Notice extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar('알림'),
+      appBar: renderAppbar('알림', true),
       body: Center(child: Text('HI'),),
     );
   }

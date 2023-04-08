@@ -15,7 +15,7 @@ class _WithdrawService extends State<WithdrawService> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar('서비스 탈퇴'),
+      appBar: renderAppbar('서비스 탈퇴', true),
       body: Container(
         margin: const EdgeInsets.all(20),
         child: Column(
@@ -58,6 +58,7 @@ class _WithdrawService extends State<WithdrawService> {
     );
   }
   serviceWithdraw() async{
+    //var resultCode = await deleteUser();
     // 1. 삭제 - dio 사용
     // 2. 로컬 DB & secureStorage 삭제
     // 2. initPage로 이동

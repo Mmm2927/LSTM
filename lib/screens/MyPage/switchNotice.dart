@@ -10,7 +10,7 @@ class _SwitchNotice extends State<SwitchNotice> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar('알림 ON / OFF'),
+      appBar: renderAppbar('알림 ON / OFF' , true),
       body: Container(
         margin: EdgeInsets.all(20),
         child: Text('-')

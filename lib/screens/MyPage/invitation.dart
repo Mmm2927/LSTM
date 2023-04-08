@@ -10,7 +10,7 @@ class _Invitation extends State<Invitation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar('양육자 / 베이비시터 초대'),
+      appBar: renderAppbar('양육자 / 베이비시터 초대', true),
       body: Container(
         margin: EdgeInsets.all(20),
         child: Text('-')

@@ -22,7 +22,7 @@ class _ModifyBaby extends State<ModifyBaby> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar('아기 정보 수정'),
+      appBar: renderAppbar('아기 정보 수정', true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
           child:Column(
