@@ -53,6 +53,7 @@ class Baby_relation{
   final int Access_week;
   final String Access_startTime;
   final String Access_endTime;
+  //final bool active;
 
   String getRelationString(){
     if(relation==0) return '부모';

@@ -248,7 +248,7 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
       newbieInfo['relationInfo'] = relation.toJson();
       Baby newBaby = Baby.fromJson(newbieInfo);
       // 2. return - pop
-      GET.Get.back(result: {'baby' : newBaby});
+      GET.Get.back();
       //Navigator.pop(context, newBaby);
     }
     else{
