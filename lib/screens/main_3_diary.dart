@@ -204,7 +204,7 @@ class MainDiaryState extends State<MainDiary> {
                                               });
                                               Navigator.of(context).pop();
                                             }),
-                                            child: Text('삭제')),
+                                            child: const Text('삭제')),
                                         ],
                                       ));
                                     },
@@ -230,10 +230,12 @@ class MainDiaryState extends State<MainDiary> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
 
+  final picker = ImagePicker();
+
   updateDiary(DateTime selectedDay, Diary? diary) {
     String title = diary!.title;
-    String content = diary!.content;
-    String? image = diary!.image;
+    String content = diary.content;
+    String? image = diary.image;
     String selDay = DateFormat('yyyy.MM.dd').format(selectedDay);
 
     return Column(
@@ -250,7 +252,7 @@ class MainDiaryState extends State<MainDiary> {
             height: 5.0,
           ),
           TextFormField(
-            cursorColor: Color(0xfffa625f),
+            cursorColor: const Color(0xfffa625f),
             initialValue: diary.title,
             onSaved: (value) {
               setState(() {
@@ -278,7 +280,7 @@ class MainDiaryState extends State<MainDiary> {
             width: 5000,
           ),
           TextFormField(
-            cursorColor: Color(0xfffa625f),
+            cursorColor: const Color(0xfffa625f),
             maxLines: 15,
             keyboardType: TextInputType.multiline,
             initialValue: diary.content,
@@ -310,9 +312,10 @@ class MainDiaryState extends State<MainDiary> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ElevatedButton(onPressed: (() async {
-                final _image = await ImagePicker().getImage(source: ImageSource.gallery);
+                final image0 = await picker.pickImage(source: ImageSource.gallery);
+
                 setState(() {
-                  image = _image!.path;
+                  image = image0!.path;
                 });
               }), style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -321,7 +324,7 @@ class MainDiaryState extends State<MainDiary> {
                     width: 0.5,
                   )
               ),
-                  child: Text(image != null? '사진 바꾸기' : '사진 첨부', style: TextStyle(color: Color(0xff625ffa)))),
+                  child: Text(image != null? '사진 바꾸기' : '사진 첨부', style: const TextStyle(color: Color(0xff625ffa)))),
               const SizedBox(width: 10),
               ElevatedButton(
                   onPressed: () {
@@ -344,6 +347,20 @@ class MainDiaryState extends State<MainDiary> {
                   ),child: const Text('수정', style: TextStyle(color: Color(0xfffa625f)))
               ),
             ],
+          ),
+          Container(
+              margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+              padding: const EdgeInsets.fromLTRB(5, 5, 12, 5),
+              alignment: Alignment.centerRight,
+              color: const Color(0xffd0cece),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    image == null
+                        ? const Text('No image selected.')
+                        : Text(image!.substring(image!.length - image!.lastIndexOf('/')+1 > 40? image!.length-40 : image!.lastIndexOf('/')+1, image!.length))
+                  ]
+              )
           ),
         ]
     );
@@ -369,7 +386,7 @@ class MainDiaryState extends State<MainDiary> {
           height: 5.0,
         ),
         TextFormField(
-          cursorColor: Color(0xfffa625f),
+          cursorColor: const Color(0xfffa625f),
           controller: _titleController,
           onSaved: (value) {
             setState(() {
@@ -397,7 +414,7 @@ class MainDiaryState extends State<MainDiary> {
           width: 5000,
         ),
         TextFormField(
-          cursorColor: Color(0xfffa625f),
+          cursorColor: const Color(0xfffa625f),
           maxLines: 15,
           keyboardType: TextInputType.multiline,
           controller: _contentController,
@@ -429,9 +446,9 @@ class MainDiaryState extends State<MainDiary> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             ElevatedButton(onPressed: (() async {
-              final _image = await ImagePicker().getImage(source: ImageSource.gallery);
+              final image0 = await picker.pickImage(source: ImageSource.gallery);
               setState(() {
-                image = _image!.path;
+                image = image0!.path; // 가져온 이미지를 _image에 저장
               });
             }), style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
@@ -440,7 +457,7 @@ class MainDiaryState extends State<MainDiary> {
                   width: 0.5,
                 )
             ),
-                child: Text(image != null? '사진 바꾸기' : '사진 첨부', style: TextStyle(color: Color(0xff625ffa)))),
+                child: Text(image != null? '사진 바꾸기' : '사진 첨부', style: const TextStyle(color: Color(0xff625ffa)))),
             const SizedBox(width: 10),
             ElevatedButton(
                 onPressed: () {
@@ -463,6 +480,20 @@ class MainDiaryState extends State<MainDiary> {
                 ),child: const Text('업로드', style: TextStyle(color: Color(0xfffa625f)))
             ),
           ],
+        ),
+        Container(
+            margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+            padding: const EdgeInsets.fromLTRB(5, 5, 12, 5),
+            alignment: Alignment.centerRight,
+            color: const Color(0xffd0cece),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  image == null
+                      ? const Text('No image selected.')
+                      : Text(image!.substring(image!.length - image!.lastIndexOf('/')+1 > 40? image!.length-40 : image!.lastIndexOf('/')+1, image!.length))
+                ]
+            )
         ),
       ]
     );
