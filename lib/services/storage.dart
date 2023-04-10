@@ -8,6 +8,9 @@ writeLogin(loginInfo) async{
   // input : <Login>
   await storage.write(key: 'login', value: jsonEncode(loginInfo));
 }
+deleteLogin() async{
+  await storage.delete(key: 'login');
+}
 getLoginStorage() async{
   var login = await storage.read(key: "login");
   return login;
@@ -23,15 +26,14 @@ getToken() async{
   Map<String,dynamic> jsonData = jsonDecode(tmp!);
   return "Bearer ${jsonData["token"]}";
 }
-updateTokenInfo(String accessToken, String refreshToken) async{
+updateTokenInfo(String accessToken) async{
   var tmp = (await storage.read(key: "login"));
   Map<String,dynamic> jsonData = jsonDecode(tmp!);
   jsonData['token'] = accessToken;
-  jsonData['refreshtoken'] = refreshToken;
   await storage.write(key: 'login', value: jsonEncode(jsonData));
 }
 getRefreshToken() async{
   var tmp = (await storage.read(key: "login"));
   Map<String,dynamic> jsonData = jsonDecode(tmp!);
-  return "Bearer ${jsonData["refreshtoken"]}";
+  return jsonData["refreshtoken"];
 }

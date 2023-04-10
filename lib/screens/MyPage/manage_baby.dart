@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../../models/model.dart';
 import 'package:bob/services/backend.dart';
 import 'package:dio/dio.dart';
+import 'package:get/get.dart' as GET;
 
 class ManageBabyWidget extends StatefulWidget{
   final List<Baby> babies;
@@ -247,7 +248,8 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
       newbieInfo['relationInfo'] = relation.toJson();
       Baby newBaby = Baby.fromJson(newbieInfo);
       // 2. return - pop
-      Navigator.pop(context, newBaby);
+      GET.Get.back(result: {'baby' : newBaby});
+      //Navigator.pop(context, newBaby);
     }
     else{
       print('errorr');

@@ -11,6 +11,9 @@ import 'package:bob/screens/MyPage/withdraw.dart';
 import 'package:bob/screens/MyPage/modifyUser.dart';
 import 'package:bob/screens/MyPage/modifyBaby.dart';
 import 'package:bob/widgets/appbar.dart';
+import 'package:get/get.dart' as GET;
+
+import '../services/storage.dart';
 
 class MainMyPage extends StatefulWidget{
   final User userinfo;
@@ -20,8 +23,6 @@ class MainMyPage extends StatefulWidget{
   State<MainMyPage> createState() => _MainMyPage();
 }
 class _MainMyPage extends State<MainMyPage>{
-  Map<String, dynamic> sidePageList = {'withdrawal': WithdrawService(), 'switch_notice': SwitchNotice(), 'invite' : Invitation()};
-  static const storage = FlutterSecureStorage();
   @override
   void initState() {
     super.initState();
@@ -77,12 +78,9 @@ class _MainMyPage extends State<MainMyPage>{
                                           ),
                                           child: IconButton(
                                               onPressed: () async{
-                                                Baby newbieInfo = await Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(builder: (context)=> ManageBabyWidget(widget.babies))
-                                                );
+                                                Baby newBabyInfo = await GET.Get.to(ManageBabyWidget(widget.babies));
                                                 setState(() {
-                                                  widget.babies.add(newbieInfo);
+                                                  widget.babies.add(newBabyInfo);
                                                 });
                                               },
                                               iconSize: 40,
@@ -99,13 +97,14 @@ class _MainMyPage extends State<MainMyPage>{
                       )
                   ),
                   getSettingScreen('아이 추가 / 수정', const Icon(Icons.edit_attributes_sharp),(){
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context)=> ManageBabyWidget(widget.babies))
-                    );
+                    GET.Get.to(() => ManageBabyWidget(widget.babies));
                   }),
-                  getSettingScreen('양육자 / 베이비시터 초대', const Icon(Icons.diamond_outlined),()=> navigatorSide('invite')),
-                  getSettingScreen('알림 ON / OFF', const Icon(Icons.notifications_off_outlined),()=> navigatorSide('switch_notice')),
+                  getSettingScreen('양육자 / 베이비시터 초대', const Icon(Icons.diamond_outlined),(){
+                    GET.Get.to(() => Invitation());
+                  }),
+                  getSettingScreen('알림 ON / OFF', const Icon(Icons.notifications_off_outlined),(){
+                    GET.Get.to(() => SwitchNotice(widget.babies));
+                  })
                 ],
               )
           ),
@@ -120,23 +119,19 @@ class _MainMyPage extends State<MainMyPage>{
                     children: [
                       const Text('Common'),
                       const SizedBox(height: 10),
-                      getSettingScreen('로그아웃', const Icon(Icons.logout),()=>logout()),
+                      getSettingScreen('로그아웃', const Icon(Icons.logout),() => logout()),
                       getSettingScreen('회원 정보 수정', const Icon(Icons.mode_edit_outlined),() async {
-                        var i = await Navigator.push(
-                            context,
-                            CupertinoPageRoute(builder: (context)=> ModifyUser(widget.userinfo))
-                        );
-                        Map<String,String> decoded = i;
-                        if( decoded!= null ){
-                          setState(() {
-                            widget.userinfo.modifyUserInfo(decoded["password"], decoded["name"], decoded["phone"]);
+                        var modifyInfo = await GET.Get.to(() => ModifyUser(widget.userinfo));
+                        if(modifyInfo != null){
+                          setState((){
+                            widget.userinfo.modifyUserInfo(modifyInfo['pass'], modifyInfo['name'], modifyInfo['phone']);
                           });
-                        }else{
-                          print('null');
                         }
                       }),
                       getSettingScreen('언어 모드 변경', const Icon(Icons.language),(){}),
-                      getSettingScreen('서비스 탈퇴', const Icon(Icons.minimize),()=> navigatorSide('withdrawal')),
+                      getSettingScreen('서비스 탈퇴', const Icon(Icons.minimize),(){
+                        GET.Get.to(() => const WithdrawService());
+                      }),
                     ],
                   ),
                 )
@@ -147,25 +142,9 @@ class _MainMyPage extends State<MainMyPage>{
       )
     );
   }
-  navigatorSide(target){
-    if('modify_user'.compareTo(target) == 0){
-      Navigator.push(
-          context,
-          CupertinoPageRoute(builder: (context)=> ModifyUser(widget.userinfo))
-      );
-    }else{
-      Navigator.push(
-          context,
-          CupertinoPageRoute(builder: (context)=> sidePageList[target])
-      );
-    }
-  }
   logout() async{
-    await storage.delete(key: 'login');
-    Navigator.pushReplacement(
-        context,
-        CupertinoPageRoute(builder: (context)=> LoginInit())
-    );
+    await deleteLogin();
+    GET.Get.to(() => const LoginInit());
   }
   Container getSettingScreen(title, icon, func){
     return Container(
@@ -202,7 +181,7 @@ class _MainMyPage extends State<MainMyPage>{
               return AlertDialog(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0)),
-                content: Container(
+                content: SizedBox(
                   height: 300,
                   child: Column(
                     children: [
@@ -216,10 +195,10 @@ class _MainMyPage extends State<MainMyPage>{
                       const SizedBox(height: 10),
                       Image.asset('assets/images/baby.png',scale: 8),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                        child: Text(baby.name, style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold)),
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        child: Text(baby.name, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold)),
                       ),
-                      Text('생일 : ${DateFormat('yyyy년 MM월 dd일').format(baby.birth)}', style:TextStyle(fontSize: 20)),
+                      Text('생일 : ${DateFormat('yyyy년 MM월 dd일').format(baby.birth)}', style:const TextStyle(fontSize: 20)),
                       Text('성별 : ${baby.getGenderString()}', style:const TextStyle(fontSize: 20)),
                       Text('관계 : ${baby.relationInfo.getRelationString()}', style:const TextStyle(fontSize: 20)),
                     ],
@@ -228,7 +207,6 @@ class _MainMyPage extends State<MainMyPage>{
               );
             }
         );
-        print(baby.birth);
       },
     );
   }

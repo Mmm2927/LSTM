@@ -5,11 +5,11 @@ import 'package:bob/widgets/form.dart';
 import 'package:bob/services/backend.dart';
 import 'package:bob/services/storage.dart';
 import 'package:bob/models/validate.dart';
+import 'package:get/get.dart' as GET;
 
 class ModifyUser extends StatefulWidget{
   final User userinfo;
   const ModifyUser(this.userinfo, {super.key});
-
   @override
   State<ModifyUser> createState() => _ModifyUser();
 }
@@ -64,7 +64,7 @@ class _ModifyUser extends State<ModifyUser> {
                 ),
                 const SizedBox(height: 100),
                 ElevatedButton(
-                  onPressed: () async => await _ModifyUserinfo(),
+                  onPressed: () async => await modifyUserinfo(),
                     style:ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
                         foregroundColor: Colors.white,
@@ -78,43 +78,26 @@ class _ModifyUser extends State<ModifyUser> {
           )
     );
   }
-  bool validate(String pass, String name, String phone){
-    if(!validatePassword(pass)){
-      showDlg('비밀번호 형식을 맞춰주세요(8자 이상)');
-      passContoller.clear();
-      return false;
-    }
-    if(!validateName(name)){
-      showDlg('이름 형식을 맞춰주세요(3자 이상)');
-      nameContoller.clear();
-      return false;
-    }
-    if(!validatePhone(phone)){
-      showDlg('핸드폰 형식을 맞춰주세요(11자)');
-      phoneContoller.clear();
-      return false;
-    }
-    return true;
-  }
-  _ModifyUserinfo() async{
+  modifyUserinfo() async{
+    print('modifyUserinfo');
     // 1. validate
     String pass = passContoller.text.trim();
     String name = nameContoller.text.trim();
     String phone = phoneContoller.text.trim();
-    if(!validate(pass, name, phone)){
+    print(pass+name+phone);
+    if(!validatePassword(pass) && !validateName(name) && !validatePhone(phone)){
       return;
     }
     // 2. modify
     if(await editUserService({"password":pass,"name": name,"phone": phone}) == "True"){
-      editPasswordLoginStorage(pass);   // 내부 저장소 변경
-      Navigator.pop(context, {"password":pass,"name": name,"phone": phone}); // 리턴
+      // (1) 비번 변경시 -> 내부 저장소 변경
+      if(pass != widget.userinfo.password1){
+        await editPasswordLoginStorage(pass);   // 내부 저장소 변경
+      }
+      GET.Get.back(result: {'pass' : pass, 'name' : name, 'phone' : phone});
     }
     else{
-      showDlg('수정 실패');
+      GET.Get.snackbar('수정 실패', '수정에 실패하였습니다', snackPosition: GET.SnackPosition.TOP, duration: const Duration(seconds: 2));
     }
-  }
-  void showDlg(String title){
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(title)));
   }
 }

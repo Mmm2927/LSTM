@@ -38,9 +38,9 @@ class _SignUp extends State<SignUp>{
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 20),
-                  getLoginForm(idController, "아이디", false),
+                  getLoginForm(idController, "아이디", false, TextInputType.emailAddress),
                   const SizedBox(height: 15),
-                  getLoginForm(passController, "패스워드", true),
+                  getLoginForm(passController, "패스워드", true, TextInputType.text),
                   const SizedBox(height: 30),
                   CupertinoButton(
                       color:Colors.black,
@@ -71,8 +71,9 @@ class _SignUp extends State<SignUp>{
       )
     );
   }
-  Widget getLoginForm(contoller, title, isOb){
+  Widget getLoginForm(contoller, title, isOb, keyType){
     return CupertinoTextField(
+      keyboardType: keyType,
       obscureText: isOb,
       controller: contoller,
       placeholder: title,
@@ -115,8 +116,8 @@ class _SignUp extends State<SignUp>{
         var baby = await getBaby(babyList[i]['baby']);
         baby['relationInfo'] = relation.toJson();
         MyBabies.add(Baby.fromJson(baby));
-        GET.Get.snackbar('로그인 성공', '환영합니다', snackPosition: GET.SnackPosition.TOP, duration: const Duration(seconds: 2));
       }
+      GET.Get.snackbar('로그인 성공', '환영합니다', snackPosition: GET.SnackPosition.TOP, duration: const Duration(seconds: 2));
       GET.Get.to(()=> BaseWidget(userInfo, MyBabies));
     }
     else{

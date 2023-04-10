@@ -79,13 +79,13 @@ class _Splash extends State<Splash> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               'Error: ${snapshot.error}', // 에러명을 텍스트에 뿌려줌
-              style: TextStyle(fontSize: 15),
+              style: const TextStyle(fontSize: 15),
             ),
           );
         }
         else{
           if(snapshot.data is LoginInit){
-            return Scaffold(
+            return const Scaffold(
                 body: LoginInit()
             );
           }
@@ -111,6 +111,7 @@ class _Splash extends State<Splash> {
       // 2. babyList 가져오기
       List<Baby> MyBabies = [];
       List<dynamic> babyList = await getMyBabies();
+      print(babyList);
       for(int i=0; i<babyList.length;i++){
         // 1. baby relation도 받아오기
         Baby_relation relation;
