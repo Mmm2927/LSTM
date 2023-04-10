@@ -16,25 +16,37 @@ class User {
     "name": name,
     "phone": phone
   };
+  modifyUserInfo(_pass, _name, _phone){
+    this.password1 = _pass;
+    this.name = _name;
+    this.phone = _phone;
+  }
 }
-
 class Login {
   final String token;
+  final String refreshtoken;
   final int loginID;
-  final User userInfo;
-
-  Login(this.token, this.loginID, this.userInfo);
-
+  final String userEmail;
+  String userPassword;
+  Login(this.token, this.refreshtoken, this.loginID, this.userEmail, this.userPassword);
+  changePassword(String newPass){
+    this.userPassword = newPass;
+  }
   Login.fromJson(Map<dynamic, dynamic> json)
-      : token = json['token'], loginID = json['loginID'], userInfo = User.fromJson(json['userInfo']);
+      : token = json['token'],
+        refreshtoken = json['refreshtoken'],
+        loginID = json['loginID'],
+        userEmail = json['userEmail'],
+        userPassword = json['userPassword'];
 
   Map<String, dynamic> toJson() => {
     'token': token,
+    'refreshtoken': refreshtoken,
     'loginID': loginID,
-    'userInfo': userInfo
+    'userEmail': userEmail,
+    'userPassword': userPassword,
   };
 }
-
 class Baby_relation{
   final int BabyId;
   final int relation; // 0:부모, 1: 가족 , 2 : 베이비시터
@@ -42,16 +54,23 @@ class Baby_relation{
   final String Access_startTime;
   final String Access_endTime;
 
+  String getRelationString(){
+    if(relation==0) return '부모';
+    if(relation==1) return '가족';
+    else return '베이비시터';
+  }
   Baby_relation(this.BabyId, this.relation, this.Access_week, this.Access_startTime, this.Access_endTime);
   Baby_relation.fromJson(Map<dynamic, dynamic> json)
-      : BabyId = json['BabyId'], relation = json['relation'], Access_week = json['Access_week'], Access_startTime = json['Access_startTime'], Access_endTime = json['Access_endTime'];
+      : BabyId = json['baby'], relation = json['relation'], Access_week = json['access_date'], Access_startTime = json['access_starttime'], Access_endTime = json['access_endtime'];
   Map<String, dynamic> toJson() => {
-    'BabyId': BabyId,
+    'baby': BabyId,
     'relation': relation,
-    'Access_week': Access_week,
-    'Access_startTime': Access_startTime,
-    'Access_endTime': Access_endTime,
+    'access_date': Access_week,
+    'access_starttime': Access_startTime,
+    'access_endtime': Access_endTime,
   };
+
+  void elif(bool bool) {}
 }
 class Baby {
   final String name;
@@ -62,10 +81,14 @@ class Baby {
   Baby(this.name, this.birth, this.gender, this.relationInfo);
 
   Baby.fromJson(Map<dynamic, dynamic> json)
-      : name = json['name'], birth = json['birth'], gender = json['gender'], relationInfo = Baby_relation.fromJson(json['relationInfo']);
+      : name = json['baby_name'], birth = DateTime.parse(json['birth']), gender = (json['gender']=='M'?0:1), relationInfo = Baby_relation.fromJson(json['relationInfo']);
+  getGenderString(){
+    if(gender==0) return 'F';
+    if(gender==1) return 'M';
+  }
 
   Map<String, dynamic> toJson() => {
-    'name': name,
+    'baby_name': name,
     'birth': birth,
     'gender': gender,
     'relationInfo': relationInfo

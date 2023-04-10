@@ -3,6 +3,9 @@ import 'package:bob/widgets/appbar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bob/screens/Login/initPage.dart';
+import 'package:bob/services/backend.dart';
+import 'package:bob/services/storage.dart';
+import 'package:get/get.dart' as GET;
 
 class WithdrawService extends StatefulWidget{
   const WithdrawService({super.key});
@@ -15,7 +18,7 @@ class _WithdrawService extends State<WithdrawService> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar('서비스 탈퇴'),
+      appBar: renderAppbar('서비스 탈퇴', true),
       body: Container(
         margin: const EdgeInsets.all(20),
         child: Column(
@@ -58,14 +61,20 @@ class _WithdrawService extends State<WithdrawService> {
     );
   }
   serviceWithdraw() async{
+    print('serviceWithdraw');
     // 1. 삭제 - dio 사용
-    // 2. 로컬 DB & secureStorage 삭제
-    // 2. initPage로 이동
-    /*
-    Navigator.pushReplacement(
-        context,
-        CupertinoPageRoute(builder: (context)=> LoginInit())
-    );*/
+    if(await deleteUser() == 204){
+      print('삭제 완료');
+      // 삭제 성공
+      // 2. 로컬 DB & secureStorage 삭제
+      await storage.delete(key: 'login');
+      // 2. initPage로 이동
+      GET.Get.offAll(LoginInit());
+    }
+    else{
+      GET.Get.snackbar('삭제 실패', '', snackPosition: GET.SnackPosition.TOP, duration: const Duration(seconds: 2));
+    }
+
   }
   void _showDlg(){
     if(!_isCheked){

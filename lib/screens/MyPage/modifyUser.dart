@@ -2,11 +2,14 @@ import 'package:bob/models/model.dart';
 import 'package:flutter/material.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:bob/widgets/form.dart';
+import 'package:bob/services/backend.dart';
+import 'package:bob/services/storage.dart';
+import 'package:bob/models/validate.dart';
+import 'package:get/get.dart' as GET;
 
 class ModifyUser extends StatefulWidget{
   final User userinfo;
   const ModifyUser(this.userinfo, {super.key});
-
   @override
   State<ModifyUser> createState() => _ModifyUser();
 }
@@ -25,7 +28,7 @@ class _ModifyUser extends State<ModifyUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: renderAppbar('회원 정보 수정'),
+        appBar: renderAppbar('회원 정보 수정', true),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child:
@@ -61,45 +64,40 @@ class _ModifyUser extends State<ModifyUser> {
                 ),
                 const SizedBox(height: 100),
                 ElevatedButton(
-                  onPressed: () async => await _ModifyUserinfo(),
+                  onPressed: () async => await modifyUserinfo(),
                     style:ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
                         foregroundColor: Colors.white,
                         minimumSize: const Size.fromHeight(55),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))
                     ),
-                  child: const Text('회원가입')
+                  child: const Text('수정 완료')
                 )
               ],
             ),
           )
     );
   }
-  _ModifyUserinfo() async{
+  modifyUserinfo() async{
+    print('modifyUserinfo');
     // 1. validate
-    String _pass = passContoller.text.trim();
-    if(_pass.isEmpty || _pass.length<8){
-      showDlg('비밀번호 형식을 맞춰주세요(8자 이상)');
-      passContoller.clear();
-      return;
-    }
-    String _name = nameContoller.text.trim();
-    if(_name.isEmpty){
-      showDlg('비밀번호 형식을 맞춰주세요(8자 이상)');
-      nameContoller.clear();
-      return;
-    }
-    String _phone = phoneContoller.text.trim();
-    if(_phone.isEmpty){
-      showDlg('비밀번호 형식을 맞춰주세요(8자 이상)');
-      phoneContoller.clear();
+    String pass = passContoller.text.trim();
+    String name = nameContoller.text.trim();
+    String phone = phoneContoller.text.trim();
+    print(pass+name+phone);
+    if(!validatePassword(pass) && !validateName(name) && !validatePhone(phone)){
       return;
     }
     // 2. modify
-
-  }
-  void showDlg(String title){
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(title)));
+    if(await editUserService({"password":pass,"name": name,"phone": phone}) == "True"){
+      // (1) 비번 변경시 -> 내부 저장소 변경
+      if(pass != widget.userinfo.password1){
+        await editPasswordLoginStorage(pass);   // 내부 저장소 변경
+      }
+      GET.Get.back(result: {'pass' : pass, 'name' : name, 'phone' : phone});
+    }
+    else{
+      GET.Get.snackbar('수정 실패', '수정에 실패하였습니다', snackPosition: GET.SnackPosition.TOP, duration: const Duration(seconds: 2));
+    }
   }
 }
