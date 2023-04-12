@@ -13,14 +13,12 @@ class _Invitation extends State<Invitation> {
   late List<Baby> notAllowedBabies;
   @override
   void initState() {
-    // 1. 미등록인 것들만 넣기
-    /*
+    notAllowedBabies = [];
     for(int i=0; i<widget.babies.length;i++){
-      if(widget.babies[i].relationInfo.active){
+      if(!widget.babies[i].relationInfo.active){
         notAllowedBabies.add(widget.babies[i]);
       }
-    }*/
-    notAllowedBabies = widget.babies;   // <--- 임시로 삽입
+    }
     super.initState();
   }
   @override
@@ -34,6 +32,10 @@ class _Invitation extends State<Invitation> {
           children: [
             InkWell(
               onTap: (){
+                if(widget.babies.isEmpty){
+                  GET.Get.snackbar('초대 불가', '아이를 먼저 등록해주세요', snackPosition: GET.SnackPosition.TOP, duration: const Duration(seconds: 2));
+                  return;
+                }
                 GET.Get.to(()=>InvitationNew(widget.babies));
               },
               child: Container(
@@ -58,8 +60,8 @@ class _Invitation extends State<Invitation> {
               ),
             ),
             const SizedBox(height: 20),
-            Text('미수락 초대들', style: TextStyle(fontSize: 20)),
-            Divider(thickness: 1, color: Colors.grey),
+            const Text('미수락 초대들', style: TextStyle(fontSize: 20)),
+            const Divider(thickness: 1, color: Colors.grey),
             Expanded(
                 child: ListView.builder(
                   scrollDirection : Axis.vertical,

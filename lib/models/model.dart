@@ -53,22 +53,29 @@ class Baby_relation{
   final int Access_week;
   final String Access_startTime;
   final String Access_endTime;
-  //final bool active;
+  final bool active;
 
   String getRelationString(){
     if(relation==0) return '부모';
     if(relation==1) return '가족';
     else return '베이비시터';
   }
-  Baby_relation(this.BabyId, this.relation, this.Access_week, this.Access_startTime, this.Access_endTime);
+  Baby_relation(this.BabyId, this.relation, this.Access_week, this.Access_startTime, this.Access_endTime, this.active);
   Baby_relation.fromJson(Map<dynamic, dynamic> json)
-      : BabyId = json['baby'], relation = json['relation'], Access_week = json['access_date'], Access_startTime = json['access_starttime'], Access_endTime = json['access_endtime'];
+      : BabyId = json['baby'],
+        relation = json['relation'],
+        Access_week = (json['access_date']==null) ? 255 : json['access_date'],
+        Access_startTime = (json['access_starttime']==null) ? "" : json['access_starttime'],
+        Access_endTime = (json['access_endtime']==null) ? "" : json['access_endtime'],
+        active=json['active'];
+
   Map<String, dynamic> toJson() => {
     'baby': BabyId,
     'relation': relation,
     'access_date': Access_week,
     'access_starttime': Access_startTime,
     'access_endtime': Access_endTime,
+    'active': active,
   };
 
   void elif(bool bool) {}

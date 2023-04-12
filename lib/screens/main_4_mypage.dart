@@ -14,7 +14,12 @@ import 'package:bob/widgets/appbar.dart';
 import 'package:get/get.dart' as GET;
 import 'package:bob/services/backend.dart';
 import '../services/storage.dart';
-
+import 'package:easy_localization/easy_localization.dart';
+// 앱에서 지원하는 언어 리스트 변수
+final supportedLocales = [
+  Locale('en', 'US'),
+  Locale('ko', 'KR')
+];
 class MainMyPage extends StatefulWidget{
   final User userinfo;
   final List<Baby> babies;
@@ -23,6 +28,7 @@ class MainMyPage extends StatefulWidget{
   State<MainMyPage> createState() => _MainMyPage();
 }
 class _MainMyPage extends State<MainMyPage>{
+  final String selectedLanguageMode = '한국어';
   late List<int> babyIds;
   @override
   void initState() {
@@ -132,7 +138,7 @@ class _MainMyPage extends State<MainMyPage>{
                           });
                         }
                       }),
-                      getSettingScreen('언어 모드 변경', const Icon(Icons.language),(){}),
+                      getSettingScreen('언어 모드 변경', const Icon(Icons.language),() => changeLanguageMode()),
                       getSettingScreen('서비스 탈퇴', const Icon(Icons.minimize),(){
                         GET.Get.to(() => const WithdrawService());
                       }),
@@ -146,6 +152,48 @@ class _MainMyPage extends State<MainMyPage>{
       )
     );
   }
+  changeLanguageMode(){
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context){
+          return Container(
+              child : AlertDialog(
+                  title: const Text('언어모드 변경'),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextButton(
+                          onPressed: (){},
+                          child: const Text('한국어')
+                      ),
+                      const Divider(thickness: 0.2, color: Colors.grey),
+                      TextButton(
+                          onPressed: (){},
+                          child: const Text('English')
+                      ),
+                      const Divider(thickness: 0.2, color: Colors.grey),
+                      TextButton(
+                          onPressed: (){},
+                          child: const Text('中国')
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(55),
+                            backgroundColor: const Color(0xffffc8c7),
+                          ),
+                          onPressed: (){
+                            GET.Get.back();
+                          },
+                          child: const Text('변경')
+                      )
+                    ],
+                  ))
+          );
+        }
+    );
+  }
   reloadBabies() async{
     // 다시 받아오기
     List<dynamic> babyRelationList = await getMyBabies();
@@ -154,12 +202,12 @@ class _MainMyPage extends State<MainMyPage>{
       if(!babyIds.contains(babyRelationList[i]['baby'])){
         print(babyRelationList[i]['baby']);
         // 없으면 ADD
-        Baby_relation relation;
-        if(babyRelationList[i]['relation']==0) {
+        Baby_relation relation = Baby_relation.fromJson(babyRelationList[i]);
+        /*if(babyRelationList[i]['relation']==0) {
           relation = Baby_relation(babyRelationList[i]['baby'], babyRelationList[i]['relation'], 255,"","");
         } else {
           relation = Baby_relation.fromJson(babyRelationList[i]);
-        }
+        }*/
         // 2. 아기 등록
         var baby = await getBaby(babyRelationList[i]['baby']);
         baby['relationInfo'] = relation.toJson();
@@ -171,10 +219,33 @@ class _MainMyPage extends State<MainMyPage>{
     }
   }
   logout() async{
-    await deleteLogin();
-    GET.Get.offAll(LoginInit());
+    List<dynamic> babyRelationList = await getMyBabies();
+    print(babyRelationList);
+    //await deleteLogin();
+    //GET.Get.offAll(LoginInit());
   }
   Container getSettingScreen(title, icon, func){
+    if(title == '언어 모드 변경'){
+      return Container(
+          padding: const EdgeInsets.all(8),
+          child: InkWell(
+              onTap: func,
+              child : Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(children: [icon, const SizedBox(width: 30), Text(title)]),
+                      Text(selectedLanguageMode, style: const TextStyle(color: Colors.grey))
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Divider(thickness: 1, color: Colors.grey[300]),
+                ],
+              )
+          )
+      );
+    }
     return Container(
       padding: const EdgeInsets.all(8),
       child: InkWell(

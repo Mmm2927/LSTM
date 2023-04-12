@@ -15,8 +15,12 @@ loginService(id, pass) async{
 }
 // 중복 검사 서비스
 emailOverlapService(id) async{
-  Response response = await dio.post('${PATH}/api/user/exist/', data: {'email' : id});
-  if(response.statusCode == 200){
+  try{
+    Response response = await dio.post('${PATH}/api/user/exist/', data: {'email' : id});
+    return response.data;
+  }on DioError catch (e) {
+    dio.options.headers['Authorization'] = await refresh();
+    Response response = await dio.post('${PATH}/api/user/exist/', data: {'email' : id});
     return response.data;
   }
 }
