@@ -28,7 +28,6 @@ registerService(email, pass, name, phone) async{
   return response;
 }
 
-
 getMyBabies() async{
   dio.options.headers['Authorization'] = await getToken();
   Response response = await dio.post('${PATH}/api/baby/lists/');
@@ -44,9 +43,15 @@ getBaby(int id) async{
   }
 }
 setBabyService(data) async{
-  dio.options.headers['Authorization'] = await getToken();
-  Response response = await dio.post('${PATH}/api/baby/set/', data: data);
-  if(response.statusCode == 200){
+  try{
+    dio.options.headers['Authorization'] = await getToken();
+    Response response = await dio.post('${PATH}/api/baby/set/', data: data);
+    if(response.statusCode == 200){
+      return response.data;
+    }
+  }catch(e){
+    dio.options.headers['Authorization'] = await refresh();
+    Response response = await dio.post('${PATH}/api/baby/set/', data: data);
     return response.data;
   }
 }
@@ -69,6 +74,10 @@ deleteUser() async{
   }on DioError catch (e) {
     return 405;
   }
+}
+// 초대 수락 API
+acceptInvitation() async{
+
 }
 // 토큰 갱신
 refresh() async{

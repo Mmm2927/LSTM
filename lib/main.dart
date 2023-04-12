@@ -130,7 +130,7 @@ class _Splash extends State<Splash> {
       return [uinfo, MyBabies];
     }else{
       logger.i("로그인 정보 X");
-      return LoginInit();
+      return const LoginInit();
     }
   }
 }

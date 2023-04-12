@@ -12,7 +12,7 @@ import 'package:bob/screens/MyPage/modifyUser.dart';
 import 'package:bob/screens/MyPage/modifyBaby.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:get/get.dart' as GET;
-
+import 'package:bob/services/backend.dart';
 import '../services/storage.dart';
 
 class MainMyPage extends StatefulWidget{
@@ -23,8 +23,13 @@ class MainMyPage extends StatefulWidget{
   State<MainMyPage> createState() => _MainMyPage();
 }
 class _MainMyPage extends State<MainMyPage>{
+  late List<int> babyIds;
   @override
   void initState() {
+    babyIds = [];
+    for(int i=0;i<widget.babies.length;i++){
+      babyIds.add(widget.babies[i].relationInfo.BabyId);
+    }
     super.initState();
   }
   @override
@@ -78,10 +83,8 @@ class _MainMyPage extends State<MainMyPage>{
                                           ),
                                           child: IconButton(
                                               onPressed: () async{
-                                                Baby newBabyInfo = await GET.Get.to(ManageBabyWidget(widget.babies));
-                                                setState(() {
-                                                  widget.babies.add(newBabyInfo);
-                                                });
+                                                await GET.Get.to(ManageBabyWidget(widget.babies));
+                                                await reloadBabies();
                                               },
                                               iconSize: 40,
                                               color: Colors.grey,
@@ -96,11 +99,12 @@ class _MainMyPage extends State<MainMyPage>{
                           }
                       )
                   ),
-                  getSettingScreen('아이 추가 / 수정', const Icon(Icons.edit_attributes_sharp),(){
-                    GET.Get.to(() => ManageBabyWidget(widget.babies));
+                  getSettingScreen('아이 추가 / 수정', const Icon(Icons.edit_attributes_sharp),() async{
+                    await GET.Get.to(ManageBabyWidget(widget.babies));
+                    await reloadBabies();
                   }),
                   getSettingScreen('양육자 / 베이비시터 초대', const Icon(Icons.diamond_outlined),(){
-                    GET.Get.to(() => Invitation());
+                    GET.Get.to(() => Invitation(widget.babies));
                   }),
                   getSettingScreen('알림 ON / OFF', const Icon(Icons.notifications_off_outlined),(){
                     GET.Get.to(() => SwitchNotice(widget.babies));
@@ -142,9 +146,33 @@ class _MainMyPage extends State<MainMyPage>{
       )
     );
   }
+  reloadBabies() async{
+    // 다시 받아오기
+    List<dynamic> babyRelationList = await getMyBabies();
+    for(int i=0; i<babyRelationList.length;i++){
+      // 기존에 있는 아이디인지 확인
+      if(!babyIds.contains(babyRelationList[i]['baby'])){
+        print(babyRelationList[i]['baby']);
+        // 없으면 ADD
+        Baby_relation relation;
+        if(babyRelationList[i]['relation']==0) {
+          relation = Baby_relation(babyRelationList[i]['baby'], babyRelationList[i]['relation'], 255,"","");
+        } else {
+          relation = Baby_relation.fromJson(babyRelationList[i]);
+        }
+        // 2. 아기 등록
+        var baby = await getBaby(babyRelationList[i]['baby']);
+        baby['relationInfo'] = relation.toJson();
+        setState(() {
+          babyIds.add(babyRelationList[i]['baby']);
+          widget.babies.add(Baby.fromJson(baby));
+        });
+      }
+    }
+  }
   logout() async{
     await deleteLogin();
-    GET.Get.to(() => const LoginInit());
+    GET.Get.offAll(LoginInit());
   }
   Container getSettingScreen(title, icon, func){
     return Container(
