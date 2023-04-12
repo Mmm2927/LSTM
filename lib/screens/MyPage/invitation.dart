@@ -32,6 +32,10 @@ class _Invitation extends State<Invitation> {
           children: [
             InkWell(
               onTap: (){
+                if(widget.babies.isEmpty){
+                  GET.Get.snackbar('초대 불가', '아이를 먼저 등록해주세요', snackPosition: GET.SnackPosition.TOP, duration: const Duration(seconds: 2));
+                  return;
+                }
                 GET.Get.to(()=>InvitationNew(widget.babies));
               },
               child: Container(
