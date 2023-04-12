@@ -21,7 +21,7 @@ class MainDiaryState extends State<MainDiary> {
     return Scaffold(
       appBar: renderAppbar_with_alarm('BoB', context),
       resizeToAvoidBottomInset: false,
-      body: diaryList(),
+      body: SingleChildScrollView(child: diaryList()),
       floatingActionButton: FutureBuilder<bool>(
             future: DatabaseHelper.instance.isDiary(selectedDay),
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
