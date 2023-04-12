@@ -154,12 +154,12 @@ class _MainMyPage extends State<MainMyPage>{
       if(!babyIds.contains(babyRelationList[i]['baby'])){
         print(babyRelationList[i]['baby']);
         // 없으면 ADD
-        Baby_relation relation;
-        if(babyRelationList[i]['relation']==0) {
+        Baby_relation relation = Baby_relation.fromJson(babyRelationList[i]);
+        /*if(babyRelationList[i]['relation']==0) {
           relation = Baby_relation(babyRelationList[i]['baby'], babyRelationList[i]['relation'], 255,"","");
         } else {
           relation = Baby_relation.fromJson(babyRelationList[i]);
-        }
+        }*/
         // 2. 아기 등록
         var baby = await getBaby(babyRelationList[i]['baby']);
         baby['relationInfo'] = relation.toJson();
@@ -171,8 +171,10 @@ class _MainMyPage extends State<MainMyPage>{
     }
   }
   logout() async{
-    await deleteLogin();
-    GET.Get.offAll(LoginInit());
+    List<dynamic> babyRelationList = await getMyBabies();
+    print(babyRelationList);
+    //await deleteLogin();
+    //GET.Get.offAll(LoginInit());
   }
   Container getSettingScreen(title, icon, func){
     return Container(
