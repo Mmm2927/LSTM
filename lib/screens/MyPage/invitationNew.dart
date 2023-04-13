@@ -192,14 +192,17 @@ class _InvitationNew extends State<InvitationNew> {
     if(selectedBaby.isEmpty)
       return;
     Baby invitBaby = widget.babies[int.parse(selectedBaby)];
+    Baby_relation relation;
     if(selectedRelation==0){  // -> 부모
-      Baby_relation relation = Baby_relation(invitBaby.relationInfo.BabyId, 0, 127, "", "", false);
+      relation = Baby_relation(invitBaby.relationInfo.BabyId, 0, 127, "00:00", "23:59", false);
     }else{    // 가족 or 베이비시터
-      Baby_relation relation = Baby_relation(invitBaby.relationInfo.BabyId, 0, int.parse(selectedWeek.join(), radix: 2), startTime, endTime, false);
+      relation = Baby_relation(invitBaby.relationInfo.BabyId, selectedRelation, int.parse(selectedWeek.join(), radix: 2), startTime, endTime, false);
     }
-    // 1. 이거 API 등록
-    // 2. 돌아가기
-    GET.Get.back();
+    var tmp = relation.toJson();
+    tmp['email'] = targetemail;
+    var i = await invitationService(tmp);
+    print(i);
+    GET.Get.back();    // 2. 돌아가기
   }
   void duplicateCheck() async{
     String email = idController.text.trim();

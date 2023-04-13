@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:get/get.dart' as GET;
 import 'package:bob/screens/MyPage/invitationNew.dart';
+
+import '../../services/backend.dart';
 class Invitation extends StatefulWidget{
   final List<Baby> babies;
   const Invitation(this.babies, {super.key});
@@ -85,14 +87,7 @@ class _Invitation extends State<Invitation> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(baby.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-              Text('(2023-05-04)'),
-              Text('by. hehe@naver.com님')
-            ],
-          ),
+            Text(baby.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
             IconButton(onPressed: (){
               showDialog(
                   context: context,
@@ -108,13 +103,15 @@ class _Invitation extends State<Invitation> {
                               backgroundColor: const Color(0xfffa625f),
                               foregroundColor: Colors.white
                             ),
-                            onPressed: (){
+                            onPressed: () async{
                               // 1. 초대 수락하는 API 보내기
-                              //await acceptInvitation();
-                              // 2. 돌아가면 babyList 다시 로딩하기
+                              var i = await acceptInvitationService(baby.relationInfo.BabyId);
+                              print(i);
                               Navigator.pop(context);
+                              // 2. 돌아가면 babyList 다시 로딩하기
+                              GET.Get.back();
                             },
-                            child: Text('확인')
+                            child: const Text('확인')
                         )
                       ],
                     );
