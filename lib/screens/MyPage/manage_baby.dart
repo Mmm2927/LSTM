@@ -243,12 +243,12 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
     var response = await setBabyService({"baby_name":nameController.text, "birth":DateFormat('yyyy-MM-dd').format(birth), "gender":(_valueGender==0?'F':'M')});
     if(response['result'] == 'success'){
       // 1. 아이 정보 받아오기
-      Baby_relation relation = Baby_relation(response["success_id"], 0, 255,"","");
+      Baby_relation relation = Baby_relation.fromJson(response);
       var newbieInfo = await getBaby(response["success_id"]);
       newbieInfo['relationInfo'] = relation.toJson();
       Baby newBaby = Baby.fromJson(newbieInfo);
       // 2. return - pop
-      GET.Get.back(result: {'baby' : newBaby});
+      GET.Get.back();
       //Navigator.pop(context, newBaby);
     }
     else{

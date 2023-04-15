@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:bob/screens/BaseWidget.dart';
@@ -15,6 +16,7 @@ import 'package:dio/dio.dart';
 void main() {
   runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
@@ -111,16 +113,10 @@ class _Splash extends State<Splash> {
       // 2. babyList 가져오기
       List<Baby> MyBabies = [];
       List<dynamic> babyList = await getMyBabies();
-      print(babyList);
+      //print(babyList);
       for(int i=0; i<babyList.length;i++){
-        // 1. baby relation도 받아오기
-        Baby_relation relation;
-        if(babyList[i]['relation']==0) {
-          relation = Baby_relation(babyList[i]['baby'], babyList[i]['relation'], 255,"","");
-        } else {
-          relation = Baby_relation.fromJson(babyList[i]);
-        }
         // 2. 아기 등록
+        Baby_relation relation = Baby_relation.fromJson(babyList[i]);
         var baby = await getBaby(babyList[i]['baby']);
         baby['relationInfo'] = relation.toJson();
         MyBabies.add(Baby.fromJson(baby));
@@ -128,7 +124,7 @@ class _Splash extends State<Splash> {
       return [uinfo, MyBabies];
     }else{
       logger.i("로그인 정보 X");
-      return LoginInit();
+      return const LoginInit();
     }
   }
 }
