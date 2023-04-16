@@ -1,7 +1,9 @@
-import 'package:bob/screens/HomePage/babyFood_bottom_sheet.dart';
-import 'package:bob/screens/HomePage/diaper_bottom_sheet.dart';
-import 'package:bob/screens/HomePage/feedingBottle_bottom_sheet.dart';
-import 'package:bob/screens/HomePage/sleep_bottom_sheet.dart';
+import 'package:bob/screens/HomePage/BottomSheet/babyFood_bottom_sheet.dart';
+import 'package:bob/screens/HomePage/BottomSheet/diaper_bottom_sheet.dart';
+import 'package:bob/screens/HomePage/BottomSheet/feedingBottle_bottom_sheet.dart';
+import 'package:bob/screens/HomePage/BottomSheet/growthRecord_bottom_sheet.dart';
+import 'package:bob/screens/HomePage/BottomSheet/sleep_bottom_sheet.dart';
+import 'package:bob/screens/HomePage/baby_statistics.dart';
 import 'package:flutter/material.dart';
 import 'package:bob/models/model.dart';
 import 'package:bob/screens/MyPage/manage_baby.dart';
@@ -12,7 +14,7 @@ import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:bob/models/model.dart';
 import 'package:bob/services/backend.dart';
 
-import 'HomePage/feeding_bottom_sheet.dart';
+import 'HomePage/BottomSheet/feeding_bottom_sheet.dart';
 
 
 
@@ -27,11 +29,11 @@ class Main_Home extends StatefulWidget{
 class _Main_home extends State<Main_Home>{
 
   late int babyIdx;
-  String _feeding = '-분 전';
-  String _feedingBottle = '-분 전';
-  String _babyfood = '-분 전';
-  String _diaper = '-분 전';
-  String _sleep = '-분 전';
+  String _feeding = '-';
+  String _feedingBottle = '-';
+  String _babyfood = '-';
+  String _diaper = '-';
+  String _sleep = '-';
 
   void _timeFeeding(val){
     setState(() {
@@ -177,8 +179,9 @@ class _Main_home extends State<Main_Home>{
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.only(left: 20,top: 10),
+                      padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           SizedBox.fromSize(
                             size: const Size(50, 50),
@@ -206,7 +209,7 @@ class _Main_home extends State<Main_Home>{
                                   child: const Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
-                                      Icon(Icons.dining_outlined,), // <-- Icon
+                                      Icon(Icons.water_drop_outlined,), // <-- Icon
                                       Text("모유",style: TextStyle(fontSize: 15),), // <-- Text
                                     ],
                                   ),
@@ -369,18 +372,366 @@ class _Main_home extends State<Main_Home>{
           ),
           //기록 button 구현
           Positioned(
-              top: 300,
-              child: Column(
-               children: [
-                 Text(_feeding, style: TextStyle(fontSize: 20),),
-                 Text(_feedingBottle, style: TextStyle(fontSize: 20),),
-                 Text(_babyfood, style: TextStyle(fontSize: 20),),
-                 Text(_diaper, style: TextStyle(fontSize: 20),),
-                 Text(_sleep, style: TextStyle(fontSize: 20),),
+              top: 240,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => BabyStatistics()),
+                  );
+                },
+                child: Container(
+                  height: 120,
+                  width: MediaQuery.of(context).size.width-40,
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                      color: const Color(0xffffc8c7),
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 10,
+                            spreadRadius: 3
+                        )
+                      ]
+                  ),
+                  child: Column(
+                   children: [
+                     Container(
+                       padding: const EdgeInsets.only(left: 12, top: 3, bottom: 5),
+                       width: MediaQuery.of(context).size.width-40,
+                       child: const Row(
+                         mainAxisAlignment: MainAxisAlignment.start,
+                         children: [
+                           Text('생활 기록',
+                             style: TextStyle(
+                                 fontSize: 20,
+                                 color: Colors.black
+                             ),
+                           ),
+                         ],
+                       ),
+                     ),
+                     Column(
+                       children: [
+                         Row(
+                           children: [
+                             Container(
+                               padding: const EdgeInsets.only(left: 15),
+                               width: (MediaQuery.of(context).size.width)/2-20,
+                               child: Text('모유', style: TextStyle(
+                                   fontSize: 17,
+                                   color: Colors.grey[600]
+                               ),),
+                             ),
+                             Container(
+                               width: (MediaQuery.of(context).size.width)/2-20,
+                               child: Text('젖병', style: TextStyle(
+                                   fontSize: 17,
+                                   color: Colors.grey[600]
+                               ),),
+                             ),
+                           ],
+                         ),
+                         Row(
+                           children: [
+                             Container(
+                               padding: const EdgeInsets.only(left: 15),
+                               width: (MediaQuery.of(context).size.width)/2-20,
+                               child: Text(_feeding, style: TextStyle(
+                                   fontSize: 20,
+                                   color: Colors.grey[800]
+                               ),),
+                             ),
+                             Container(
+                               width: (MediaQuery.of(context).size.width)/2-20,
+                               child: Text(_feedingBottle, style: TextStyle(
+                                   fontSize: 20,
+                                   color: Colors.grey[800]
+                               ),),
+                             ),
+                           ],
+                         ),
+                         Row(
+                           children: [
+                             Container(
+                               padding: const EdgeInsets.only(left: 15),
+                               width: (MediaQuery.of(context).size.width)/2-20,
+                               child: Text('기저귀', style: TextStyle(
+                                   fontSize: 17,
+                                   color: Colors.grey[600]
+                               ),),
+                             ),
+                             Container(
+                               width: (MediaQuery.of(context).size.width)/2-20,
+                               child: Text('수면', style: TextStyle(
+                                   fontSize: 17,
+                                   color: Colors.grey[600]
+                               ),),
+                             ),
+                           ],
+                         ),
+                         Row(
+                           children: [
+                             Container(
+                               padding: const EdgeInsets.only(left: 15),
+                               width: (MediaQuery.of(context).size.width)/2-20,
+                               child: Text(_diaper, style: TextStyle(
+                                   fontSize: 20,
+                                   color: Colors.grey[800]
+                               ),),
+                             ),
+                             Container(
+                               width: (MediaQuery.of(context).size.width)/2-20,
+                               child: Text(_sleep, style: TextStyle(
+                                   fontSize: 20,
+                                   color: Colors.grey[800]
+                               ),),
+                             ),
+                           ],
+                         ),
+                       ],
+                     )
+                   ]
+                  ),
+                ),
+              )
+          ),
+          //생활기록
+          Positioned(
+              top: 380,
+              child: GestureDetector(
+                  onTap: () {
 
-               ]
+                  },
+                  child: Container(
+                    height: 130,
+                    width: MediaQuery.of(context).size.width-235,
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                        color: const Color(0xffffc8c7),
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 8,
+                              spreadRadius: 3
+                          )
+                        ]
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(left: 12),
+                          width: MediaQuery.of(context).size.width-40,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const Text('성장 기록',
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    color: Colors.black
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(left: 58),
+                                child: IconButton(
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                          shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(20),
+                                                  topLeft: Radius.circular(20)
+                                              )
+                                          ),
+                                          backgroundColor: Colors.purple[50],
+                                          isScrollControlled: true,
+                                          context: context,
+                                          builder: ( BuildContext context ) {
+                                            return GrowthRecordBottomSheet(widget.babies[babyIdx].relationInfo.BabyId);
+                                          }
+                                      );
+                                    },
+                                    // onPressed: () {
+                                    //   Scaffold.of(context).showBottomSheet<void>(
+                                    //         (BuildContext context) {
+                                    //       return Container(
+                                    //         height: 200,
+                                    //         color: Colors.amber,
+                                    //         child: Center(
+                                    //           child: Column(
+                                    //             mainAxisAlignment: MainAxisAlignment.center,
+                                    //             mainAxisSize: MainAxisSize.min,
+                                    //             children: <Widget>[
+                                    //               const Text('BottomSheet'),
+                                    //               ElevatedButton(
+                                    //                 child: const Text('Close BottomSheet'),
+                                    //                 onPressed: () {
+                                    //                   Navigator.pop(context);
+                                    //                 },
+                                    //               ),
+                                    //             ],
+                                    //           ),
+                                    //         ),
+                                    //       );
+                                    //     },
+                                    //   );
+                                    // },
+                                    icon: Icon(Icons.add_circle)
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(left: 15, bottom: 5),
+                          width: MediaQuery.of(context).size.width-40,
+                          child: Text(
+                            '키, 몸무게',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey[700]
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+              )
+          ),
+          //성장기록
+          Positioned(
+              top: 380,
+              child: GestureDetector(
+                  onTap: () {
+                    //예방 접종 페이지로 이동하도록
+                  },
+                  child: Container(
+                    height: 60,
+                    width: MediaQuery.of(context).size.width-235,
+                    margin: const EdgeInsets.symmetric(horizontal: 215),
+                    decoration: BoxDecoration(
+                        color: const Color(0xffffc8c7),
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 8,
+                              spreadRadius: 3
+                          )
+                        ]
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(left: 12, top: 8),
+                          width: MediaQuery.of(context).size.width-40,
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text('예방 접종',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(left: 15, bottom: 5),
+                          width: MediaQuery.of(context).size.width-40,
+                          child: Row(
+                            children: [
+                              Text(
+                                '다음 예방 접종 -> ',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.grey[700]
+                                ),
+                              ),
+                              const Text(
+                                '(예시)',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+              )
+          ),
+          //예방접종
+          Positioned(
+              top: 450,
+              child: GestureDetector(
+                  onTap: () {
+                    //건강 검진 페이지 이동
+                  },
+                  child: Container(
+                    height: 60,
+                    width: MediaQuery.of(context).size.width-235,
+                    margin: const EdgeInsets.symmetric(horizontal: 215),
+                    decoration: BoxDecoration(
+                        color: const Color(0xffffc8c7),
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 8,
+                              spreadRadius: 3
+                          )
+                        ]
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(left: 12, top: 8),
+                          width: MediaQuery.of(context).size.width-40,
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text('건강 검진',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(left: 15, bottom: 5),
+                          width: MediaQuery.of(context).size.width-40,
+                          child: Row(
+                            children: [
+                              Text(
+                                '다음 건강 검진 -> ',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.grey[700]
+                                ),
+                              ),
+                              const Text(
+                                '(예시)',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )
               )
           )
+          //건강검진
         ],
       ),
     );

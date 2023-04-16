@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
-import '../../services/backend.dart';
+import '../../../services/backend.dart';
 
-class SleepBottomSheet extends StatefulWidget {
+class DiaperBottomSheet extends StatefulWidget {
 
   final int babyId;
-  final void Function(String id) timeSleep;
-  const SleepBottomSheet (this.babyId, this.timeSleep, {Key? key}) : super(key: key);
+  final void Function(String id) timeDiaper;
+  const DiaperBottomSheet (this.babyId, this.timeDiaper, {Key? key}) : super(key: key);
   //final String feedingTime;
 
   @override
-  _SleepBottomSheet createState() => _SleepBottomSheet();
+  _DiaperBottomSheet createState() => _DiaperBottomSheet();
 }
 
-class _SleepBottomSheet extends State<SleepBottomSheet> {
+class _DiaperBottomSheet extends State<DiaperBottomSheet> {
 
+  bool isSelect = true;
   List<DateTime>? dateTimeList;
 
   GlobalKey<FormState> _fKey = GlobalKey<FormState>();
@@ -36,7 +37,7 @@ class _SleepBottomSheet extends State<SleepBottomSheet> {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.38,
+        height: MediaQuery.of(context).size.height * 0.48,
         child: Column(
           children: [
             Container(
@@ -44,17 +45,62 @@ class _SleepBottomSheet extends State<SleepBottomSheet> {
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('수면',
+                  Text('기저귀',
                     style: TextStyle(
                         fontSize: 35,
-                        color: Colors.blue
+                        color: Colors.green
                     ),
                   ),
                 ],
               ),
             ),
+            Container(
+              padding: const EdgeInsets.only(left: 25, top: 5),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text('배소변',
+                    style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.black
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                OutlinedButton(
+                  onPressed: () {
+                    setState(() {
+                      isSelect = true;
+                    });
+                  },
+                  child: Text('배변',style: TextStyle(fontSize: 20),),
+                  style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: isSelect ? Colors.orangeAccent : null,
+                      minimumSize: Size((MediaQuery.of(context).size.width)/2*0.8, 30)
+                  ),
+                ),
+                OutlinedButton(
+                  onPressed: () {
+                    setState(() {
+                      isSelect = false;
+                    });
+                  },
+                  child: Text('소변',style: TextStyle(fontSize: 20),),
+                  style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: !isSelect ? Colors.orangeAccent : null,
+                      minimumSize: Size((MediaQuery.of(context).size.width)/2*0.8, 30)
+                  ),
+                )
+              ],
+            ),
             SizedBox(
-              height: 10,
+              height: 5,
             ),
             Column(
               children: [
@@ -116,7 +162,7 @@ class _SleepBottomSheet extends State<SleepBottomSheet> {
                       child: TextFormField(
                         controller: ymdtController,
                         decoration: const InputDecoration(
-                            labelText: '수면 시간을 입력하세요',
+                            labelText: '배변 시간을 입력하세요',
                             labelStyle: TextStyle(fontSize: 18),
                             suffixIcon: Icon(Icons.add_alarm_sharp),
                             filled: false, //색 지정
@@ -193,20 +239,22 @@ class _SleepBottomSheet extends State<SleepBottomSheet> {
                     OutlinedButton(
                       onPressed: () async{
                         print(widget.babyId);
+                        int type = isSelect? 0 : 1;   //0:배변, 1:소변
                         String startTime = dateTimeList![0].toString();
                         String endTime = dateTimeList![1].toString();
                         String memo = memoController.text;
 
-                        var content = {"startTime": startTime, "endTime": endTime, "memo": memo};
-                        var result = await lifesetService(widget.babyId, 4, content.toString());
+                        var content = {"type": type, "startTime": startTime, "endTime": endTime, "memo": memo};
+                        var result = await lifesetService(widget.babyId, 3, content.toString());
 
-                        String sleepTime = '${DateTime.now().difference(dateTimeList![1]).inMinutes}분 전';
-                        widget.timeSleep(sleepTime);
+                        String diaperTime = '${DateTime.now().difference(dateTimeList![1]).inMinutes}분 전';
+                        widget.timeDiaper(diaperTime);
                         Navigator.pop(context);
                       },
                       child: Text('확인',style: TextStyle(fontSize: 25),),
                       style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.black,
+                          backgroundColor: !isSelect ? Colors.orangeAccent : null,
                           minimumSize: Size((MediaQuery.of(context).size.width)/2*0.8, 40),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10))

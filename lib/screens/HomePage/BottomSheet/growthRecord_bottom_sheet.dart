@@ -2,33 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
-import '../../services/backend.dart';
+import '../../../services/backend.dart';
 
-class BabyFoodBottomSheet extends StatefulWidget {
+class GrowthRecordBottomSheet extends StatefulWidget {
 
   final int babyId;
-  final void Function(String id) timeBabyFood;
+  // final void Function(String id) timeFeedingBottle;
 
-  const BabyFoodBottomSheet (this.babyId, this.timeBabyFood, {Key? key}) : super(key: key);
+  const GrowthRecordBottomSheet (this.babyId, {Key? key}) : super(key: key);
   //final String feedingTime;
 
   @override
-  _BabyFoodBottomSheet createState() => _BabyFoodBottomSheet();
+  _GrowthRecordBottomSheet createState() => _GrowthRecordBottomSheet();
 }
 
-class _BabyFoodBottomSheet extends State<BabyFoodBottomSheet> {
-
+class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
 
   List<DateTime>? dateTimeList;
 
   GlobalKey<FormState> _fKey = GlobalKey<FormState>();
   String? yearMonthDayTime;
   TextEditingController ymdtController = TextEditingController();
-  TextEditingController memoController = TextEditingController();
-  TextEditingController amountController = TextEditingController(text: '100');
-
-
-  bool autovalidate = false;
 
   @override
   void initState() {
@@ -40,7 +34,7 @@ class _BabyFoodBottomSheet extends State<BabyFoodBottomSheet> {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.47,
+        height: MediaQuery.of(context).size.height * 0.58,
         child: Column(
           children: [
             Container(
@@ -48,68 +42,18 @@ class _BabyFoodBottomSheet extends State<BabyFoodBottomSheet> {
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('이유식',
+                  Text('키',
                     style: TextStyle(
                       fontSize: 35,
-                      color: Color(0xfff3a415),
+                      color: Colors.orange,
                     ),
                   ),
                 ],
               ),
             ),
+
             SizedBox(
-              height: 10,
-            ),
-            GestureDetector(
-              onTap: () {
-                // FocusScope.of(context).unfocus();
-                Navigator.pop(context);
-              },
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width*0.9,
-                child: TextFormField(
-                  controller: amountController,
-                  style: TextStyle(fontSize: 22),
-                  decoration: InputDecoration(
-                      floatingLabelBehavior:FloatingLabelBehavior.always, // labelText위치
-                      labelText: '이유식 양 (ml)',
-                      labelStyle: TextStyle(fontSize: 25),
-                      suffixIcon: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: BoxConstraints(),
-                              onPressed: () {
-                                null;
-                              },
-                              icon: Icon(Icons.add_circle,size: 22,)
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                null;
-                              },
-                              icon: Icon(Icons.remove_circle,size: 22,)
-                          ),
-                        ],
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(color: Colors.orangeAccent)
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(color: Colors.orangeAccent)
-                      ),
-                      contentPadding: EdgeInsets.only(left: 15)
-                  ),
-                  keyboardType: TextInputType.number,   //키보드 타입
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 15,
+              height: 5,
             ),
             Column(
               children: [
@@ -171,7 +115,7 @@ class _BabyFoodBottomSheet extends State<BabyFoodBottomSheet> {
                       child: TextFormField(
                         controller: ymdtController,
                         decoration: const InputDecoration(
-                            labelText: '이유식 시간을 입력하세요',
+                            labelText: '측정 날짜를 골라주세요',
                             labelStyle: TextStyle(fontSize: 18),
                             suffixIcon: Icon(Icons.add_alarm_sharp),
                             filled: false, //색 지정
@@ -197,38 +141,7 @@ class _BabyFoodBottomSheet extends State<BabyFoodBottomSheet> {
                 SizedBox(
                   height: 15,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    // FocusScope.of(context).unfocus();
-                    Navigator.pop(context);
-                  },
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width*0.9,
-                    child: TextFormField(
-                      controller: memoController,
-                      maxLines: 2,
-                      style: TextStyle(fontSize: 24),
-                      decoration: const InputDecoration(
-                          floatingLabelBehavior:FloatingLabelBehavior.always, // labelText위치
-                          labelText: '메모',
-                          labelStyle: TextStyle(fontSize: 30),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: BorderSide(color: Colors.orangeAccent)
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: BorderSide(color: Colors.orangeAccent)
-                          ),
-                          contentPadding: EdgeInsets.all(12)
-                      ),
-                      keyboardType: TextInputType.text,   //키보드 타입
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 8,
-                ),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -247,18 +160,19 @@ class _BabyFoodBottomSheet extends State<BabyFoodBottomSheet> {
                     ),
                     OutlinedButton(
                       onPressed: () async{
-                        print(widget.babyId);   // 0:모유, 1:분유
-                        String amount = amountController.text;
-                        String startTime = dateTimeList![0].toString();
-                        String endTime = dateTimeList![1].toString();
-                        String memo = memoController.text;
-
-                        var content = {"amount": amount, "startTime": startTime, "endTime": endTime, "memo": memo,};
-                        var result = await lifesetService(widget.babyId, 2, content.toString());
-
-                        String babyFoodTime = '${DateTime.now().difference(dateTimeList![1]).inMinutes}분 전';
-                        widget.timeBabyFood(babyFoodTime);
-                        Navigator.pop(context);
+                        // print(widget.babyId);
+                        // int type = isSelect? 0 : 1;   // 0:모유, 1:분유
+                        // String amount = amountController.text;
+                        // String startTime = dateTimeList![0].toString();
+                        // String endTime = dateTimeList![1].toString();
+                        // String memo = memoController.text;
+                        //
+                        // var content = {"type": type, "amount": amount, "startTime": startTime, "endTime": endTime, "memo": memo,};
+                        // var result = await lifesetService(widget.babyId, 1, content.toString());
+                        //
+                        // String feedingBottleTime = '${DateTime.now().difference(dateTimeList![1]).inMinutes}분 전';
+                        // widget.timeFeedingBottle(feedingBottleTime);
+                        // Navigator.pop(context);
                       },
                       child: Text('확인',style: TextStyle(fontSize: 25),),
                       style: OutlinedButton.styleFrom(

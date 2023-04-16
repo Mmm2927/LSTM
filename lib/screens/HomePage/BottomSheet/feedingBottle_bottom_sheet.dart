@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
-import '../../services/backend.dart';
+import '../../../services/backend.dart';
 
-class FeedingBottomSheet extends StatefulWidget {
+class FeedingBottleBottomSheet extends StatefulWidget {
 
   final int babyId;
-  final void Function(String id) timeFeeding;
-  const FeedingBottomSheet (this.babyId, this.timeFeeding, {Key? key}) : super(key: key);
+  final void Function(String id) timeFeedingBottle;
+
+  const FeedingBottleBottomSheet (this.babyId, this.timeFeedingBottle, {Key? key}) : super(key: key);
   //final String feedingTime;
 
   @override
-  _FeedingBottomSheet createState() => _FeedingBottomSheet();
+  _FeedingBottleBottomSheet createState() => _FeedingBottleBottomSheet();
 }
 
-class _FeedingBottomSheet extends State<FeedingBottomSheet> {
+class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
 
   bool isSelect = true;
   List<DateTime>? dateTimeList;
@@ -24,6 +25,8 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
   String? yearMonthDayTime;
   TextEditingController ymdtController = TextEditingController();
   TextEditingController memoController = TextEditingController();
+  TextEditingController amountController = TextEditingController(text: '100');
+
 
   bool autovalidate = false;
 
@@ -37,7 +40,7 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.48,
+        height: MediaQuery.of(context).size.height * 0.58,
         child: Column(
           children: [
             Container(
@@ -45,10 +48,10 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('수유',
+                  Text('젖병',
                     style: TextStyle(
                         fontSize: 35,
-                        color: Colors.red
+                        color: Colors.orange,
                     ),
                   ),
                 ],
@@ -59,7 +62,7 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('수유 방향',
+                  Text('수유 타입',
                     style: TextStyle(
                         fontSize: 17,
                         color: Colors.black
@@ -77,7 +80,7 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
                       isSelect = true;
                     });
                   },
-                  child: Text('왼쪽',style: TextStyle(fontSize: 20),),
+                  child: Text('모유',style: TextStyle(fontSize: 20),),
                   style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.black,
                       backgroundColor: isSelect ? Colors.orangeAccent : null,
@@ -90,7 +93,7 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
                       isSelect = false;
                     });
                   },
-                  child: Text('오른쪽',style: TextStyle(fontSize: 20),),
+                  child: Text('분유',style: TextStyle(fontSize: 20),),
                   style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.black,
                       backgroundColor: !isSelect ? Colors.orangeAccent : null,
@@ -101,6 +104,57 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
             ),
             SizedBox(
               height: 5,
+            ),
+            GestureDetector(
+              onTap: () {
+                // FocusScope.of(context).unfocus();
+                Navigator.pop(context);
+              },
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width*0.9,
+                child: TextFormField(
+                  controller: amountController,
+                  style: TextStyle(fontSize: 22),
+                  decoration: InputDecoration(
+                      floatingLabelBehavior:FloatingLabelBehavior.always, // labelText위치
+                      labelText: '수유량 (ml)',
+                      labelStyle: TextStyle(fontSize: 25),
+                      suffixIcon: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                              padding: EdgeInsets.zero,
+                              constraints: BoxConstraints(),
+                              onPressed: () {
+                                null;
+                              },
+                              icon: Icon(Icons.add_circle,size: 22,)
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                null;
+                              },
+                              icon: Icon(Icons.remove_circle,size: 22,)
+                          ),
+                        ],
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.orangeAccent)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.orangeAccent)
+                      ),
+                      contentPadding: EdgeInsets.only(left: 15)
+                  ),
+                  keyboardType: TextInputType.number,   //키보드 타입
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 15,
             ),
             Column(
               children: [
@@ -239,16 +293,17 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
                     OutlinedButton(
                       onPressed: () async{
                         print(widget.babyId);
-                        int side = isSelect? 0 : 1;
+                        int type = isSelect? 0 : 1;   // 0:모유, 1:분유
+                        String amount = amountController.text;
                         String startTime = dateTimeList![0].toString();
                         String endTime = dateTimeList![1].toString();
                         String memo = memoController.text;
 
-                        var content = {"side": side, "startTime": startTime, "endTime": endTime, "memo": memo};
-                        var result = await lifesetService(widget.babyId, 0, content.toString());
+                        var content = {"type": type, "amount": amount, "startTime": startTime, "endTime": endTime, "memo": memo,};
+                        var result = await lifesetService(widget.babyId, 1, content.toString());
 
-                        String feedingTime = '${DateTime.now().difference(dateTimeList![1]).inMinutes}분 전';
-                        widget.timeFeeding(feedingTime);
+                        String feedingBottleTime = '${DateTime.now().difference(dateTimeList![1]).inMinutes}분 전';
+                        widget.timeFeedingBottle(feedingBottleTime);
                         Navigator.pop(context);
                       },
                       child: Text('확인',style: TextStyle(fontSize: 25),),

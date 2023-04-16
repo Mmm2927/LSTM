@@ -2,28 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
-import '../../services/backend.dart';
+import '../../../services/backend.dart';
 
-class DiaperBottomSheet extends StatefulWidget {
+class BabyFoodBottomSheet extends StatefulWidget {
 
   final int babyId;
-  final void Function(String id) timeDiaper;
-  const DiaperBottomSheet (this.babyId, this.timeDiaper, {Key? key}) : super(key: key);
+  final void Function(String id) timeBabyFood;
+
+  const BabyFoodBottomSheet (this.babyId, this.timeBabyFood, {Key? key}) : super(key: key);
   //final String feedingTime;
 
   @override
-  _DiaperBottomSheet createState() => _DiaperBottomSheet();
+  _BabyFoodBottomSheet createState() => _BabyFoodBottomSheet();
 }
 
-class _DiaperBottomSheet extends State<DiaperBottomSheet> {
+class _BabyFoodBottomSheet extends State<BabyFoodBottomSheet> {
 
-  bool isSelect = true;
+
   List<DateTime>? dateTimeList;
 
   GlobalKey<FormState> _fKey = GlobalKey<FormState>();
   String? yearMonthDayTime;
   TextEditingController ymdtController = TextEditingController();
   TextEditingController memoController = TextEditingController();
+  TextEditingController amountController = TextEditingController(text: '100');
+
 
   bool autovalidate = false;
 
@@ -37,7 +40,7 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.48,
+        height: MediaQuery.of(context).size.height * 0.47,
         child: Column(
           children: [
             Container(
@@ -45,62 +48,68 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('기저귀',
+                  Text('이유식',
                     style: TextStyle(
-                        fontSize: 35,
-                        color: Colors.green
+                      fontSize: 35,
+                      color: Color(0xfff3a415),
                     ),
                   ),
                 ],
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(left: 25, top: 5),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text('배소변',
-                    style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.black
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                OutlinedButton(
-                  onPressed: () {
-                    setState(() {
-                      isSelect = true;
-                    });
-                  },
-                  child: Text('배변',style: TextStyle(fontSize: 20),),
-                  style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: isSelect ? Colors.orangeAccent : null,
-                      minimumSize: Size((MediaQuery.of(context).size.width)/2*0.8, 30)
-                  ),
-                ),
-                OutlinedButton(
-                  onPressed: () {
-                    setState(() {
-                      isSelect = false;
-                    });
-                  },
-                  child: Text('소변',style: TextStyle(fontSize: 20),),
-                  style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: !isSelect ? Colors.orangeAccent : null,
-                      minimumSize: Size((MediaQuery.of(context).size.width)/2*0.8, 30)
-                  ),
-                )
-              ],
             ),
             SizedBox(
-              height: 5,
+              height: 10,
+            ),
+            GestureDetector(
+              onTap: () {
+                // FocusScope.of(context).unfocus();
+                Navigator.pop(context);
+              },
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width*0.9,
+                child: TextFormField(
+                  controller: amountController,
+                  style: TextStyle(fontSize: 22),
+                  decoration: InputDecoration(
+                      floatingLabelBehavior:FloatingLabelBehavior.always, // labelText위치
+                      labelText: '이유식 양 (ml)',
+                      labelStyle: TextStyle(fontSize: 25),
+                      suffixIcon: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                              padding: EdgeInsets.zero,
+                              constraints: BoxConstraints(),
+                              onPressed: () {
+                                null;
+                              },
+                              icon: Icon(Icons.add_circle,size: 22,)
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                null;
+                              },
+                              icon: Icon(Icons.remove_circle,size: 22,)
+                          ),
+                        ],
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.orangeAccent)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.orangeAccent)
+                      ),
+                      contentPadding: EdgeInsets.only(left: 15)
+                  ),
+                  keyboardType: TextInputType.number,   //키보드 타입
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 15,
             ),
             Column(
               children: [
@@ -162,7 +171,7 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
                       child: TextFormField(
                         controller: ymdtController,
                         decoration: const InputDecoration(
-                            labelText: '배변 시간을 입력하세요',
+                            labelText: '이유식 시간을 입력하세요',
                             labelStyle: TextStyle(fontSize: 18),
                             suffixIcon: Icon(Icons.add_alarm_sharp),
                             filled: false, //색 지정
@@ -238,23 +247,22 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
                     ),
                     OutlinedButton(
                       onPressed: () async{
-                        print(widget.babyId);
-                        int type = isSelect? 0 : 1;   //0:배변, 1:소변
+                        print(widget.babyId);   // 0:모유, 1:분유
+                        String amount = amountController.text;
                         String startTime = dateTimeList![0].toString();
                         String endTime = dateTimeList![1].toString();
                         String memo = memoController.text;
 
-                        var content = {"type": type, "startTime": startTime, "endTime": endTime, "memo": memo};
-                        var result = await lifesetService(widget.babyId, 3, content.toString());
+                        var content = {"amount": amount, "startTime": startTime, "endTime": endTime, "memo": memo,};
+                        var result = await lifesetService(widget.babyId, 2, content.toString());
 
-                        String diaperTime = '${DateTime.now().difference(dateTimeList![1]).inMinutes}분 전';
-                        widget.timeDiaper(diaperTime);
+                        String babyFoodTime = '${DateTime.now().difference(dateTimeList![1]).inMinutes}분 전';
+                        widget.timeBabyFood(babyFoodTime);
                         Navigator.pop(context);
                       },
                       child: Text('확인',style: TextStyle(fontSize: 25),),
                       style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.black,
-                          backgroundColor: !isSelect ? Colors.orangeAccent : null,
                           minimumSize: Size((MediaQuery.of(context).size.width)/2*0.8, 40),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10))

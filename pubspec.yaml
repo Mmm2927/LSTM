@@ -33,13 +33,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   table_calendar: ^3.0.8
-<<<<<<< HEAD
   intl: ^0.18.0
-=======
-  intl: ^0.17.0
   flutter_vlc_player: 6.0.0
   flutter_mjpeg:
->>>>>>> 8abcfe58abd8b318c05a170625536d72ebeb6ac8
   checkbox_formfield: ^0.2.0
   dio: ^5.0.3
   jwt_decode: ^0.3.1
