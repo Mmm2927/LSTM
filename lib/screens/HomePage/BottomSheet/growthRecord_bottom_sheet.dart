@@ -21,7 +21,8 @@ class GrowthRecordBottomSheet extends StatefulWidget {
 class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
 
 
-  double? newValue;
+  double? height;
+  double? weight;
 
   DateTime _selectedDate = DateTime.now();
 
@@ -39,7 +40,7 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.54,
+        height: MediaQuery.of(context).size.height * 0.62,
         child: Column(
           children: [
             Container(
@@ -47,44 +48,67 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('키',
+                  Text('키, 몸무게',
                     style: TextStyle(
-                      fontSize: 35,
+                      fontSize: 30,
                       color: Colors.orange,
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(
-              height: 5,
+            SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    HorizontalPicker(
+                      minValue: 0,
+                      maxValue: 100,
+                      divisions: 1000,
+                      height: 100,
+                      suffix: " cm",
+                      showCursor: false,
+                      backgroundColor: Colors.transparent,
+                      activeItemTextColor: Colors.black,
+                      passiveItemsTextColor: Colors.red,
+                      onChanged: (value) {
+                        setState(() {
+                          height = value;
+                        });
+                      },
+                    ),
+                    (height==null) ? Text('스크롤하여 키를 선택해 주세요',style: TextStyle(fontSize: 22, color: Colors.grey)) :
+                    Text('${height.toString()} cm',style: TextStyle(fontSize: 22),),
+                  ],
+                ),
+              ),
             ),
             SafeArea(
               child: SingleChildScrollView(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.only(bottom: 10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Divider(),
                     HorizontalPicker(
                       minValue: 0,
-                      maxValue: 120,
-                      divisions: 1200,
-                      height: 120,
-                      suffix: " cm",
+                      maxValue: 20,
+                      divisions: 200,
+                      height: 100,
+                      suffix: " kg",
                       showCursor: false,
                       backgroundColor: Colors.transparent,
                       activeItemTextColor: Colors.black,
-                      passiveItemsTextColor: Colors.orange,
+                      passiveItemsTextColor: Colors.blue,
                       onChanged: (value) {
                         setState(() {
-                          newValue = value;
+                          weight = value;
                         });
                       },
                     ),
-                    (newValue==null) ? Text('스크롤하여 키를 선택해 주세요',style: TextStyle(fontSize: 22, color: Colors.grey)) :
-                    Text('${newValue.toString()} cm',style: TextStyle(fontSize: 22),),
-                    Divider()
+                    (weight==null) ? Text('스크롤하여 몸무게를 선택해 주세요',style: TextStyle(fontSize: 22, color: Colors.grey)) :
+                    Text('${weight.toString()} kg',style: TextStyle(fontSize: 22),),
                   ],
                 ),
               ),
@@ -105,7 +129,7 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                       titleText: '측정 날짜를 선택해주세요',
                       cancelText: '취소',
                       confirmText: '확인',
-                      itemTextStyle: TextStyle(color: Colors.orangeAccent),
+                      itemTextStyle: TextStyle(color: Colors.orange),
                       textColor: Colors.black
                     );
 
@@ -142,7 +166,7 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                   ),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 10,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
