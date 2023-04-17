@@ -42,7 +42,7 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
           children: [
             Container(
               padding: const EdgeInsets.only(left: 25, top: 5),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text('수유',
@@ -56,7 +56,7 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
             ),
             Container(
               padding: const EdgeInsets.only(left: 25, top: 5),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text('수유 방향',

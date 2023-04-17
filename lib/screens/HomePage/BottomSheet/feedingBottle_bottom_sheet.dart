@@ -45,7 +45,7 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
           children: [
             Container(
               padding: const EdgeInsets.only(left: 25, top: 5),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text('젖병',
@@ -59,7 +59,7 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
             ),
             Container(
               padding: const EdgeInsets.only(left: 25, top: 5),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text('수유 타입',

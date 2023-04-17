@@ -45,7 +45,7 @@ class _BabyFoodBottomSheet extends State<BabyFoodBottomSheet> {
           children: [
             Container(
               padding: const EdgeInsets.only(left: 25, top: 5),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text('이유식',

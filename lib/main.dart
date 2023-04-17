@@ -91,9 +91,11 @@ class _Splash extends State<Splash> {
                 body: LoginInit()
             );
           }
-          return Scaffold(
-            body: BaseWidget(snapshot.data[0], snapshot.data[1] as List<Baby>)
-          );
+          else{
+            return Scaffold(
+                body: BaseWidget(snapshot.data[0], snapshot.data[1] as List<Baby>)
+            );
+          }
         }
       },
     );

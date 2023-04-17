@@ -6,7 +6,6 @@ import 'package:bob/screens/MyPage/modifyBaby.dart';
 import 'package:intl/intl.dart';
 import '../../models/model.dart';
 import 'package:bob/services/backend.dart';
-import 'package:dio/dio.dart';
 import 'package:get/get.dart' as GET;
 
 class ManageBabyWidget extends StatefulWidget{
@@ -46,10 +45,11 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
   void initState() {
     _tabController = TabController(
       length: 2,
-      vsync: this, // vsync에 this 형태로 전달 해야 애니메이션이 정상 처리됨
+      vsync: this,
     );
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,8 +82,8 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  SingleChildScrollView(child: addBaby(),),
-                  SingleChildScrollView(child: modifyBaby(context)),
+                  addBaby(),
+                  modifyBaby(context),
                 ],
               )
           )
@@ -93,11 +93,11 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
   }
   Widget modifyBaby(BuildContext rootContext){
     List<Baby> myBabies = [];
-    widget.babies.forEach((value) {
+    for (var value in widget.babies) {
       if(value.relationInfo.relation == 0){
         myBabies.add(value);
       }
-    });
+    }
     return Expanded(
             child: GridView.builder(
                 shrinkWrap: true,
@@ -155,84 +155,85 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
     super.dispose();
   }
   Widget addBaby(){
-    return Container(
-        margin: const EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('아기 이름'),
-            TextFormField(
-              controller: nameController,
-            ),
-            const SizedBox(height: 30),
-            const Text('생일'),
-            CupertinoButton(
-              // Display a CupertinoDatePicker in date picker mode.
-              onPressed: () => _showDialog(
-                CupertinoDatePicker(
-                  initialDateTime: birth,
-                  mode: CupertinoDatePickerMode.date,
-                  use24hFormat: true,
-                  // This is called when the user changes the date.
-                  onDateTimeChanged: (DateTime newDate) {
-                    setState(() => birth = newDate);
-                  },
-                ),
+    return SingleChildScrollView(
+      child: Container(
+          margin: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('아기 이름'),
+              TextFormField(
+                controller: nameController,
               ),
-              child: Text(
-                '${birth.year}년 ${birth.month}월 ${birth.day}일',
-                style: const TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            const SizedBox(height: 30),
-            const Text('성별'),
-            const SizedBox(height: 10),
-            Wrap(
-                spacing: 10.0,
-                children: List<Widget>.generate(
-                    2, (int index){
-                  List<String> gender = ['남자', '여자'];
-                  return ChoiceChip(
-                    elevation: 6.0,
-                    padding: const EdgeInsets.all(10),
-                    selectedColor: const Color(0xffff846d),
-                    label: Text(gender[index]),
-                    selected: _valueGender == index,
-                    onSelected: (bool selected){
-                      setState((){
-                        _valueGender = (selected ? index : null)!;
-                      });
-                    }
-                  );
-                }).toList()
-            ),
-            const SizedBox(height: 50),
-            Container(
-              width: double.infinity,
-              child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.all(20),
-                    elevation: 0.0,
-                    backgroundColor: Colors.white,
-                    foregroundColor: const Color(0xfffa625f),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                      side: const BorderSide(
-                        color: Colors.grey,
-                        width: 0.5,
-                      )
+              const SizedBox(height: 30),
+              const Text('생일'),
+              CupertinoButton(
+                // Display a CupertinoDatePicker in date picker mode.
+                onPressed: () => _showDialog(
+                  CupertinoDatePicker(
+                    initialDateTime: birth,
+                    mode: CupertinoDatePickerMode.date,
+                    use24hFormat: true,
+                    // This is called when the user changes the date.
+                    onDateTimeChanged: (DateTime newDate) {
+                      setState(() => birth = newDate);
+                    },
                   ),
-                  onPressed: (){
-                    _registerBaby();
-                    //print(nameController.text + date.toString());
-                  },
-                  child: Text('등록'))
-            )
-          ],
-        )
+                ),
+                child: Text(
+                  '${birth.year}년 ${birth.month}월 ${birth.day}일',
+                  style: const TextStyle(
+                    fontSize: 22.0,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              const Text('성별'),
+              const SizedBox(height: 10),
+              Wrap(
+                  spacing: 10.0,
+                  children: List<Widget>.generate(
+                      2, (int index){
+                    List<String> gender = ['남자', '여자'];
+                    return ChoiceChip(
+                        elevation: 6.0,
+                        padding: const EdgeInsets.all(10),
+                        selectedColor: const Color(0xffff846d),
+                        label: Text(gender[index]),
+                        selected: _valueGender == index,
+                        onSelected: (bool selected){
+                          setState((){
+                            _valueGender = (selected ? index : null)!;
+                          });
+                        }
+                    );
+                  }).toList()
+              ),
+              const SizedBox(height: 50),
+              SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.all(20),
+                          elevation: 0.0,
+                          backgroundColor: Colors.white,
+                          foregroundColor: const Color(0xfffa625f),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          side: const BorderSide(
+                            color: Colors.grey,
+                            width: 0.5,
+                          )
+                      ),
+                      onPressed: (){
+                        _registerBaby();
+                      },
+                      child: Text('등록'))
+              )
+            ],
+          )
+      )
     );
   }
   void _registerBaby() async{
@@ -240,16 +241,9 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
     if(nameController.text.isEmpty && nameController.text.length < 5){
       return;
     }
-    var response = await setBabyService({"baby_name":nameController.text, "birth":DateFormat('yyyy-MM-dd').format(birth), "gender":(_valueGender==0?'F':'M')});
+    var response = await setBabyService({"baby_name":nameController.text, "birth":DateFormat('yyyy-MM-dd').format(birth), "gender":(_valueGender==0?'F':'M'),"ip":null});
     if(response['result'] == 'success'){
-      // 1. 아이 정보 받아오기
-      Baby_relation relation = Baby_relation.fromJson(response);
-      var newbieInfo = await getBaby(response["success_id"]);
-      newbieInfo['relationInfo'] = relation.toJson();
-      Baby newBaby = Baby.fromJson(newbieInfo);
-      // 2. return - pop
       GET.Get.back();
-      //Navigator.pop(context, newBaby);
     }
     else{
       print('errorr');

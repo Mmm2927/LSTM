@@ -84,7 +84,6 @@ class _ModifyUser extends State<ModifyUser> {
     String pass = passContoller.text.trim();
     String name = nameContoller.text.trim();
     String phone = phoneContoller.text.trim();
-    print(pass+name+phone);
     if(!validatePassword(pass) && !validateName(name) && !validatePhone(phone)){
       return;
     }

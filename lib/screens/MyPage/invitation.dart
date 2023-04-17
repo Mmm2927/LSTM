@@ -6,21 +6,22 @@ import 'package:bob/screens/MyPage/invitationNew.dart';
 
 import '../../services/backend.dart';
 class Invitation extends StatefulWidget{
-  final List<Baby> babies;
-  const Invitation(this.babies, {super.key});
+  final List<Baby> activebabies;
+  final List<Baby> disactivebabies;
+  const Invitation(this.activebabies, this.disactivebabies, {super.key});
   @override
   State<Invitation> createState() => _Invitation();
 }
 class _Invitation extends State<Invitation> {
-  late List<Baby> notAllowedBabies;
+  //late List<Baby> notAllowedBabies;
   @override
   void initState() {
-    notAllowedBabies = [];
+    /*notAllowedBabies = [];
     for(int i=0; i<widget.babies.length;i++){
       if(!widget.babies[i].relationInfo.active){
         notAllowedBabies.add(widget.babies[i]);
       }
-    }
+    }*/
     super.initState();
   }
   @override
@@ -34,11 +35,11 @@ class _Invitation extends State<Invitation> {
           children: [
             InkWell(
               onTap: (){
-                if(widget.babies.isEmpty){
+                if(widget.activebabies.isEmpty){
                   GET.Get.snackbar('초대 불가', '아이를 먼저 등록해주세요', snackPosition: GET.SnackPosition.TOP, duration: const Duration(seconds: 2));
                   return;
                 }
-                GET.Get.to(()=>InvitationNew(widget.babies));
+                GET.Get.to(()=>InvitationNew(widget.activebabies));
               },
               child: Container(
                   width: double.infinity,
@@ -67,9 +68,9 @@ class _Invitation extends State<Invitation> {
             Expanded(
                 child: ListView.builder(
                   scrollDirection : Axis.vertical,
-                  itemCount: notAllowedBabies.length,
+                  itemCount: widget.disactivebabies.length,
                   itemBuilder: (BuildContext context, int index){
-                    return drawBaby(notAllowedBabies[index]);
+                    return drawBaby(widget.disactivebabies[index]);
                   },
                 )
             )
@@ -95,7 +96,7 @@ class _Invitation extends State<Invitation> {
                     return AlertDialog(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                       title: Text('초대 수락', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                      content: Text('~~~님이 보내신 초대를 수락하시겠습니까?'),
+                      content: Text('초대를 수락하시겠습니까?'),
                       actions: [
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(

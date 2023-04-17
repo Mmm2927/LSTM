@@ -206,7 +206,7 @@ class _Main_home extends State<Main_Home>{
                                         }
                                     );
                                   },
-                                  child: const Column(
+                                  child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Icon(Icons.water_drop_outlined,), // <-- Icon
@@ -243,7 +243,7 @@ class _Main_home extends State<Main_Home>{
                                         }
                                     );
                                   },
-                                  child: const Column(
+                                  child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Icon(Icons.water_drop,), // <-- Icon
@@ -280,7 +280,7 @@ class _Main_home extends State<Main_Home>{
                                         }
                                     );
                                   },
-                                  child: const Column(
+                                  child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Icon(Icons.rice_bowl_rounded,), // <-- Icon
@@ -316,7 +316,7 @@ class _Main_home extends State<Main_Home>{
                                         }
                                     );
                                   },
-                                  child: const Column(
+                                  child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Icon(Icons.baby_changing_station,), // <-- Icon
@@ -352,7 +352,7 @@ class _Main_home extends State<Main_Home>{
                                         }
                                     );
                                   },
-                                  child: const Column(
+                                  child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Icon(Icons.nights_stay_sharp,), // <-- Icon
@@ -400,7 +400,7 @@ class _Main_home extends State<Main_Home>{
                      Container(
                        padding: const EdgeInsets.only(left: 12, top: 3, bottom: 5),
                        width: MediaQuery.of(context).size.width-40,
-                       child: const Row(
+                       child: Row(
                          mainAxisAlignment: MainAxisAlignment.start,
                          children: [
                            Text('생활 기록',
@@ -522,10 +522,10 @@ class _Main_home extends State<Main_Home>{
                     child: Column(
                       children: [
                         Container(
-                          padding: const EdgeInsets.only(left: 12),
+                          padding: const EdgeInsets.all(5),
                           width: MediaQuery.of(context).size.width-40,
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const Text('성장 기록',
                                 style: TextStyle(
@@ -534,7 +534,6 @@ class _Main_home extends State<Main_Home>{
                                 ),
                               ),
                               Container(
-                                padding: EdgeInsets.only(left: 58),
                                 child: IconButton(
                                     onPressed: () {
                                       showModalBottomSheet(
@@ -552,32 +551,7 @@ class _Main_home extends State<Main_Home>{
                                           }
                                       );
                                     },
-                                    // onPressed: () {
-                                    //   Scaffold.of(context).showBottomSheet<void>(
-                                    //         (BuildContext context) {
-                                    //       return Container(
-                                    //         height: 200,
-                                    //         color: Colors.amber,
-                                    //         child: Center(
-                                    //           child: Column(
-                                    //             mainAxisAlignment: MainAxisAlignment.center,
-                                    //             mainAxisSize: MainAxisSize.min,
-                                    //             children: <Widget>[
-                                    //               const Text('BottomSheet'),
-                                    //               ElevatedButton(
-                                    //                 child: const Text('Close BottomSheet'),
-                                    //                 onPressed: () {
-                                    //                   Navigator.pop(context);
-                                    //                 },
-                                    //               ),
-                                    //             ],
-                                    //           ),
-                                    //         ),
-                                    //       );
-                                    //     },
-                                    //   );
-                                    // },
-                                    icon: Icon(Icons.add_circle)
+                                    icon: const Icon(Icons.add_circle)
                                 ),
                               )
                             ],
@@ -626,7 +600,7 @@ class _Main_home extends State<Main_Home>{
                         Container(
                           padding: const EdgeInsets.only(left: 12, top: 8),
                           width: MediaQuery.of(context).size.width-40,
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text('예방 접종',
@@ -692,7 +666,9 @@ class _Main_home extends State<Main_Home>{
                         Container(
                           padding: const EdgeInsets.only(left: 12, top: 8),
                           width: MediaQuery.of(context).size.width-40,
-                          child: const Row(
+
+
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text('건강 검진',

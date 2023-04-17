@@ -45,7 +45,7 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
           children: [
             Container(
               padding: const EdgeInsets.only(left: 25, top: 5),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text('키, 몸무게',

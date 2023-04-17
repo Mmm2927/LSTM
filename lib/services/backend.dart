@@ -87,7 +87,7 @@ editUserService(data) async{
     return response.data;
   }
 }
-deleteUser() async{
+deleteUserService() async{
   try{
     dio.options.headers['Authorization'] = await getToken();
     Response response = await dio.get('${PATH}/api/user/remove/');

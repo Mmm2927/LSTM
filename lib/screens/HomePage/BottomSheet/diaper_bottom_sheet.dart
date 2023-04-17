@@ -42,7 +42,7 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
           children: [
             Container(
               padding: const EdgeInsets.only(left: 25, top: 5),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text('기저귀',
@@ -56,7 +56,7 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
             ),
             Container(
               padding: const EdgeInsets.only(left: 25, top: 5),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text('배소변',
