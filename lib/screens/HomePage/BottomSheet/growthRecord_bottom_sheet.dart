@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:omni_datetime_picker/omni_datetime_picker.dart';
+import 'package:horizontal_picker/horizontal_picker.dart';
+
+import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 
 import '../../../services/backend.dart';
 
@@ -18,7 +20,10 @@ class GrowthRecordBottomSheet extends StatefulWidget {
 
 class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
 
-  List<DateTime>? dateTimeList;
+
+  double? newValue;
+
+  DateTime _selectedDate = DateTime.now();
 
   GlobalKey<FormState> _fKey = GlobalKey<FormState>();
   String? yearMonthDayTime;
@@ -34,7 +39,7 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.58,
+        height: MediaQuery.of(context).size.height * 0.54,
         child: Column(
           children: [
             Container(
@@ -51,63 +56,61 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                 ],
               ),
             ),
-
             SizedBox(
               height: 5,
+            ),
+            SafeArea(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Divider(),
+                    HorizontalPicker(
+                      minValue: 0,
+                      maxValue: 120,
+                      divisions: 1200,
+                      height: 120,
+                      suffix: " cm",
+                      showCursor: false,
+                      backgroundColor: Colors.transparent,
+                      activeItemTextColor: Colors.black,
+                      passiveItemsTextColor: Colors.orange,
+                      onChanged: (value) {
+                        setState(() {
+                          newValue = value;
+                        });
+                      },
+                    ),
+                    (newValue==null) ? Text('스크롤하여 키를 선택해 주세요',style: TextStyle(fontSize: 22, color: Colors.grey)) :
+                    Text('${newValue.toString()} cm',style: TextStyle(fontSize: 22),),
+                    Divider()
+                  ],
+                ),
+              ),
             ),
             Column(
               children: [
                 GestureDetector(
                   onTap: () async {
-                    dateTimeList = await showOmniDateTimeRangePicker(
-                      context: context,
-                      startInitialDate: DateTime.now(),
-                      startFirstDate:
-                      DateTime(1600).subtract(const Duration(days: 3652)),
-                      startLastDate: DateTime.now().add(
-                        const Duration(days: 3652),
-                      ),
-                      endInitialDate: DateTime.now(),
-                      endFirstDate:
-                      DateTime(1600).subtract(const Duration(days: 3652)),
-                      endLastDate: DateTime.now().add(
-                        const Duration(days: 3652),
-                      ),
-                      is24HourMode: true,
-                      isShowSeconds: false,
-                      minutesInterval: 1,
-                      secondsInterval: 1,
-                      borderRadius: const BorderRadius.all(Radius.circular(16)),
-                      constraints: const BoxConstraints(
-                        maxHeight: double.infinity,
-                      ),
-                      transitionBuilder: (context, anim1, anim2, child) {
-                        return FadeTransition(
-                          opacity: anim1.drive(
-                            Tween(
-                              begin: 0,
-                              end: 1,
-                            ),
-                          ),
-                          child: child,
-                        );
-                      },
-                      transitionDuration: const Duration(milliseconds: 200),
-                      barrierDismissible: true,
-                      selectableDayPredicate: (dateTime) {
-                        // Disable 25th Feb 2023
-                        if (dateTime == DateTime(2023, 2, 25)) {
-                          return false;
-                        } else {
-                          return true;
-                        }
-                      },
+                    var datePicked = await DatePicker.showSimpleDatePicker(
+                      context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2040),
+                      dateFormat: "yyyy-MMMM-dd",
+                      locale: DateTimePickerLocale.ko,
+                      looping: true,
+                      backgroundColor: Colors.purple[50],
+                      titleText: '측정 날짜를 선택해주세요',
+                      cancelText: '취소',
+                      confirmText: '확인',
+                      itemTextStyle: TextStyle(color: Colors.orangeAccent),
+                      textColor: Colors.black
                     );
-                    ymdtController.text = '${DateFormat('yyyy년 MM월 dd일 HH:mm').format(dateTimeList![0])} ~ '
-                        '${DateFormat('HH:mm').format(dateTimeList![1])}';
 
-                    print("Start dateTime: ${dateTimeList?[0]}");
-                    print("End dateTime: ${dateTimeList?[1]}");
+                    ymdtController.text = '${DateFormat('yyyy년 MM월 dd일').format(datePicked!)}';
+
                   },
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width*0.9,
@@ -115,7 +118,7 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                       child: TextFormField(
                         controller: ymdtController,
                         decoration: const InputDecoration(
-                            labelText: '측정 날짜를 골라주세요',
+                            labelText: '측정 날짜를 선택해주세요',
                             labelStyle: TextStyle(fontSize: 18),
                             suffixIcon: Icon(Icons.add_alarm_sharp),
                             filled: false, //색 지정
@@ -141,7 +144,6 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                 SizedBox(
                   height: 15,
                 ),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -159,7 +161,7 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                       ),
                     ),
                     OutlinedButton(
-                      onPressed: () async{
+                      onPressed: () async{  // 추가할 예정
                         // print(widget.babyId);
                         // int type = isSelect? 0 : 1;   // 0:모유, 1:분유
                         // String amount = amountController.text;
@@ -172,7 +174,7 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                         //
                         // String feedingBottleTime = '${DateTime.now().difference(dateTimeList![1]).inMinutes}분 전';
                         // widget.timeFeedingBottle(feedingBottleTime);
-                        // Navigator.pop(context);
+                        Navigator.pop(context);
                       },
                       child: Text('확인',style: TextStyle(fontSize: 25),),
                       style: OutlinedButton.styleFrom(

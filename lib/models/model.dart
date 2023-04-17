@@ -123,3 +123,18 @@ class lifeRecord{
     }
   }
 }
+
+class growthRecord{
+  final int babyId;
+  final int mode;    // 0:키, 1:몸무게
+  final String content;
+  growthRecord(this.babyId, this.mode, this.content);
+  makeContent(mode, value, date) {
+    var data;
+    if(mode==0){
+      data = {"height":value, "date":date};
+    }else if(mode==1){
+      data = {"weight":value, "date":date};
+    }
+  }
+}
