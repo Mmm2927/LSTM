@@ -2,9 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:horizontal_picker/horizontal_picker.dart';
-
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
-
 import '../../../services/backend.dart';
 
 class GrowthRecordBottomSheet extends StatefulWidget {
