@@ -19,15 +19,15 @@ class MainDiaryState extends State<MainDiary> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar_with_alarm('BoB', context),
-      resizeToAvoidBottomInset: false,
-      body: diaryList(),
-      floatingActionButton: FutureBuilder<bool>(
+        appBar: renderAppbar_with_alarm('BoB', context),
+        resizeToAvoidBottomInset: false,
+        body: diaryList(),
+        floatingActionButton: FutureBuilder<bool>(
             future: DatabaseHelper.instance.isDiary(selectedDay),
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
               if (snapshot.hasData) {
                 return const Center(
-                    child: null,
+                  child: null,
                 );
               }
               return FloatingActionButton(
@@ -137,91 +137,91 @@ class MainDiaryState extends State<MainDiary> {
         ),
         const SizedBox(height: 20),
         FutureBuilder<Diary>(
-          future: DatabaseHelper.instance.getDiary(selectedDay),
-          builder: (BuildContext context, AsyncSnapshot<Diary> snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: Text('No Today Diary')
-              );
-            }
-            return snapshot.data == null
-                ? const Center(child: Text('No Today Diary'))
-                : Expanded(
-                  child: SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
-                      scrollDirection: Axis.vertical,
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(snapshot.data!.title, style:const TextStyle(fontSize:18, fontWeight: FontWeight.bold)),
-                            const SizedBox(height:10),
-                            Text(snapshot.data!.date, style:const TextStyle(fontSize:13, color:Colors.blueGrey)),
-                            const SizedBox(height:10, width: double.infinity,),
-                            Center(child: snapshot.data!.image == null? const SizedBox(height:10, width: double.infinity,) : Image.file(File(snapshot.data!.image ?? 'default'), width: MediaQuery.of(context).size.width/2) ,),
-                            const SizedBox(height:10, width: double.infinity,),
-                            Text(snapshot.data!.content, style:const TextStyle(fontSize:16)),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                ElevatedButton(onPressed: (() async {
-                                  showDialog(
-                                      context: context,
-                                      barrierDismissible: true,
-                                      builder: (BuildContext context) {
-                                        return SingleChildScrollView(
-                                          child: AlertDialog(
-                                            content: Form(
-                                              key: _formKey,
-                                              child: updateDiary(selectedDay, snapshot.data),
-                                            ),
-                                            insetPadding: const EdgeInsets.fromLTRB(15, 30, 15, 30),
-                                            backgroundColor: const Color(0xfffffdfd),
+            future: DatabaseHelper.instance.getDiary(selectedDay),
+            builder: (BuildContext context, AsyncSnapshot<Diary> snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                    child: Text('No Today Diary')
+                );
+              }
+              return snapshot.data == null
+                  ? const Center(child: Text('No Today Diary'))
+                  : Expanded(
+                child: SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(snapshot.data!.title, style:const TextStyle(fontSize:18, fontWeight: FontWeight.bold)),
+                          const SizedBox(height:10),
+                          Text(snapshot.data!.date, style:const TextStyle(fontSize:13, color:Colors.blueGrey)),
+                          const SizedBox(height:10, width: double.infinity,),
+                          Center(child: snapshot.data!.image == null? const SizedBox(height:10, width: double.infinity,) : Image.file(File(snapshot.data!.image ?? 'default'), width: MediaQuery.of(context).size.width/2) ,),
+                          const SizedBox(height:10, width: double.infinity,),
+                          Text(snapshot.data!.content, style:const TextStyle(fontSize:16)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(onPressed: (() async {
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (BuildContext context) {
+                                      return SingleChildScrollView(
+                                        child: AlertDialog(
+                                          content: Form(
+                                            key: _formKey,
+                                            child: updateDiary(selectedDay, snapshot.data),
                                           ),
-                                        );
-                                      }
-                                  );
-                                }), style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    side: const BorderSide(
-                                      color: Color(0xff625ffa),
-                                      width: 0.5,
-                                    )
-                                ),
-                                    child: const Text('수정', style: TextStyle(color: Color(0xff625ffa)))),
-                                const SizedBox(width: 10),
-                                ElevatedButton(
-                                    onPressed: () {
-                                      showDialog(context: context, builder: (BuildContext context) => AlertDialog(
-                                        content: const Text('삭제하시겠습니까?'),
-                                        actions: [
-                                          ElevatedButton(
-                                              onPressed: () => Navigator.of(context).pop(), child: const Text('취소')),
-                                          ElevatedButton(
+                                          insetPadding: const EdgeInsets.fromLTRB(15, 30, 15, 30),
+                                          backgroundColor: const Color(0xfffffdfd),
+                                        ),
+                                      );
+                                    }
+                                );
+                              }), style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  side: const BorderSide(
+                                    color: Color(0xff625ffa),
+                                    width: 0.5,
+                                  )
+                              ),
+                                  child: const Text('수정', style: TextStyle(color: Color(0xff625ffa)))),
+                              const SizedBox(width: 10),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    showDialog(context: context, builder: (BuildContext context) => AlertDialog(
+                                      content: const Text('삭제하시겠습니까?'),
+                                      actions: [
+                                        ElevatedButton(
+                                            onPressed: () => Navigator.of(context).pop(), child: const Text('취소')),
+                                        ElevatedButton(
                                             onPressed: (() async {
                                               setState(() {
                                                 DatabaseHelper.instance.remove(selectedDay);
                                               });
                                               Navigator.of(context).pop();
                                             }),
-                                            child: const Text('삭제')),
-                                        ],
-                                      ));
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        side: const BorderSide(
-                                          color: Color(0xfffa625f),
-                                          width: 0.5,
-                                        )
-                                    ),child: const Text('삭제', style: TextStyle(color: Color(0xfffa625f)))),
-                              ],
-                            ),
-                          ]
-                      )
-                  ),
-            );
-          }
+                                            child: Text('삭제')),
+                                      ],
+                                    ));
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      side: const BorderSide(
+                                        color: Color(0xfffa625f),
+                                        width: 0.5,
+                                      )
+                                  ),child: const Text('삭제', style: TextStyle(color: Color(0xfffa625f)))),
+                            ],
+                          ),
+                        ]
+                    )
+                ),
+              );
+            }
         )
       ],
     );
@@ -230,13 +230,13 @@ class MainDiaryState extends State<MainDiary> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
 
-  final picker = ImagePicker();
-
   updateDiary(DateTime selectedDay, Diary? diary) {
     String title = diary!.title;
-    String content = diary.content;
-    String? image = diary.image;
+    String content = diary!.content;
+    String? image = diary!.image;
     String selDay = DateFormat('yyyy.MM.dd').format(selectedDay);
+    XFile? preImage;
+    final ImagePicker picker = ImagePicker();
 
     return Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -252,7 +252,7 @@ class MainDiaryState extends State<MainDiary> {
             height: 5.0,
           ),
           TextFormField(
-            cursorColor: const Color(0xfffa625f),
+            cursorColor: Color(0xfffa625f),
             initialValue: diary.title,
             onSaved: (value) {
               setState(() {
@@ -280,7 +280,7 @@ class MainDiaryState extends State<MainDiary> {
             width: 5000,
           ),
           TextFormField(
-            cursorColor: const Color(0xfffa625f),
+            cursorColor: Color(0xfffa625f),
             maxLines: 15,
             keyboardType: TextInputType.multiline,
             initialValue: diary.content,
@@ -312,10 +312,10 @@ class MainDiaryState extends State<MainDiary> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ElevatedButton(onPressed: (() async {
-                final image0 = await picker.pickImage(source: ImageSource.gallery);
-
+                final XFile? _image = await picker.pickImage(source: ImageSource.gallery);
                 setState(() {
-                  image = image0!.path;
+                  preImage = _image;
+                  image = _image!.path;
                 });
               }), style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -324,7 +324,7 @@ class MainDiaryState extends State<MainDiary> {
                     width: 0.5,
                   )
               ),
-                  child: Text(image != null? '사진 바꾸기' : '사진 첨부', style: const TextStyle(color: Color(0xff625ffa)))),
+                  child: Text(image != null? '사진 바꾸기' : '사진 첨부', style: TextStyle(color: Color(0xff625ffa)))),
               const SizedBox(width: 10),
               ElevatedButton(
                   onPressed: () {
@@ -346,21 +346,10 @@ class MainDiaryState extends State<MainDiary> {
                       )
                   ),child: const Text('수정', style: TextStyle(color: Color(0xfffa625f)))
               ),
+              if(image != null) Expanded(
+                child: Image.file(File(image!)),
+              ),
             ],
-          ),
-          Container(
-              margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-              padding: const EdgeInsets.fromLTRB(5, 5, 12, 5),
-              alignment: Alignment.centerRight,
-              color: const Color(0xffd0cece),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    image == null
-                        ? const Text('No image selected.')
-                        : Text(image!.substring(image!.length - image!.lastIndexOf('/')+1 > 40? image!.length-40 : image!.lastIndexOf('/')+1, image!.length))
-                  ]
-              )
           ),
         ]
     );
@@ -371,131 +360,123 @@ class MainDiaryState extends State<MainDiary> {
     String content = '';
     String? image;
     String selDay = DateFormat('yyyy.MM.dd').format(selectedDay);
+    XFile? preImage;
+    final ImagePicker picker = ImagePicker();
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        TextButton(
-          child: const Icon(Icons.clear, color: Color(0xfffa625f)),
-          onPressed: () {
-            _formKey.currentState?.reset();
-            Navigator.of(context).pop();
-          },
-        ),
-        const SizedBox(
-          height: 5.0,
-        ),
-        TextFormField(
-          cursorColor: const Color(0xfffa625f),
-          controller: _titleController,
-          onSaved: (value) {
-            setState(() {
-              title = value as String;
-            });
-          },
-          validator: (value) {
-            if (value!.trim().isEmpty) {
-              return '제목을 입력하세요.';
-            }
-            return null;
-          },
-          decoration: const InputDecoration(
-            labelText: '제목',
-            floatingLabelStyle: TextStyle(color: Color(0xfffa625f)),
-            focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(width:1.5, color: Color(0xfffa625f))
-            ),
-            border: OutlineInputBorder(),
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          TextButton(
+            child: const Icon(Icons.clear, color: Color(0xfffa625f)),
+            onPressed: () {
+              _formKey.currentState?.reset();
+              Navigator.of(context).pop();
+            },
           ),
-          style: const TextStyle(fontSize: 15),
-        ),
-        const SizedBox(
-          height: 16.0,
-          width: 5000,
-        ),
-        TextFormField(
-          cursorColor: const Color(0xfffa625f),
-          maxLines: 15,
-          keyboardType: TextInputType.multiline,
-          controller: _contentController,
-          onSaved: (value) {
-            setState(() {
-              content = value as String;
-            });
-          },
-          validator: (value) {
-            if (value!.trim().isEmpty) {
-              return '내용을 입력하세요.';
-            }
-            return null;
-          },
-          decoration: const InputDecoration(
-            labelText: '내용',
-            floatingLabelStyle: TextStyle(color: Color(0xfffa625f)),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(width:1.5, color: Color(0xfffa625f))
-            ),
-            border: OutlineInputBorder(),
+          const SizedBox(
+            height: 5.0,
           ),
-          style: const TextStyle(fontSize: 15),
-        ),
-        const SizedBox(
-          height: 16.0,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ElevatedButton(onPressed: (() async {
-              final image0 = await picker.pickImage(source: ImageSource.gallery);
+          TextFormField(
+            cursorColor: Color(0xfffa625f),
+            controller: _titleController,
+            onSaved: (value) {
               setState(() {
-                image = image0!.path; // 가져온 이미지를 _image에 저장
+                title = value as String;
               });
-            }), style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                side: const BorderSide(
-                  color: Color(0xff625ffa),
-                  width: 0.5,
-                )
+            },
+            validator: (value) {
+              if (value!.trim().isEmpty) {
+                return '제목을 입력하세요.';
+              }
+              return null;
+            },
+            decoration: const InputDecoration(
+              labelText: '제목',
+              floatingLabelStyle: TextStyle(color: Color(0xfffa625f)),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width:1.5, color: Color(0xfffa625f))
+              ),
+              border: OutlineInputBorder(),
             ),
-                child: Text(image != null? '사진 바꾸기' : '사진 첨부', style: const TextStyle(color: Color(0xff625ffa)))),
-            const SizedBox(width: 10),
-            ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    DatabaseHelper.instance.add(Diary(date: selDay, title: title, content: content, image: image));
-                    _formKey.currentState?.reset();
-                    Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('업로드 되었습니다.')),
-                    );
-                  }
+            style: const TextStyle(fontSize: 15),
+          ),
+          const SizedBox(
+            height: 16.0,
+            width: 5000,
+          ),
+          TextFormField(
+            cursorColor: Color(0xfffa625f),
+            maxLines: 15,
+            keyboardType: TextInputType.multiline,
+            controller: _contentController,
+            onSaved: (value) {
+              setState(() {
+                content = value as String;
+              });
+            },
+            validator: (value) {
+              if (value!.trim().isEmpty) {
+                return '내용을 입력하세요.';
+              }
+              return null;
+            },
+            decoration: const InputDecoration(
+              labelText: '내용',
+              floatingLabelStyle: TextStyle(color: Color(0xfffa625f)),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width:1.5, color: Color(0xfffa625f))
+              ),
+              border: OutlineInputBorder(),
+            ),
+            style: const TextStyle(fontSize: 15),
+          ),
+          const SizedBox(
+            height: 16.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(onPressed: (() async {
+                final XFile? _image = await picker.pickImage(source: ImageSource.gallery);
+                setState(() {
+                  preImage = _image;
+                  image = _image!.path;
+                });
+              }), style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  side: const BorderSide(
+                    color: Color(0xff625ffa),
+                    width: 0.5,
+                  )
+              ),
+                  child: Text(image != null? '사진 바꾸기' : '사진 첨부', style: const TextStyle(color: Color(0xff625ffa)))),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      DatabaseHelper.instance.add(Diary(date: selDay, title: title, content: content, image: image));
+                      _formKey.currentState?.reset();
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('업로드 되었습니다.')),
+                      );
+                    }
                   },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    side: const BorderSide(
-                      color: Color(0xfffa625f),
-                      width: 0.5,
-                    )
-                ),child: const Text('업로드', style: TextStyle(color: Color(0xfffa625f)))
-            ),
-          ],
-        ),
-        Container(
-            margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-            padding: const EdgeInsets.fromLTRB(5, 5, 12, 5),
-            alignment: Alignment.centerRight,
-            color: const Color(0xffd0cece),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  image == null
-                      ? const Text('No image selected.')
-                      : Text(image!.substring(image!.length - image!.lastIndexOf('/')+1 > 40? image!.length-40 : image!.lastIndexOf('/')+1, image!.length))
-                ]
-            )
-        ),
-      ]
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(
+                        color: Color(0xfffa625f),
+                        width: 0.5,
+                      )
+                  ),child: const Text('업로드', style: TextStyle(color: Color(0xfffa625f)))
+              ),
+              if(image != null) Expanded(
+                child: Image.file(File(image!)),
+              ),
+            ],
+          ),
+        ]
     );
   }
 }

@@ -1,6 +1,22 @@
+import 'package:bob/screens/HomePage/BottomSheet/babyFood_bottom_sheet.dart';
+import 'package:bob/screens/HomePage/BottomSheet/diaper_bottom_sheet.dart';
+import 'package:bob/screens/HomePage/BottomSheet/feedingBottle_bottom_sheet.dart';
+import 'package:bob/screens/HomePage/BottomSheet/growthRecord_bottom_sheet.dart';
+import 'package:bob/screens/HomePage/BottomSheet/sleep_bottom_sheet.dart';
+import 'package:bob/screens/HomePage/baby_statistics.dart';
 import 'package:flutter/material.dart';
 import 'package:bob/models/model.dart';
 import 'package:bob/screens/MyPage/manage_baby.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:path/path.dart';
+import 'package:omni_datetime_picker/omni_datetime_picker.dart';
+import 'package:bob/models/model.dart';
+import 'package:bob/services/backend.dart';
+
+import 'HomePage/BottomSheet/feeding_bottom_sheet.dart';
+
+
 
 class Main_Home extends StatefulWidget{
   final User userinfo;
@@ -11,131 +27,126 @@ class Main_Home extends StatefulWidget{
   _Main_home createState() => _Main_home();
 }
 class _Main_home extends State<Main_Home>{
+
   late int babyIdx;
+  String _feeding = '-';        // 모유
+  String _feedingBottle = '-';  // 젖병
+  String _babyfood = '-';       // 이유식
+  String _diaper = '-';         // 기저귀 
+  String _sleep = '-';          // 수면
+
+  void _timeFeeding(val){
+    setState(() {
+      _feeding = val;
+    });
+  }
+
+  void _timeFeedingBottle(val){
+    setState(() {
+      _feedingBottle = val;
+    });
+  }
+
+  void _timeBabyFood(val){
+    setState(() {
+      _babyfood = val;
+    });
+  }
+
+  void _timeDiaper(val){
+    setState(() {
+      _diaper = val;
+    });
+  }
+
+  void _timeSleep(val){
+    setState(() {
+      _sleep = val;
+    });
+  }
+
   @override
   void initState() {
     babyIdx = 0;
     print(widget.babies.length);
   }
+  bool timerClosed = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xF9F9F9FF),
-      appBar: AppBar(
-        backgroundColor: const Color(0xffffc8c7),
-        elevation: 0.0,
-        iconTheme : const IconThemeData(color: Colors.black),
-        title: const Text('BoB', style: TextStyle(color: Colors.black,fontSize: 15)),
-      ),
-      drawer: Drawer(                             //appbar 메뉴
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            UserAccountsDrawerHeader(
-              currentAccountPicture: const CircleAvatar(
-                backgroundImage: AssetImage('assets/images/logo.png'),
-                backgroundColor: Colors.white,
-              ),
-              accountName: Text( widget.userinfo.name,style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold,fontSize: 20),),
-              accountEmail: Text(widget.userinfo.email,style: TextStyle(color: Colors.grey[800]),),
-              onDetailsPressed: (){},
-              decoration: const BoxDecoration(
-                color: Color(0xfffa625f),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20)
-                )
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.home, color: Colors.grey[850]),
-              title: Text('Home'),
-              onTap: () {
-                // Navigator.push(context,
-                // MaterialPageRoute(
-                //     builder: (context) => Main_Cctv()));
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.camera, color: Colors.grey[850]),
-              title: Text('CCTV'),
-              onTap: () {
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.list_alt, color: Colors.grey[850]),
-              title: Text('Diary'),
-              onTap: () {
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.person_outline, color: Colors.grey[850]),
-              title: Text('Mypage'),
-              onTap: () {
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings, color: Colors.grey[850]),
-              title: Text('Setting'),
-              onTap: () {
-              },
-            )
-          ],
+        backgroundColor: const Color(0xF9F9F9FF),
+        appBar: AppBar(
+          backgroundColor: const Color(0xffffc8c7),
+          elevation: 0.0,
+          iconTheme : const IconThemeData(color: Colors.black),
+          title: const Text('BoB', style: TextStyle(color: Colors.black,fontSize: 15)),
         ),
-      ),
-      body: Stack(
-        children: [
-          Positioned(
-              top: 0,
-              right: 0,
-              left: 0,
-              child: Container(
-                height: 160,
-                decoration: const BoxDecoration(
-                  color: Color(0xffffc8c7),
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(40),
-                    bottomLeft: Radius.circular(40)
-                  )
-                ),
-                child: Container(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                          height: 150,
-                          child: drawBaby(
-                              widget.babies[babyIdx].name,
-                              widget.babies[babyIdx].birth
+        drawer: Drawer(
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: widget.babies.length,
+                itemBuilder: (BuildContext context, int index){
+                  Baby baby = widget.babies[index];
+                  return InkWell(
+                      onTap: (){
+                        setState(() {
+                          babyIdx = index;
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(color: Colors.grey)
+                        ),
+                        padding: EdgeInsets.all(10),
+                        margin: EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Text(baby.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                            Text(baby.getGenderString()),
+                            Text(DateFormat('yyyy년 MM월 dd일생').format(baby.birth)),
+                          ],
+                        ),
+                      )
+                  );
+                }
+            )
+        ),
+        //drawer 구현
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Container(
+              child: Column(
+                children: [
+                  Container(
+                      padding : const EdgeInsets.fromLTRB(10, 0, 10, 30),
+                      decoration: const BoxDecoration(
+                          color: Color(0xffffc8c7),
+                          borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(40),
+                              bottomLeft: Radius.circular(40)
                           )
                       ),
-                    ],
+                      child: drawBaby(widget.babies[babyIdx].name, widget.babies[babyIdx].birth)
                   ),
-                ),
-              ),
-          ),
-          Positioned(
-            top: 130,
-              child: Container(
-                height: 90,
-                width: MediaQuery.of(context).size.width-40,
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  color: const Color(0xfffdb1a5),
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 8,
-                      spreadRadius: 3
-                    )
-                  ]
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.only(right: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                  //아기 정보 구현
+                  Container(
+                      padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(
+                          color: const Color(0xfffdb1a5),
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                blurRadius: 8,
+                                spreadRadius: 3
+                            )
+                          ]
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text('버튼을 길게 누르면 타이머가 작동합니다.',
                             style: TextStyle(
@@ -143,132 +154,447 @@ class _Main_home extends State<Main_Home>{
                                 color: Colors.grey[700]
                             ),
                           ),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              InkWell(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(20),
+                                                topLeft: Radius.circular(20)
+                                            )
+                                        ),
+                                        backgroundColor: Colors.purple[50],
+                                        isScrollControlled: true,
+                                        context: context,
+                                        builder: ( BuildContext context ) {
+                                          return FeedingBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeFeeding);
+                                        }
+                                    );
+                                  },
+                                  onLongPress: (){
+                                    setState(() {
+                                      timerClosed = false;
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: Colors.red
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Icon(Icons.water_drop_outlined,), // <-- Icon
+                                        Text("모유",style: TextStyle(fontSize: 15),), // <-- Text
+                                      ],
+                                    ),
+                                  )
+                              ),
+                              InkWell(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(20),
+                                                topLeft: Radius.circular(20)
+                                            )
+                                        ),
+                                        backgroundColor: Colors.purple[50],
+                                        isScrollControlled: true,
+                                        context: context,
+                                        builder: ( BuildContext context ) {
+                                          return FeedingBottleBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeFeedingBottle);
+                                        }
+                                    );
+                                  },
+                                  onLongPress: (){
+                                    setState(() {
+                                      timerClosed = false;
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: Colors.orange
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Icon(Icons.water_drop,), // <-- Icon
+                                        Text("젖병",style: TextStyle(fontSize: 15),), // <-- Text
+                                      ],
+                                    ),
+                                  )
+                              ),
+                              InkWell(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(20),
+                                                topLeft: Radius.circular(20)
+                                            )
+                                        ),
+                                        backgroundColor: Colors.purple[50],
+                                        isScrollControlled: true,
+                                        context: context,
+                                        builder: ( BuildContext context ) {
+                                          return BabyFoodBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeBabyFood);
+                                        }
+                                    );
+                                  },
+                                  onLongPress: (){
+                                    setState(() {
+                                      timerClosed = false;
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: Colors.yellow
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Icon(Icons.rice_bowl_rounded,), // <-- Icon
+                                        Text("이유식",style: TextStyle(fontSize: 15),), // <-- Text
+                                      ],
+                                    ),
+                                  )
+                              ),
+                              InkWell(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(20),
+                                                topLeft: Radius.circular(20)
+                                            )
+                                        ),
+                                        backgroundColor: Colors.purple[50],
+                                        isScrollControlled: true,
+                                        context: context,
+                                        builder: ( BuildContext context ) {
+                                          return DiaperBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeDiaper);
+                                        }
+                                    );
+                                  },
+                                  onLongPress: (){
+                                    setState(() {
+                                      timerClosed = false;
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: Colors.green
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Icon(Icons.baby_changing_station,), // <-- Icon
+                                        Text("기저귀",style: TextStyle(fontSize: 15),), // <-- Text
+                                      ],
+                                    ),
+                                  )
+                              ),
+                              InkWell(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(20),
+                                                topLeft: Radius.circular(20)
+                                            )
+                                        ),
+                                        backgroundColor: Colors.purple[50],
+                                        isScrollControlled: true,
+                                        context: context,
+                                        builder: ( BuildContext context ) {
+                                          return SleepBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeSleep);
+                                        }
+                                    );
+                                  },
+                                  onLongPress: (){
+                                    setState(() {
+                                      timerClosed = false;
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: Colors.blue
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Icon(Icons.nights_stay_sharp,), // <-- Icon
+                                        Text("수면",style: TextStyle(fontSize: 13),), // <-- Text
+                                      ],
+                                    ),
+                                  )
+                              )
+                            ],
+                          ),
+                        ],
+                      )
+                  ),
+                  //기록 button 구현
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => BabyStatistics()),
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          color: const Color(0xffffc8c7),
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 10,
+                                spreadRadius: 3
+                            )
+                          ]
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('생활 기록', style: TextStyle(fontSize: 20, color: Colors.black)),
+                          Row(
+                            children: [
+                              Expanded(flex:1,child: Text('모유', style: TextStyle(fontSize: 17, color: Colors.grey[600]))),
+                              Expanded(flex:1,child: Text('젖병', style: TextStyle(fontSize: 17, color: Colors.grey[600])),)
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(flex:1,child: Center(child:Text( _feeding, style: TextStyle(fontSize: 20, color: Colors.grey[800])))),
+                              Expanded(flex:1,child: Center(child:Text(_feedingBottle, style: TextStyle(fontSize: 20, color: Colors.grey[800]))))
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(flex:1,child: Text('기저귀', style: TextStyle(fontSize: 17, color: Colors.grey[600]))),
+                              Expanded(flex:1,child: Text('수면', style: TextStyle(fontSize: 17, color: Colors.grey[600])),)
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(flex:1,child: Center(child:Text(_diaper, style: TextStyle(fontSize: 20, color: Colors.grey[800]))),),
+                              Expanded(flex:1,child: Center(child:Text(_sleep, style: TextStyle(fontSize: 20, color: Colors.grey[800])),))
+                            ],
+                          ),
                         ],
                       ),
                     ),
-
-                    Container(
-                      padding: EdgeInsets.only(left: 20,top: 10),
-                      child: Row(
+                  ),
+                  Offstage(
+                    offstage: timerClosed,
+                    child: Container(
+                      height: 80,
+                      padding: EdgeInsets.all(10),
+                      margin: EdgeInsets.fromLTRB(20, 01, 20, 10),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.white
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox.fromSize(
-                            size: Size(50, 50),
-                            child: ClipOval(
-                              child: Material(
-                                color: Colors.red,
-                                child: InkWell(
-                                  splashColor: Colors.grey,
-                                  onTap: () {},
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Icon(Icons.dining_outlined,), // <-- Icon
-                                      Text("수유",style: TextStyle(fontSize: 15),), // <-- Text
-                                    ],
-                                  ),
-                                ),
+                          Text('타이머')
+                        ],
+                      )
+                    )
+                  ),
+                  Row(
+                    children: [
+                      //생활기록
+                      Expanded(
+                          flex:1,
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              height: 210,
+                              margin: const EdgeInsets.fromLTRB(20, 0, 5, 10),
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  color: const Color(0xffffc8c7),
+                                  borderRadius: BorderRadius.circular(15),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        blurRadius: 8,
+                                        spreadRadius: 3
+                                    )
+                                  ]
                               ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          SizedBox.fromSize(
-                            size: Size(50, 50),
-                            child: ClipOval(
-                              child: Material(
-                                color: Colors.orange,
-                                child: InkWell(
-                                  splashColor: Colors.grey,
-                                  onTap: () {},
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Icon(Icons.baby_changing_station,), // <-- Icon
-                                      Text("배변",style: TextStyle(fontSize: 15),), // <-- Text
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('성장 기록',style: TextStyle(fontSize: 22, color: Colors.black)),
+                                      IconButton(
+                                          onPressed: () {
+                                            showModalBottomSheet(
+                                                shape: const RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.only(
+                                                        topRight: Radius.circular(20),
+                                                        topLeft: Radius.circular(20)
+                                                    )
+                                                ),
+                                                backgroundColor: Colors.purple[50],
+                                                isScrollControlled: true,
+                                                context: context,
+                                                builder: ( BuildContext context ) {
+                                                  return GrowthRecordBottomSheet(widget.babies[babyIdx].relationInfo.BabyId);
+                                                }
+                                            );
+                                          },
+                                          icon: const Icon(Icons.add_circle)
+                                      ),
                                     ],
                                   ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          SizedBox.fromSize(
-                            size: Size(50, 50),
-                            child: ClipOval(
-                              child: Material(
-                                color: Colors.yellow,
-                                child: InkWell(
-                                  splashColor: Colors.grey,
-                                  onTap: () {},
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Icon(Icons.baby_changing_station,), // <-- Icon
-                                      Text("소변",style: TextStyle(fontSize: 15),), // <-- Text
-                                    ],
+                                  Text(
+                                    '키, 몸무게',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.grey[700]
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ),
-                          ),SizedBox(
-                            width: 20,
-                          ),
-                          SizedBox.fromSize(
-                            size: Size(50, 50),
-                            child: ClipOval(
-                              child: Material(
-                                color: Colors.green,
-                                child: InkWell(
-                                  splashColor: Colors.grey,
-                                  onTap: () {},
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Icon(Icons.bedroom_child_outlined,), // <-- Icon
-                                      Text("수면",style: TextStyle(fontSize: 15),), // <-- Text
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),SizedBox(
-                            width: 20,
-                          ),
-                          SizedBox.fromSize(
-                            size: Size(50, 50),
-                            child: ClipOval(
-                              child: Material(
-                                color: Colors.blue,
-                                child: InkWell(
-                                  splashColor: Colors.grey,
-                                  onTap: () {},
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Icon(Icons.add_circle,), // <-- Icon
-                                      Text("직접 입력",style: TextStyle(fontSize: 13),), // <-- Text
-                                    ],
-                                  ),
-                                ),
+                                ],
                               ),
                             ),
                           )
-                        ],
                       ),
-                    )
-                  ],
-                ),
+                      Expanded(
+                          flex:1,
+                          child: Container(
+                              margin: const EdgeInsets.fromLTRB(5, 0, 20, 10),
+                              child: Column(
+                                children: [
+                                  GestureDetector(
+                                      onTap: () {//건강 검진 페이지 이동
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(10),
+                                        height: 95,
+                                        decoration: BoxDecoration(
+                                            color: const Color(0xffffc8c7),
+                                            borderRadius: BorderRadius.circular(15),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.black.withOpacity(0.2),
+                                                  blurRadius: 8,
+                                                  spreadRadius: 3
+                                              )
+                                            ]
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('예방 접종', style: TextStyle(fontSize: 20, color: Colors.black),),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    '다음 예방 접종 -> ',
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        color: Colors.grey[700]
+                                                    ),
+                                                  ),
+                                                  const Text(
+                                                    '(예시)',
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.black
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+
+                                            ]
+                                        ),
+                                      )
+                                  ),
+                                  const SizedBox(height: 20),
+                                  GestureDetector(
+                                      onTap: () {//건강 검진 페이지 이동
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(10),
+                                        height: 95,
+                                        decoration: BoxDecoration(
+                                            color: const Color(0xffffc8c7),
+                                            borderRadius: BorderRadius.circular(15),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.black.withOpacity(0.2),
+                                                  blurRadius: 8,
+                                                  spreadRadius: 3
+                                              )
+                                            ]
+                                        ),
+                                        child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('건강 접종', style: TextStyle(fontSize: 20, color: Colors.black),),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    '다음 건강 접종 -> ',
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        color: Colors.grey[700]
+                                                    ),
+                                                  ),
+                                                  const Text(
+                                                    '(예시)',
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.black
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+
+                                            ]
+                                        ),
+                                      )
+                                  )
+                                ],
+                              )
+                          )
+                      )
+                    ],
+                  ),
+                ],
               )
-          ),
-        ],
-      ),
+          )
+        )
     );
   }
 }
-
 
 Widget drawBaby(String name, DateTime birth){
   final now = DateTime.now();
@@ -291,7 +617,7 @@ Widget drawBaby(String name, DateTime birth){
                     ),
                     Text(
                       'D+ ${DateTime(now.year, now.month, now.day).difference(birth).inDays+2}',
-                      style: TextStyle(fontSize: 25),
+                      style: const TextStyle(fontSize: 25),
                     ),
                   ],
                 )
@@ -301,3 +627,4 @@ Widget drawBaby(String name, DateTime birth){
       )
   );
 }
+//아기 정보 그리기

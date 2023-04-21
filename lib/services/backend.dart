@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:bob/services/storage.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
@@ -15,8 +17,12 @@ loginService(id, pass) async{
 }
 // 중복 검사 서비스
 emailOverlapService(id) async{
-  Response response = await dio.post('${PATH}/api/user/exist/', data: {'email' : id});
-  if(response.statusCode == 200){
+  try{
+    Response response = await dio.post('${PATH}/api/user/exist/', data: {'email' : id});
+    return response.data;
+  }on DioError catch (e) {
+    dio.options.headers['Authorization'] = await refresh();
+    Response response = await dio.post('${PATH}/api/user/exist/', data: {'email' : id});
     return response.data;
   }
 }
@@ -29,18 +35,35 @@ registerService(email, pass, name, phone) async{
 }
 
 getMyBabies() async{
-  dio.options.headers['Authorization'] = await getToken();
-  Response response = await dio.post('${PATH}/api/baby/lists/');
-  if(response.statusCode == 200){
-    return response.data as List<dynamic>;
+  try{
+    dio.options.headers['Authorization'] = await getToken();
+    Response response = await dio.post('${PATH}/api/baby/lists/');
+    if(response.statusCode == 200){
+      return response.data as List<dynamic>;
+    }
+  }catch(e){
+    dio.options.headers['Authorization'] = await refresh();
+    Response response = await dio.post('${PATH}/api/baby/lists/');
+    if(response.statusCode == 200){
+      return response.data as List<dynamic>;
+    }
   }
 }
 getBaby(int id) async{
-  dio.options.headers['Authorization'] = await getToken();
-  Response response = await dio.post('${PATH}/api/baby/${id}/get/');
-  if(response.statusCode == 200){
-    return response.data;
+  try{
+    dio.options.headers['Authorization'] = await getToken();
+    Response response = await dio.post('${PATH}/api/baby/${id}/get/');
+    if(response.statusCode == 200){
+      return response.data;
+    }
+  }catch(e){
+    dio.options.headers['Authorization'] = await refresh();
+    Response response = await dio.post('${PATH}/api/baby/${id}/get/');
+    if(response.statusCode == 200){
+      return response.data;
+    }
   }
+
 }
 setBabyService(data) async{
   try{
@@ -66,7 +89,7 @@ editUserService(data) async{
     return response.data;
   }
 }
-deleteUser() async{
+deleteUserService() async{
   try{
     dio.options.headers['Authorization'] = await getToken();
     Response response = await dio.get('${PATH}/api/user/remove/');
@@ -75,9 +98,29 @@ deleteUser() async{
     return 405;
   }
 }
+// 추가 양육자 초대
+invitationService(data) async{
+  try{
+    dio.options.headers['Authorization'] = await getToken();
+    Response response = await dio.post('${PATH}/api/baby/connect/',data: data);
+    return response.data;
+  }on DioError catch (e) {
+    dio.options.headers['Authorization'] = await refresh();
+    Response response = await dio.post('${PATH}/api/baby/connect/',data: data);
+    return response.data;
+  }
+}
 // 초대 수락 API
-acceptInvitation() async{
-
+acceptInvitationService(int babyId) async{
+  try{
+    dio.options.headers['Authorization'] = await getToken();
+    Response response = await dio.post('${PATH}/api/baby/activate/',data: {"babyid": babyId});
+    return response.data;
+  }on DioError catch (e) {
+    dio.options.headers['Authorization'] = await refresh();
+    Response response = await dio.post('${PATH}/api/baby/activate/',data: {"babyid": babyId});
+    return response.data;
+  }
 }
 // 토큰 갱신
 refresh() async{
@@ -90,4 +133,29 @@ refresh() async{
   // login storage - update
   await updateTokenInfo(newAccessToken);
   return "Bearer ${newAccessToken}";
+}
+
+//// 1. home page
+lifesetService(int babyId, int mode, String content) async{
+  try{
+    dio.options.headers['Authorization'] = await getToken();
+    Response response = await dio.post('${PATH}/api/life/set/',data: {"babyid": babyId, "mode" : mode, "content":content});
+    return response.data;
+  }on DioError catch (e) {
+    dio.options.headers['Authorization'] = await refresh();
+    Response response = await dio.post('${PATH}/api/life/set/',data: {"babyid": babyId});
+    return response.data;
+  }
+}
+
+growthService(int babyId, double height, double weight, DateTime date) async{
+  try{
+    dio.options.headers['Authorization'] = await getToken();
+    Response response = await dio.post('${PATH}/api/growth/set/',data: {"babyid": babyId, "height" : height, "weight":weight, "date":date});
+    return response.data;
+  }on DioError catch (e) {
+    dio.options.headers['Authorization'] = await refresh();
+    Response response = await dio.post('${PATH}/api/growth/set/',data: {"babyid": babyId});
+    return response.data;
+  }
 }

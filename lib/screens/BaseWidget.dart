@@ -27,6 +27,7 @@ class _BaseWidget extends State<BaseWidget>{
   }
   @override
   void initState() {
+    super.initState();
     babyIds = [];
     for(int i=0;i<widget.MyBabies.length;i++){
       babyIds.add(widget.MyBabies[i].relationInfo.BabyId);
@@ -37,19 +38,14 @@ class _BaseWidget extends State<BaseWidget>{
   }
   Future<void> loadData() async {
     await GET.Get.to(ManageBabyWidget(widget.MyBabies));
+    print('dd');
     List<dynamic> babyRelationList = await getMyBabies();
+    print(babyRelationList);
     for(int i=0; i<babyRelationList.length;i++){
       // 기존에 있는 아이디인지 확인
       if(!babyIds.contains(babyRelationList[i]['baby'])){
-        print(babyRelationList[i]['baby']);
-        // 없으면 ADD
-        Baby_relation relation;
-        if(babyRelationList[i]['relation']==0) {
-          relation = Baby_relation(babyRelationList[i]['baby'], babyRelationList[i]['relation'], 255,"","");
-        } else {
-          relation = Baby_relation.fromJson(babyRelationList[i]);
-        }
-        // 2. 아기 등록
+        // 없으면 ADD  // 2. 아기 등록
+        Baby_relation relation = Baby_relation.fromJson(babyRelationList[i]);
         var baby = await getBaby(babyRelationList[i]['baby']);
         baby['relationInfo'] = relation.toJson();
         setState(() {

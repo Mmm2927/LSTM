@@ -13,6 +13,8 @@ import 'package:bob/services/storage.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:get/get.dart' as GET;
 import 'package:dio/dio.dart';
+import 'langauges.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -26,10 +28,14 @@ class MyApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('ko', ''),
-        Locale('en', ''),
+      /*supportedLocales: const [
+        Locale('ko', 'KR'),
+        Locale('en', 'US'),
       ],
+      path: 'assets/translations',*/
+      translations: Languages(),
+      locale: GET.Get.deviceLocale,  // 기기에 설정한 언어
+      fallbackLocale:  const Locale('ko','KR'),
       theme: ThemeData(
         fontFamily: 'basic',
       ),
@@ -38,6 +44,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class Splash extends StatefulWidget {
   const Splash({super.key});
   @override
@@ -91,9 +98,11 @@ class _Splash extends State<Splash> {
                 body: LoginInit()
             );
           }
-          return Scaffold(
-            body: BaseWidget(snapshot.data[0], snapshot.data[1] as List<Baby>)
-          );
+          else{
+            return Scaffold(
+                body: BaseWidget(snapshot.data[0], snapshot.data[1] as List<Baby>)
+            );
+          }
         }
       },
     );
@@ -113,16 +122,10 @@ class _Splash extends State<Splash> {
       // 2. babyList 가져오기
       List<Baby> MyBabies = [];
       List<dynamic> babyList = await getMyBabies();
-      print(babyList);
+      //print(babyList);
       for(int i=0; i<babyList.length;i++){
-        // 1. baby relation도 받아오기
-        Baby_relation relation;
-        if(babyList[i]['relation']==0) {
-          relation = Baby_relation(babyList[i]['baby'], babyList[i]['relation'], 255,"","");
-        } else {
-          relation = Baby_relation.fromJson(babyList[i]);
-        }
         // 2. 아기 등록
+        Baby_relation relation = Baby_relation.fromJson(babyList[i]);
         var baby = await getBaby(babyList[i]['baby']);
         baby['relationInfo'] = relation.toJson();
         MyBabies.add(Baby.fromJson(baby));

@@ -22,6 +22,7 @@ class _WithdrawService extends State<WithdrawService> {
       body: Container(
         margin: const EdgeInsets.all(20),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Padding(
@@ -63,13 +64,9 @@ class _WithdrawService extends State<WithdrawService> {
   serviceWithdraw() async{
     print('serviceWithdraw');
     // 1. 삭제 - dio 사용
-    if(await deleteUser() == 204){
-      print('삭제 완료');
-      // 삭제 성공
-      // 2. 로컬 DB & secureStorage 삭제
-      await storage.delete(key: 'login');
-      // 2. initPage로 이동
-      GET.Get.offAll(LoginInit());
+    if(await deleteUserService() == 204){
+      await storage.delete(key: 'login');    // 2. 로컬 DB & secureStorage 삭제
+      GET.Get.offAll(const LoginInit());            // 2. initPage로 이동
     }
     else{
       GET.Get.snackbar('삭제 실패', '', snackPosition: GET.SnackPosition.TOP, duration: const Duration(seconds: 2));
