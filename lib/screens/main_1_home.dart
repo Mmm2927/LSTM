@@ -372,7 +372,7 @@ class _Main_home extends State<Main_Home>{
           ),
           //기록 button 구현
           Positioned(
-              top: 240,
+              top: 238,
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -381,7 +381,7 @@ class _Main_home extends State<Main_Home>{
                   );
                 },
                 child: Container(
-                  height: 120,
+                  height: MediaQuery.of(context).size.height-560,
                   width: MediaQuery.of(context).size.width-40,
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
@@ -505,7 +505,7 @@ class _Main_home extends State<Main_Home>{
 
                   },
                   child: Container(
-                    height: 130,
+                    height: MediaQuery.of(context).size.height-540,
                     width: MediaQuery.of(context).size.width-235,
                     margin: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
@@ -581,7 +581,7 @@ class _Main_home extends State<Main_Home>{
                     //예방 접종 페이지로 이동하도록
                   },
                   child: Container(
-                    height: 60,
+                    height: MediaQuery.of(context).size.height-620,
                     width: MediaQuery.of(context).size.width-235,
                     margin: const EdgeInsets.symmetric(horizontal: 215),
                     decoration: BoxDecoration(
@@ -641,13 +641,13 @@ class _Main_home extends State<Main_Home>{
           ),
           //예방접종
           Positioned(
-              top: 450,
+              top: 460,
               child: GestureDetector(
                   onTap: () {
                     //건강 검진 페이지 이동
                   },
                   child: Container(
-                    height: 60,
+                    height: MediaQuery.of(context).size.height-620,
                     width: MediaQuery.of(context).size.width-235,
                     margin: const EdgeInsets.symmetric(horizontal: 215),
                     decoration: BoxDecoration(

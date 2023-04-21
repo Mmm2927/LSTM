@@ -126,15 +126,18 @@ class lifeRecord{
 
 class growthRecord{
   final int babyId;
-  final int mode;    // 0:키, 1:몸무게
-  final String content;
-  growthRecord(this.babyId, this.mode, this.content);
-  makeContent(mode, value, date) {
-    var data;
-    if(mode==0){
-      data = {"height":value, "date":date};
-    }else if(mode==1){
-      data = {"weight":value, "date":date};
-    }
-  }
+  final double height;
+  final double weight;
+  final DateTime date;
+  growthRecord(this.babyId, this.height, this.weight, this.date);
+
+  growthRecord.fromJson(Map<dynamic, dynamic> json)
+      : babyId = json['babyId'], height = json['height'], weight = json['weight'], date = DateTime.parse(json['date']);
+
+  Map<String, dynamic> toJson() => {
+    "babyId": babyId,
+    "height": height,
+    "weight": weight,
+    "date": date
+  };
 }

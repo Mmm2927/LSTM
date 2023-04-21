@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:horizontal_picker/horizontal_picker.dart';
@@ -29,6 +30,8 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
   GlobalKey<FormState> _fKey = GlobalKey<FormState>();
   String? yearMonthDayTime;
   TextEditingController ymdtController = TextEditingController();
+  TextEditingController heightController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
 
   @override
   void initState() {
@@ -133,8 +136,8 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                       textColor: Colors.black
                     );
 
-                    ymdtController.text = '${DateFormat('yyyy년 MM월 dd일').format(datePicked!)}';
-
+                    //ymdtController.text = '${DateFormat('yyyy년 MM월 dd일').format(datePicked!)}';
+                    ymdtController.text = datePicked.toString();
                   },
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width*0.9,
@@ -153,7 +156,8 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                             contentPadding: EdgeInsets.all(10)
                         ),
                         onSaved: (val) {
-                          yearMonthDayTime = ymdtController.text;
+                          yearMonthDayTime = '${DateFormat('yyyy년 MM월 dd일').format(DateTime.parse(ymdtController.text))}';
+                         // yearMonthDayTime = ymdtController.text;
                         },
                         validator: (val) {
                           if (val == null || val.isEmpty) {
@@ -185,19 +189,13 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                       ),
                     ),
                     OutlinedButton(
-                      onPressed: () async{  // 추가할 예정
-                        // print(widget.babyId);
-                        // int type = isSelect? 0 : 1;   // 0:모유, 1:분유
-                        // String amount = amountController.text;
-                        // String startTime = dateTimeList![0].toString();
-                        // String endTime = dateTimeList![1].toString();
-                        // String memo = memoController.text;
-                        //
-                        // var content = {"type": type, "amount": amount, "startTime": startTime, "endTime": endTime, "memo": memo,};
-                        // var result = await lifesetService(widget.babyId, 1, content.toString());
-                        //
-                        // String feedingBottleTime = '${DateTime.now().difference(dateTimeList![1]).inMinutes}분 전';
-                        // widget.timeFeedingBottle(feedingBottleTime);
+                      onPressed: () async{
+                        print(widget.babyId);
+                        double? growthHeight = height;
+                        double? growthWeight = weight;
+                        DateTime growthDate = DateTime.parse(ymdtController.text);
+
+                        var result = await growthService(widget.babyId, growthHeight!, growthWeight!, growthDate);
                         Navigator.pop(context);
                       },
                       child: Text('확인',style: TextStyle(fontSize: 25),),
