@@ -13,6 +13,8 @@ import 'package:bob/services/storage.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:get/get.dart' as GET;
 import 'package:dio/dio.dart';
+import 'langauges.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -26,10 +28,14 @@ class MyApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('ko', ''),
-        Locale('en', ''),
+      /*supportedLocales: const [
+        Locale('ko', 'KR'),
+        Locale('en', 'US'),
       ],
+      path: 'assets/translations',*/
+      translations: Languages(),
+      locale: GET.Get.deviceLocale,  // 기기에 설정한 언어
+      fallbackLocale:  const Locale('ko','KR'),
       theme: ThemeData(
         fontFamily: 'basic',
       ),
@@ -38,6 +44,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class Splash extends StatefulWidget {
   const Splash({super.key});
   @override

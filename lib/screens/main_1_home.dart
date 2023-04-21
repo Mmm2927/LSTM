@@ -537,7 +537,7 @@ class _Main_home extends State<Main_Home>{
                                         ),
                                       )
                                   ),
-                                  SizedBox(height: 20),
+                                  const SizedBox(height: 20),
                                   GestureDetector(
                                       onTap: () {//건강 검진 페이지 이동
                                       },

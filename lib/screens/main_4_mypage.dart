@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:bob/screens/Login/initPage.dart';
 import 'package:bob/screens/MyPage/manage_baby.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:intl/intl.dart';
 import '../models/model.dart';
 import 'package:bob/screens/MyPage/invitation.dart';
@@ -10,10 +11,11 @@ import 'package:bob/screens/MyPage/switchNotice.dart';
 import 'package:bob/screens/MyPage/withdraw.dart';
 import 'package:bob/screens/MyPage/modifyUser.dart';
 import 'package:bob/widgets/appbar.dart';
-import 'package:get/get.dart' as GET;
+import 'package:get/get.dart' hide Trans;
 import 'package:bob/services/backend.dart';
 import '../services/storage.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart' hide StringTranslateExtension;
+import '../langauges.dart';
 // 앱에서 지원하는 언어 리스트 변수
 final supportedLocales = [
   Locale('en', 'US'),
@@ -31,6 +33,8 @@ class _MainMyPage extends State<MainMyPage>{
   late Map<int, Baby> disactiveBabies={};
   String selectedLanguageMode = '한국어';
   //late List<int> babyIds;
+  //var locale = Locale('en','US');
+
   @override
   void initState() {
     for(int i=0;i<widget.babies.length;i++){
@@ -48,7 +52,7 @@ class _MainMyPage extends State<MainMyPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar_with_alarm('BoB', context),
+      appBar: renderAppbar_with_alarm('bob', context),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -74,7 +78,7 @@ class _MainMyPage extends State<MainMyPage>{
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('아이 관리', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  Text('main4_manageBaby'.tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                   const SizedBox(height: 10),
                   SizedBox(
                       height: 110,
@@ -96,7 +100,7 @@ class _MainMyPage extends State<MainMyPage>{
                                           ),
                                           child: IconButton(
                                               onPressed: () async{
-                                                await GET.Get.to(ManageBabyWidget(activeBabies.values.toList()));
+                                                await Get.to(ManageBabyWidget(activeBabies.values.toList()));
                                                 await reloadBabies();
                                               },
                                               iconSize: 40,
@@ -104,7 +108,7 @@ class _MainMyPage extends State<MainMyPage>{
                                               icon: const Icon(Icons.add)),
                                         ),
                                         const SizedBox(height: 8),
-                                        const Text('아이 추가')
+                                        Text('main4_addBaby'.tr)
                                       ]
                                   )
                               );
@@ -124,31 +128,31 @@ class _MainMyPage extends State<MainMyPage>{
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      getSettingScreen('아이 추가 / 수정', const Icon(Icons.edit_attributes_sharp),() async{
-                        await GET.Get.to(ManageBabyWidget(activeBabies.values.toList()));
+                      getSettingScreen('main4_babyAddModify'.tr, const Icon(Icons.edit_attributes_sharp),() async{
+                        await Get.to(ManageBabyWidget(activeBabies.values.toList()));
                         await reloadBabies();
                       }),
-                      getSettingScreen('양육자 / 베이비시터 초대', const Icon(Icons.diamond_outlined),() async{
-                        await GET.Get.to(() => Invitation(activeBabies.values.toList(), disactiveBabies.values.toList()));
+                      getSettingScreen('main4_InviteBabysitter'.tr, const Icon(Icons.diamond_outlined),() async{
+                        await Get.to(() => Invitation(activeBabies.values.toList(), disactiveBabies.values.toList()));
                         await reloadBabies();
                       }),
-                      getSettingScreen('알림 ON / OFF', const Icon(Icons.notifications_off_outlined),(){
-                        GET.Get.to(() => SwitchNotice(activeBabies.values.toList()));
+                      getSettingScreen('main4_switch_Alarm'.tr, const Icon(Icons.notifications_off_outlined),(){
+                        Get.to(() => SwitchNotice(activeBabies.values.toList()));
                       }),
                       const Text('Common'),
                       const SizedBox(height: 10),
-                      getSettingScreen('로그아웃', const Icon(Icons.logout),() => logout()),
-                      getSettingScreen('회원 정보 수정', const Icon(Icons.mode_edit_outlined),() async {
-                        var modifyInfo = await GET.Get.to(() => ModifyUser(widget.userinfo));
+                      getSettingScreen('main4_logout'.tr, const Icon(Icons.logout),() => logout()),
+                      getSettingScreen('main4_modifyUserInfo'.tr, const Icon(Icons.mode_edit_outlined),() async {
+                        var modifyInfo = await Get.to(() => ModifyUser(widget.userinfo));
                         if(modifyInfo != null){
                           setState((){
                             widget.userinfo.modifyUserInfo(modifyInfo['pass'], modifyInfo['name'], modifyInfo['phone']);
                           });
                         }
                       }),
-                      getSettingScreen('언어 모드 변경', const Icon(Icons.language),() => changeLanguageMode()),
-                      getSettingScreen('서비스 탈퇴', const Icon(Icons.minimize),(){
-                        GET.Get.to(() => const WithdrawService());
+                      getLanguageModeScreen('main4_changeLanguage'.tr),
+                      getSettingScreen('main4_withdrawal'.tr, const Icon(Icons.minimize),(){
+                        Get.to(() => const WithdrawService());
                       }),
                     ],
                   ),
@@ -161,50 +165,46 @@ class _MainMyPage extends State<MainMyPage>{
     );
   }
   changeLanguageMode(){
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context){
-          return Container(
-              child : AlertDialog(
-                  title: const Text('언어모드 변경'),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextButton(
-                          onPressed: (){
-                            setState(() {
-                              selectedLanguageMode = '한국어';
-                            });
-                            GET.Get.back();
-                          },
-                          child: const Text('한국어')
-                      ),
-                      const Divider(thickness: 0.2, color: Colors.grey),
-                      TextButton(
-                          onPressed: (){
-                            setState(() {
-                              selectedLanguageMode = 'English';
-                            });
-                            GET.Get.back();
-                          },
-                          child: const Text('English')
-                      ),
-                      const Divider(thickness: 0.2, color: Colors.grey),
-                      TextButton(
-                          onPressed: (){
-                            setState(() {
-                              selectedLanguageMode = '中国';
-                            });
-                            GET.Get.back();
-                          },
-                          child: const Text('中国')
-                      ),
-                      SizedBox(height: 20),
-                    ],
-                  ))
-          );
-        }
+    Get.dialog(
+        AlertDialog(
+          title: const Text('언어모드 변경'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextButton(
+                    onPressed: (){
+                      setState(() {
+                        selectedLanguageMode = '한국어';
+                        Get.updateLocale(const Locale('ko','KR'));
+                      });
+                      Get.back();
+                    },
+                    child: const Text('한국어')
+                ),
+                const Divider(thickness: 0.2, color: Colors.grey),
+                TextButton(
+                    onPressed: (){
+                      setState(() {
+                        selectedLanguageMode = 'English';
+                        Get.updateLocale(const Locale('en','US'));
+                      });
+                      Get.back();
+                    },
+                    child: const Text('English')
+                ),
+                const Divider(thickness: 0.2, color: Colors.grey),
+                TextButton(
+                    onPressed: (){
+                      setState(() {
+                        selectedLanguageMode = '中国';
+                      });
+                      Get.back();
+                    },
+                    child: const Text('中国')
+                ),
+              ],
+            )
+        )
     );
   }
   reloadBabies() async{
@@ -227,30 +227,30 @@ class _MainMyPage extends State<MainMyPage>{
     //print(babiesIndexingMap);
     //print(babyRelationList);
     await deleteLogin();
-    GET.Get.offAll(LoginInit());
+    Get.offAll(LoginInit());
+  }
+  Container getLanguageModeScreen(title){
+    return Container(
+      padding: const EdgeInsets.all(8),
+        child: InkWell(
+            onTap: ()=> changeLanguageMode(),
+            child : Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(children: [const Icon(Icons.language), const SizedBox(width: 30), Text(title)]),
+                    Text(selectedLanguageMode, style: const TextStyle(color: Colors.grey))
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Divider(thickness: 1, color: Colors.grey[300]),
+              ],
+            )
+        )
+    );
   }
   Container getSettingScreen(title, icon, func){
-    if(title == '언어 모드 변경'){
-      return Container(
-          padding: const EdgeInsets.all(8),
-          child: InkWell(
-              onTap: func,
-              child : Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(children: [icon, const SizedBox(width: 30), Text(title)]),
-                      Text(selectedLanguageMode, style: const TextStyle(color: Colors.grey))
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Divider(thickness: 1, color: Colors.grey[300]),
-                ],
-              )
-          )
-      );
-    }
     return Container(
       padding: const EdgeInsets.all(8),
       child: InkWell(
