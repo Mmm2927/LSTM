@@ -4,6 +4,7 @@ import 'package:bob/screens/HomePage/BottomSheet/feedingBottle_bottom_sheet.dart
 import 'package:bob/screens/HomePage/BottomSheet/growthRecord_bottom_sheet.dart';
 import 'package:bob/screens/HomePage/BottomSheet/sleep_bottom_sheet.dart';
 import 'package:bob/screens/HomePage/baby_statistics.dart';
+import 'package:bob/screens/HomePage/baby_vaccination.dart';
 import 'package:flutter/material.dart';
 import 'package:bob/models/model.dart';
 import 'package:bob/screens/MyPage/manage_baby.dart';
@@ -67,11 +68,11 @@ class _Main_home extends State<Main_Home>{
     });
   }
 
-  void change(){
+  change(){
     setState(() {
       timerClosed = true;
     });
-  }
+  } // timerClosde 상태 변경 함수
 
   @override
   void initState() {
@@ -187,7 +188,7 @@ class _Main_home extends State<Main_Home>{
                                         }
                                     );
                                   },
-                                  onLongPress: (){
+                                  onLongPress: () async{
                                     setState(() {
                                       timerClosed = false;
                                     });
@@ -428,7 +429,7 @@ class _Main_home extends State<Main_Home>{
                       margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
                       width: double.infinity,
                         decoration: BoxDecoration(
-                            color: const Color(0xffffc8c7),
+                            color: Colors.grey[300],
                             borderRadius: BorderRadius.circular(15),
                             boxShadow: [
                               BoxShadow(
@@ -438,7 +439,7 @@ class _Main_home extends State<Main_Home>{
                               )
                             ]
                         ),
-                      child: FeedingStopwatch(widget.babies)
+                      child: FeedingStopwatch(widget.babies[babyIdx].name, timerClosedchange:change)
                     )
                   ),
                   //타이머 stage
@@ -512,6 +513,11 @@ class _Main_home extends State<Main_Home>{
                                 children: [
                                   GestureDetector(
                                       onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) =>
+                                              BabyVaccination(widget.babies[babyIdx].name, widget.babies[babyIdx].birth)),
+                                        );
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(10),

@@ -3,29 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:bob/models/model.dart';
 
 class FeedingStopwatch extends StatefulWidget {
-  final List<Baby> babies;
+  final String babyname;
+  final timerClosedchange;
 
-  FeedingStopwatch(this.babies, {Key? key}) : super(key: key);
+  FeedingStopwatch(this.babyname, {Key? key, this.timerClosedchange}) : super(key: key);
 
   @override
   State<FeedingStopwatch> createState() => _FeedingStopwatchState();
 }
 
 class _FeedingStopwatchState extends State<FeedingStopwatch> {
-  late int babyIdx;
 
-  bool? timerClosed;
 
   int seconds = 0, minutes=0, hours = 0;
   String digitSeconds = "00", digitMinutes = "00", digitHours = "00";
   Timer? timer;
   bool started = false;
-  List laps = [];
+  String laps = '';
 
 
   @override
-  void initState() {
-    babyIdx = 0;
+  void initState(){
+    // TODO: implement initState
+    // start();
   }
 
   //Creating the stop timer function
@@ -55,12 +55,12 @@ class _FeedingStopwatchState extends State<FeedingStopwatch> {
   void addLaps() {
     String lap = "$digitHours:$digitMinutes:$digitSeconds";
     setState(() {
-      laps.add(lap);
+      laps = lap;
     });
   }
 
   //creating the start timer function
-  void start(){
+  void start() {
     started = true;
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       int localSeconds = seconds + 1;
@@ -97,9 +97,9 @@ class _FeedingStopwatchState extends State<FeedingStopwatch> {
           children: [
             Container(
                 padding: const EdgeInsets.only(left: 5,top: 5),
-                child: Text(widget.babies[babyIdx].name, 
+                child: Text(widget.babyname,
                   style: const TextStyle(
-                      fontSize: 23, 
+                      fontSize: 25,
                       fontWeight: FontWeight.bold),
                 )
             ),
@@ -109,25 +109,30 @@ class _FeedingStopwatchState extends State<FeedingStopwatch> {
                   onPressed: () {
                     (!started) ? start() : stop();
                   },
-                  icon: Icon((!started) ? Icons.play_circle : Icons.pause_circle, size: 25,color: Colors.orange,),
+                  icon: Icon((!started) ? Icons.play_circle : Icons.pause_circle, size: 27,color: Colors.orange,),
                   padding: const EdgeInsets.only(right: 13,top: 10),
                   constraints: const BoxConstraints(),
                 ),
                 IconButton(
                   onPressed: () {
+                    stop();
+                    addLaps();
                     reset();
+                    print(laps);
+                    widget.timerClosedchange();
                   },
-                  icon: const Icon(Icons.check_circle,size: 25,color: Colors.orange),
+                  icon: const Icon(Icons.check_circle,size: 27,color: Colors.orange),
                   padding: const EdgeInsets.only(right: 13,top: 10),
                   constraints: const BoxConstraints(),
                 ),
 
                 IconButton(
-                  onPressed: () async{
-
+                  onPressed: () {
+                    reset();
+                    widget.timerClosedchange();
                   },
-                  icon: const Icon(Icons.cancel,size: 25,color: Colors.orange),
-                  padding: const EdgeInsets.only(right: 13,top: 10),
+                  icon: const Icon(Icons.cancel,size: 27,color: Colors.orange),
+                  padding: const EdgeInsets.only(right: 15,top: 10),
                   constraints: const BoxConstraints(),
                 )
               ],
@@ -139,7 +144,7 @@ class _FeedingStopwatchState extends State<FeedingStopwatch> {
           children: [
             Container(
               padding: EdgeInsets.only(left: 6),
-                child: Text((!started) ? '수면 일시정지' : '수면중...',style: TextStyle(color: Colors.grey[800]),)),
+                child: Text((!started) ? '모유 수유 잠깐 쉼..' : '모유 수유중..',style: TextStyle(color: Colors.grey[800],fontSize: 16),)),
           ],
         ),
         Row(
@@ -147,7 +152,7 @@ class _FeedingStopwatchState extends State<FeedingStopwatch> {
           children: [
             Container(
                 padding: EdgeInsets.only(left: 6),
-                child: Text('$digitHours:$digitMinutes:$digitSeconds',style: TextStyle(fontSize: 22))
+                child: Text('$digitHours:$digitMinutes:$digitSeconds',style: TextStyle(fontSize: 23))
             ),
           ],
         ),
