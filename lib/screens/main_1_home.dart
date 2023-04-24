@@ -16,6 +16,8 @@ import 'package:bob/services/backend.dart';
 
 import 'HomePage/BottomSheet/feeding_bottom_sheet.dart';
 
+import 'package:bob/screens/HomePage/Stopwatch/feeding_stopwatch.dart';
+
 
 
 class Main_Home extends StatefulWidget{
@@ -65,12 +67,22 @@ class _Main_home extends State<Main_Home>{
     });
   }
 
+  void change(){
+    setState(() {
+      timerClosed = true;
+    });
+  }
+
   @override
   void initState() {
     babyIdx = 0;
     print(widget.babies.length);
+
   }
+
   bool timerClosed = true;
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,7 +144,7 @@ class _Main_home extends State<Main_Home>{
                   ),
                   //아기 정보 구현
                   Container(
-                      padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                       margin: const EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
                           color: const Color(0xfffdb1a5),
@@ -150,11 +162,11 @@ class _Main_home extends State<Main_Home>{
                         children: [
                           Text('버튼을 길게 누르면 타이머가 작동합니다.',
                             style: TextStyle(
-                                fontSize: 13,
+                                fontSize: 14,
                                 color: Colors.grey[700]
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
@@ -363,7 +375,7 @@ class _Main_home extends State<Main_Home>{
                     },
                     child: Container(
                       padding: EdgeInsets.all(10),
-                      margin: const EdgeInsets.all(20),
+                      margin: EdgeInsets.fromLTRB(20, 20, 20, 15),
                       decoration: BoxDecoration(
                           color: const Color(0xffffc8c7),
                           borderRadius: BorderRadius.circular(15),
@@ -407,33 +419,37 @@ class _Main_home extends State<Main_Home>{
                       ),
                     ),
                   ),
+                  //생활 기록 구현
                   Offstage(
                     offstage: timerClosed,
                     child: Container(
-                      height: 80,
-                      padding: EdgeInsets.all(10),
-                      margin: EdgeInsets.fromLTRB(20, 01, 20, 10),
+                      height: 90,
+                      padding: EdgeInsets.only(left: 15),
+                      margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
                       width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('타이머')
-                        ],
-                      )
+                        decoration: BoxDecoration(
+                            color: const Color(0xffffc8c7),
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 10,
+                                  spreadRadius: 3
+                              )
+                            ]
+                        ),
+                      child: FeedingStopwatch(widget.babies)
                     )
                   ),
+                  //타이머 stage
                   Row(
                     children: [
-                      //생활기록
                       Expanded(
                           flex:1,
                           child: GestureDetector(
                             onTap: () {},
                             child: Container(
-                              height: 210,
+                              height: 180,
                               margin: const EdgeInsets.fromLTRB(20, 0, 5, 10),
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
@@ -487,18 +503,19 @@ class _Main_home extends State<Main_Home>{
                             ),
                           )
                       ),
+                      //성장기록 구현
                       Expanded(
                           flex:1,
                           child: Container(
-                              margin: const EdgeInsets.fromLTRB(5, 0, 20, 10),
+                              margin: const EdgeInsets.fromLTRB(10, 0, 20, 10),
                               child: Column(
                                 children: [
                                   GestureDetector(
-                                      onTap: () {//건강 검진 페이지 이동
+                                      onTap: () {
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(10),
-                                        height: 95,
+                                        height: 80,
                                         decoration: BoxDecoration(
                                             color: const Color(0xffffc8c7),
                                             borderRadius: BorderRadius.circular(15),
@@ -537,13 +554,14 @@ class _Main_home extends State<Main_Home>{
                                         ),
                                       )
                                   ),
+                                  //예방 접종 페이지 이동
                                   const SizedBox(height: 20),
                                   GestureDetector(
-                                      onTap: () {//건강 검진 페이지 이동
+                                      onTap: () {
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(10),
-                                        height: 95,
+                                        height: 80,
                                         decoration: BoxDecoration(
                                             color: const Color(0xffffc8c7),
                                             borderRadius: BorderRadius.circular(15),
@@ -558,11 +576,11 @@ class _Main_home extends State<Main_Home>{
                                         child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text('건강 접종', style: TextStyle(fontSize: 20, color: Colors.black),),
+                                              Text('건강 검진', style: TextStyle(fontSize: 20, color: Colors.black),),
                                               Row(
                                                 children: [
                                                   Text(
-                                                    '다음 건강 접종 -> ',
+                                                    '다음 건강 검진 -> ',
                                                     style: TextStyle(
                                                         fontSize: 15,
                                                         color: Colors.grey[700]
@@ -582,12 +600,15 @@ class _Main_home extends State<Main_Home>{
                                         ),
                                       )
                                   )
+                                  //건강 검진 페이지 이동
                                 ],
                               )
                           )
                       )
+                      //예방 접종, 건강 검진 구현
                     ],
                   ),
+                  //성장기록, 예방접종, 검강검진
                 ],
               )
           )
