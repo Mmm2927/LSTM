@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:bob/models/model.dart';
 
 class FeedingStopwatch extends StatefulWidget {
   final String babyname;
@@ -30,7 +29,9 @@ class _FeedingStopwatchState extends State<FeedingStopwatch> {
 
   //Creating the stop timer function
   void stop(){
-    timer!.cancel();
+    if(timer !=null){
+      timer!.cancel();
+    }
     setState(() {
       started = false;
     });
@@ -38,7 +39,9 @@ class _FeedingStopwatchState extends State<FeedingStopwatch> {
 
   //Creating the reset function
   void reset(){
+    if(timer !=null){
     timer!.cancel();
+    }
     setState(() {
       seconds = 0;
       minutes = 0;
@@ -55,7 +58,9 @@ class _FeedingStopwatchState extends State<FeedingStopwatch> {
   void addLaps() {
     String lap = "$digitHours:$digitMinutes:$digitSeconds";
     setState(() {
-      laps = lap;
+      if(lap != null) {
+        laps = lap;
+      }
     });
   }
 

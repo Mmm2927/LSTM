@@ -3,6 +3,7 @@ import 'package:bob/screens/HomePage/BottomSheet/diaper_bottom_sheet.dart';
 import 'package:bob/screens/HomePage/BottomSheet/feedingBottle_bottom_sheet.dart';
 import 'package:bob/screens/HomePage/BottomSheet/growthRecord_bottom_sheet.dart';
 import 'package:bob/screens/HomePage/BottomSheet/sleep_bottom_sheet.dart';
+import 'package:bob/screens/HomePage/baby_medicalCheckup.dart';
 import 'package:bob/screens/HomePage/baby_statistics.dart';
 import 'package:bob/screens/HomePage/baby_vaccination.dart';
 import 'package:flutter/material.dart';
@@ -564,6 +565,11 @@ class _Main_home extends State<Main_Home>{
                                   const SizedBox(height: 20),
                                   GestureDetector(
                                       onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) =>
+                                              BabyMedicalCheckup(widget.babies[babyIdx].name, widget.babies[babyIdx].birth)),
+                                        );
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(10),
