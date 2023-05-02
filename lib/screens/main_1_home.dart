@@ -514,11 +514,7 @@ class _Main_home extends State<Main_Home>{
                                 children: [
                                   GestureDetector(
                                       onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) =>
-                                              BabyVaccination(widget.babies[babyIdx].name, widget.babies[babyIdx].birth)),
-                                        );
+                                        Get.to(()=>BabyVaccination(widget.babies[babyIdx]));
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(10),

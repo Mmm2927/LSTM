@@ -141,3 +141,10 @@ class growthRecord{
     "date": date
   };
 }
+class Vaccine {
+  final String type;    // 타이틀
+  final String content;   // 내용
+  late DateTime inoculationDate;    // 접종 날짜
+  late bool isInoculation;    // 접종 여부
+  Vaccine({required this.type, required this.content});
+}
