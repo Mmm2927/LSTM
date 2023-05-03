@@ -38,7 +38,6 @@ class _BaseWidget extends State<BaseWidget>{
   }
   Future<void> loadData() async {
     await GET.Get.to(ManageBabyWidget(widget.MyBabies));
-    print('dd');
     List<dynamic> babyRelationList = await getMyBabies();
     print(babyRelationList);
     for(int i=0; i<babyRelationList.length;i++){

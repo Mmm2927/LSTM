@@ -148,6 +148,6 @@ class Vaccine {
   final String recommendationDate;  // 권장 시기
   final String detail;   // 내용
   late DateTime inoculationDate;    // 접종 날짜
-  late bool isInoculation;    // 접종 여부
+  late bool isInoculation = false;    // 접종 여부
   Vaccine({required this.ID, required this.title, required this.times, required this.recommendationDate, required this.detail});
 }
