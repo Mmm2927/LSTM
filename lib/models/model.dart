@@ -142,9 +142,12 @@ class growthRecord{
   };
 }
 class Vaccine {
-  final String type;    // 타이틀
-  final String content;   // 내용
+  final int ID;
+  final String title;    // 타이틀
+  final String times;   // 몇회
+  final String recommendationDate;  // 권장 시기
+  final String detail;   // 내용
   late DateTime inoculationDate;    // 접종 날짜
   late bool isInoculation;    // 접종 여부
-  Vaccine({required this.type, required this.content});
+  Vaccine({required this.ID, required this.title, required this.times, required this.recommendationDate, required this.detail});
 }
