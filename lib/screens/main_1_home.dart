@@ -15,7 +15,6 @@ import 'package:path/path.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:bob/models/model.dart';
 import 'package:bob/services/backend.dart';
-
 import 'HomePage/BottomSheet/feeding_bottom_sheet.dart';
 
 import 'package:bob/screens/HomePage/Stopwatch/feeding_stopwatch.dart';
@@ -561,11 +560,7 @@ class _Main_home extends State<Main_Home>{
                                   const SizedBox(height: 20),
                                   GestureDetector(
                                       onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) =>
-                                              BabyMedicalCheckup(widget.babies[babyIdx].name, widget.babies[babyIdx].birth)),
-                                        );
+                                        Get.to(()=>BabyMedicalCheckup(widget.babies[babyIdx]));
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(10),

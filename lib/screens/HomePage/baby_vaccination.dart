@@ -336,44 +336,6 @@ class _BabyVaccination extends State<BabyVaccination> {
       return InkWell(
           onTap: (){
             openDialog(vaccine);
-            /*Get.dialog(
-                StatefulBuilder(
-                    builder: (BuildContext context, StateSetter setState){
-                      return AlertDialog(
-                          content: Container(
-                            width: double.infinity,
-                            //height: 240,
-                            child: Column(
-                              children: [
-                                Text(vaccine.title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                                Text(vaccine.times, style: TextStyle(fontSize: 18)),
-                                Text(vaccine.detail, style: TextStyle(fontSize: 14)),
-                                Text('권장시기 : ${vaccine.recommendationDate}', style: TextStyle(fontSize: 14)),
-
-                                Container(
-                                    width: double.infinity,
-                                    child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          foregroundColor: Colors.white,
-                                          backgroundColor: const Color(0xffffc8c7),
-                                        ),
-                                        onPressed: (){
-                                          if(isSelected[1]){
-                                            setVaccineInfo(vaccine.ID,'${vaccine.title}(${vaccine.times})', 'y');
-                                          }
-                                          Get.back();
-                                        },
-                                        child: const Text('확인')
-                                    )
-                                )
-                              ],
-                            ),
-                          )
-
-                      );
-                    }
-                )
-            );*/
           },
           child: Container(
               decoration: BoxDecoration(
@@ -437,4 +399,3 @@ class _BabyVaccination extends State<BabyVaccination> {
     return true;
   }
 }
-
