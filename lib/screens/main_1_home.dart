@@ -32,6 +32,7 @@ class Main_Home extends StatefulWidget{
 class _Main_home extends State<Main_Home>{
 
   late int babyIdx;
+
   String _feeding = '-';        // 모유
   String _feedingBottle = '-';  // 젖병
   String _babyfood = '-';       // 이유식
@@ -73,7 +74,6 @@ class _Main_home extends State<Main_Home>{
       timerClosed = true;
     });
   } // timerClosde 상태 변경 함수
-
   @override
   void initState() {
     babyIdx = 0;
@@ -89,7 +89,7 @@ class _Main_home extends State<Main_Home>{
     return Scaffold(
         backgroundColor: const Color(0xF9F9F9FF),
         appBar: AppBar(
-          backgroundColor: const Color(0xffffc8c7),
+          backgroundColor: const Color(0x83fa625f),
           elevation: 0.0,
           iconTheme : const IconThemeData(color: Colors.black),
           title: const Text('BoB', style: TextStyle(color: Colors.black,fontSize: 15)),
@@ -135,7 +135,7 @@ class _Main_home extends State<Main_Home>{
                   Container(
                       padding : const EdgeInsets.fromLTRB(10, 0, 10, 30),
                       decoration: const BoxDecoration(
-                          color: Color(0xffffc8c7),
+                          color: Color(0x83fa625f),
                           borderRadius: BorderRadius.only(
                               bottomRight: Radius.circular(40),
                               bottomLeft: Radius.circular(40)
@@ -148,219 +148,35 @@ class _Main_home extends State<Main_Home>{
                       padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                       margin: const EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
-                          color: const Color(0xfffdb1a5),
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(15),
                           boxShadow: [
                             BoxShadow(
-                                color: Colors.black.withOpacity(0.3),
-                                blurRadius: 8,
-                                spreadRadius: 3
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 5,
                             )
                           ]
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text('버튼을 길게 누르면 타이머가 작동합니다.',
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[700]
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                            child: Text('버튼을 길게 누르면 타이머가 작동합니다.',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[700]
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              InkWell(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(20),
-                                                topLeft: Radius.circular(20)
-                                            )
-                                        ),
-                                        backgroundColor: Colors.purple[50],
-                                        isScrollControlled: true,
-                                        context: context,
-                                        builder: ( BuildContext context ) {
-                                          return FeedingBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeFeeding);
-                                        }
-                                    );
-                                  },
-                                  onLongPress: () async{
-                                    setState(() {
-                                      timerClosed = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Colors.red
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(Icons.water_drop_outlined,), // <-- Icon
-                                        Text("모유",style: TextStyle(fontSize: 15),), // <-- Text
-                                      ],
-                                    ),
-                                  )
-                              ),
-                              InkWell(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(20),
-                                                topLeft: Radius.circular(20)
-                                            )
-                                        ),
-                                        backgroundColor: Colors.purple[50],
-                                        isScrollControlled: true,
-                                        context: context,
-                                        builder: ( BuildContext context ) {
-                                          return FeedingBottleBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeFeedingBottle);
-                                        }
-                                    );
-                                  },
-                                  onLongPress: (){
-                                    setState(() {
-                                      timerClosed = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Colors.orange
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(Icons.water_drop,), // <-- Icon
-                                        Text("젖병",style: TextStyle(fontSize: 15),), // <-- Text
-                                      ],
-                                    ),
-                                  )
-                              ),
-                              InkWell(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(20),
-                                                topLeft: Radius.circular(20)
-                                            )
-                                        ),
-                                        backgroundColor: Colors.purple[50],
-                                        isScrollControlled: true,
-                                        context: context,
-                                        builder: ( BuildContext context ) {
-                                          return BabyFoodBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeBabyFood);
-                                        }
-                                    );
-                                  },
-                                  onLongPress: (){
-                                    setState(() {
-                                      timerClosed = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Colors.yellow
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(Icons.rice_bowl_rounded,), // <-- Icon
-                                        Text("이유식",style: TextStyle(fontSize: 15),), // <-- Text
-                                      ],
-                                    ),
-                                  )
-                              ),
-                              InkWell(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(20),
-                                                topLeft: Radius.circular(20)
-                                            )
-                                        ),
-                                        backgroundColor: Colors.purple[50],
-                                        isScrollControlled: true,
-                                        context: context,
-                                        builder: ( BuildContext context ) {
-                                          return DiaperBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeDiaper);
-                                        }
-                                    );
-                                  },
-                                  onLongPress: (){
-                                    setState(() {
-                                      timerClosed = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Colors.green
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(Icons.baby_changing_station,), // <-- Icon
-                                        Text("기저귀",style: TextStyle(fontSize: 15),), // <-- Text
-                                      ],
-                                    ),
-                                  )
-                              ),
-                              InkWell(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(20),
-                                                topLeft: Radius.circular(20)
-                                            )
-                                        ),
-                                        backgroundColor: Colors.purple[50],
-                                        isScrollControlled: true,
-                                        context: context,
-                                        builder: ( BuildContext context ) {
-                                          return SleepBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeSleep);
-                                        }
-                                    );
-                                  },
-                                  onLongPress: (){
-                                    setState(() {
-                                      timerClosed = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Colors.blue
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(Icons.nights_stay_sharp,), // <-- Icon
-                                        Text("수면",style: TextStyle(fontSize: 13),), // <-- Text
-                                      ],
-                                    ),
-                                  )
-                              )
+                              drawRecordButton(context, '모유', Icons.water_drop_outlined, Colors.red, const Color(0xffffdbd9), 0),
+                              drawRecordButton(context, '젖병', Icons.water_drop, Colors.orange, const Color(0xfffae2be), 1),
+                              drawRecordButton(context, '이유식', Icons.rice_bowl_rounded, const Color(0xfffacc00), const Color(0xfffff7d4), 2),
+                              drawRecordButton(context, '기저귀', Icons.baby_changing_station, Colors.green, const Color(0xffedfce6), 3),
+                              drawRecordButton(context, '수면', Icons.nights_stay_sharp, Colors.blueAccent, const Color(0xffe6eafc), 4)
                             ],
                           ),
                         ],
@@ -378,13 +194,12 @@ class _Main_home extends State<Main_Home>{
                       padding: EdgeInsets.all(10),
                       margin: EdgeInsets.fromLTRB(20, 20, 20, 15),
                       decoration: BoxDecoration(
-                          color: const Color(0xffffc8c7),
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(15),
                           boxShadow: [
                             BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 10,
-                                spreadRadius: 3
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 5,
                             )
                           ]
                       ),
@@ -433,9 +248,8 @@ class _Main_home extends State<Main_Home>{
                             borderRadius: BorderRadius.circular(15),
                             boxShadow: [
                               BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 10,
-                                  spreadRadius: 3
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 5,
                               )
                             ]
                         ),
@@ -454,13 +268,12 @@ class _Main_home extends State<Main_Home>{
                               margin: const EdgeInsets.fromLTRB(20, 0, 5, 10),
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                  color: const Color(0xffffc8c7),
+                                  color: Colors.white,
                                   borderRadius: BorderRadius.circular(15),
                                   boxShadow: [
                                     BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        blurRadius: 8,
-                                        spreadRadius: 3
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 5,
                                     )
                                   ]
                               ),
@@ -470,7 +283,7 @@ class _Main_home extends State<Main_Home>{
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text('성장 기록',style: TextStyle(fontSize: 22, color: Colors.black)),
+                                      const Text('성장 기록',style: TextStyle(fontSize: 22, color: Colors.black)),
                                       IconButton(
                                           onPressed: () {
                                             showModalBottomSheet(
@@ -519,13 +332,12 @@ class _Main_home extends State<Main_Home>{
                                         padding: EdgeInsets.all(10),
                                         height: 80,
                                         decoration: BoxDecoration(
-                                            color: const Color(0xffffc8c7),
-                                            borderRadius: BorderRadius.circular(15),
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(10),
                                             boxShadow: [
                                               BoxShadow(
-                                                  color: Colors.black.withOpacity(0.2),
-                                                  blurRadius: 8,
-                                                  spreadRadius: 3
+                                                  color: Colors.black.withOpacity(0.1),
+                                                  blurRadius: 5,
                                               )
                                             ]
                                         ),
@@ -566,13 +378,12 @@ class _Main_home extends State<Main_Home>{
                                         padding: EdgeInsets.all(10),
                                         height: 80,
                                         decoration: BoxDecoration(
-                                            color: const Color(0xffffc8c7),
+                                            color: Colors.white,
                                             borderRadius: BorderRadius.circular(15),
                                             boxShadow: [
                                               BoxShadow(
-                                                  color: Colors.black.withOpacity(0.2),
-                                                  blurRadius: 8,
-                                                  spreadRadius: 3
+                                                color: Colors.black.withOpacity(0.1),
+                                                blurRadius: 5,
                                               )
                                             ]
                                         ),
@@ -616,6 +427,61 @@ class _Main_home extends State<Main_Home>{
               )
           )
         )
+    );
+  }
+  InkWell drawRecordButton(BuildContext rootContext, String type, IconData iconData, Color background, Color color, int tapMode){
+    return InkWell(
+      onTap: () => record_with_ModalBottomSheet(rootContext, tapMode),
+      onLongPress: (){
+        setState(() {
+          timerClosed = false;
+        });
+      },
+      child: Container(
+          height: 60,
+          width: 60,
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            color: color,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(iconData, color: background), // <-- Icon
+              Text(type, style: TextStyle(fontSize: 13, color: background)), // <-- Text
+            ],
+          ),
+      )
+    );
+  }
+  record_with_ModalBottomSheet(BuildContext rootContext, int tapMode){
+    showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(20),
+                topLeft: Radius.circular(20)
+            )
+        ),
+        backgroundColor: Colors.purple[50],
+        isScrollControlled: true,
+        context: rootContext,
+        builder: (BuildContext context) {
+          if(tapMode==0){
+            return FeedingBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeFeeding);
+          }else if(tapMode==1){
+            return FeedingBottleBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeFeedingBottle);
+          }
+          else if(tapMode==2){
+            return BabyFoodBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeBabyFood);
+          }
+          else if(tapMode==3){
+            return DiaperBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeDiaper);
+          }
+          else{
+            return SleepBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeSleep);
+          }
+        }
     );
   }
 }

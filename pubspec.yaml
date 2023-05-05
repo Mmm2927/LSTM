@@ -58,7 +58,7 @@ dependencies:
   flutter_switch: ^0.3.2
   time_range_picker : any
   easy_localization: ^3.0.1
-
+  font_awesome_flutter: ^10.4.0
 
 dev_dependencies:
   flutter_test:
