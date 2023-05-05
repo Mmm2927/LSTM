@@ -25,12 +25,11 @@ class Main_Home extends StatefulWidget{
   final User userinfo;
   final List<Baby> babies;
   const Main_Home(this.babies, this.userinfo, {Key? key}) : super(key: key);
-
   @override
-  _Main_home createState() => _Main_home();
+  State<Main_Home> createState() => _MainHome();
 }
-class _Main_home extends State<Main_Home>{
-
+class _MainHome extends State<Main_Home>{
+  late List<Baby> activeBabies;
   late int babyIdx;
 
   String _feeding = '-';        // 모유
@@ -76,11 +75,16 @@ class _Main_home extends State<Main_Home>{
   } // timerClosde 상태 변경 함수
   @override
   void initState() {
+    super.initState();
     babyIdx = 0;
-    print(widget.babies.length);
-
+    activeBabies = [];
+    for(int i=0; i<widget.babies.length; i++){
+      Baby baby = widget.babies[i];
+      if(baby.relationInfo.active){
+        activeBabies.add(baby);
+      }
+    }
   }
-
   bool timerClosed = true;
 
 
@@ -95,35 +99,46 @@ class _Main_home extends State<Main_Home>{
           title: const Text('BoB', style: TextStyle(color: Colors.black,fontSize: 15)),
         ),
         drawer: Drawer(
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: widget.babies.length,
-                itemBuilder: (BuildContext context, int index){
-                  Baby baby = widget.babies[index];
-                  return InkWell(
-                      onTap: (){
-                        setState(() {
-                          babyIdx = index;
-                        });
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            border: Border.all(color: Colors.grey)
-                        ),
-                        padding: EdgeInsets.all(10),
-                        margin: EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                            Text(baby.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                            Text(baby.getGenderString()),
-                            Text(DateFormat('yyyy년 MM월 dd일생').format(baby.birth)),
-                          ],
-                        ),
-                      )
-                  );
-                }
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child:Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 30),
+                  const Text('아기 리스트', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+                  const Text('클릭하면 해당 아기를 관리할 수 있습니다', style: TextStyle(color: Colors.grey)),
+                  const SizedBox(height: 20),
+                  Expanded(
+                      child: ListView(
+                        children: [
+                          SingleChildScrollView(
+                            child:ExpansionTile(
+                                initiallyExpanded: true,
+                                title: const Text('부모', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                                children: getDrawerData(0, context, Colors.pinkAccent)
+                            ),
+                          ),
+                          SingleChildScrollView(
+                            child:ExpansionTile(
+                                initiallyExpanded: true,
+                                title: const Text('가족', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                                children: getDrawerData(1, context, Colors.blueAccent)
+                            ),
+                          ),
+                          SingleChildScrollView(
+                            child:ExpansionTile(
+                                initiallyExpanded: true,
+                                title: const Text('베이비시터', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                                children: getDrawerData(2, context, Colors.grey)
+                            ),
+                          ),
+
+                        ],
+                      ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              )
             )
         ),
         //drawer 구현
@@ -141,7 +156,7 @@ class _Main_home extends State<Main_Home>{
                               bottomLeft: Radius.circular(40)
                           )
                       ),
-                      child: drawBaby(widget.babies[babyIdx].name, widget.babies[babyIdx].birth)
+                      child: drawBaby(activeBabies[babyIdx].name, activeBabies[babyIdx].birth)
                   ),
                   //아기 정보 구현
                   Container(
@@ -429,6 +444,58 @@ class _Main_home extends State<Main_Home>{
         )
     );
   }
+  List<InkWell> getDrawerData(int relation, BuildContext context, Color color){
+    List<InkWell> datas = [];
+    for(int i=0; i<activeBabies.length; i++){
+      Baby b = activeBabies[i];
+      if(b.relationInfo.relation == relation){
+        datas.add(
+          InkWell(
+            onTap: (){
+              setState(() {
+                babyIdx = i;
+              });
+              Navigator.pop(context);
+            },
+              child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 5,
+                      )
+                    ],
+                    border: Border(
+                      left: BorderSide(
+                          color: color,
+                          width: 3.0
+                      ),
+                    ),
+                    color: Colors.white,
+                    //borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  padding: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.fromLTRB(2,10,2,10),
+                  child: Row(
+                    children: [
+                      Text(b.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          children: [
+                            Text(DateFormat('yyyy년 MM월 dd일생').format(b.birth)+', '+ (b.getGenderString()=='F'?"여자":"남자")),
+                          ],
+                        ),
+                      )
+                    ],
+                  )
+              )
+          )
+        );
+      }
+    }
+    return datas;
+  }
   InkWell drawRecordButton(BuildContext rootContext, String type, IconData iconData, Color background, Color color, int tapMode){
     return InkWell(
       onTap: () => record_with_ModalBottomSheet(rootContext, tapMode),
@@ -468,18 +535,18 @@ class _Main_home extends State<Main_Home>{
         context: rootContext,
         builder: (BuildContext context) {
           if(tapMode==0){
-            return FeedingBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeFeeding);
+            return FeedingBottomSheet(activeBabies[babyIdx].relationInfo.BabyId, _timeFeeding);
           }else if(tapMode==1){
-            return FeedingBottleBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeFeedingBottle);
+            return FeedingBottleBottomSheet(activeBabies[babyIdx].relationInfo.BabyId, _timeFeedingBottle);
           }
           else if(tapMode==2){
-            return BabyFoodBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeBabyFood);
+            return BabyFoodBottomSheet(activeBabies[babyIdx].relationInfo.BabyId, _timeBabyFood);
           }
           else if(tapMode==3){
-            return DiaperBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeDiaper);
+            return DiaperBottomSheet(activeBabies[babyIdx].relationInfo.BabyId, _timeDiaper);
           }
           else{
-            return SleepBottomSheet(widget.babies[babyIdx].relationInfo.BabyId, _timeSleep);
+            return SleepBottomSheet(activeBabies[babyIdx].relationInfo.BabyId, _timeSleep);
           }
         }
     );
