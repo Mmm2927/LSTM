@@ -102,60 +102,52 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
                 )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
-            GestureDetector(
-              onTap: () {
-                // FocusScope.of(context).unfocus();
-                Navigator.pop(context);
-              },
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width*0.9,
-                child: TextFormField(
-                  controller: amountController,
-                  style: TextStyle(fontSize: 22),
-                  decoration: InputDecoration(
-                      floatingLabelBehavior:FloatingLabelBehavior.always, // labelText위치
-                      labelText: '수유량 (ml)',
-                      labelStyle: TextStyle(fontSize: 25),
-                      suffixIcon: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: BoxConstraints(),
-                              onPressed: () {
-                                null;
-                              },
-                              icon: Icon(Icons.add_circle,size: 22,)
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                null;
-                              },
-                              icon: Icon(Icons.remove_circle,size: 22,)
-                          ),
-                        ],
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(color: Colors.orangeAccent)
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(color: Colors.orangeAccent)
-                      ),
-                      contentPadding: EdgeInsets.only(left: 15)
-                  ),
-                  keyboardType: TextInputType.number,   //키보드 타입
+            SizedBox(
+              width: MediaQuery.of(context).size.width*0.9,
+              child: TextFormField(
+                controller: amountController,
+                style: const TextStyle(fontSize: 22),
+                decoration: InputDecoration(
+                    floatingLabelBehavior:FloatingLabelBehavior.always, // labelText위치
+                    labelText: '수유량 (ml)',
+                    labelStyle: TextStyle(fontSize: 25),
+                    suffixIcon: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                            padding: EdgeInsets.zero,
+                            constraints: BoxConstraints(),
+                            onPressed: () {
+                              null;
+                            },
+                            icon: Icon(Icons.add_circle,size: 22,)
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              null;
+                            },
+                            icon: Icon(Icons.remove_circle,size: 22,)
+                        ),
+                      ],
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(color: Colors.orangeAccent)
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(color: Colors.orangeAccent)
+                    ),
+                    contentPadding: EdgeInsets.only(left: 15)
                 ),
+                keyboardType: TextInputType.number,   //키보드 타입
               ),
             ),
-            SizedBox(
-              height: 15,
-            ),
+            const SizedBox(height: 15),
             Column(
               children: [
                 GestureDetector(
@@ -292,7 +284,6 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
                     ),
                     OutlinedButton(
                       onPressed: () async{
-                        print(widget.babyId);
                         int type = isSelect? 0 : 1;   // 0:모유, 1:분유
                         String amount = amountController.text;
                         String startTime = dateTimeList![0].toString();

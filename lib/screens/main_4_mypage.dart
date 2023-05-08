@@ -57,18 +57,73 @@ class _MainMyPage extends State<MainMyPage>{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-              width: double.infinity,
-              color: const Color(0xffffc8c7),
-              padding: const EdgeInsets.all(20),
-              child : Column(
+            width: double.infinity,
+            margin: const EdgeInsets.fromLTRB(10,0,10,0),
+            padding: const EdgeInsets.all(20),
+              child :Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 10),
-                  Text(widget.userinfo.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
-                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('${widget.userinfo.name} 님', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+                          const SizedBox(height: 5),
+                          const Text('실시간으로 갱신합니다.')
+                        ],
+                      ),
+                      Image.asset('assets/images/person.png',scale: 12, color: Colors.grey[800])
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        width: 120,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('관리중인 아기', style: TextStyle(color: Colors.grey[600])),
+                            Center(
+                              child: Text(activeBabies.length.toString(), style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25)),
+                            ),
+                            const SizedBox(height: 15)
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        width: 120,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Like', style: TextStyle(color: Colors.grey[600])),
+                            const Center(
+                              child: Text('7', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25)),
+                            ),
+                            const SizedBox(height: 15)
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               )
           ),
+          Divider(color: Colors.grey[200], thickness: 7),
           Container(
               margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.all(10),
@@ -78,7 +133,7 @@ class _MainMyPage extends State<MainMyPage>{
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('main4_manageBaby'.tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  Text('main4_manageBaby'.tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color:Color(0xfffa625f),)),
                   const SizedBox(height: 10),
                   SizedBox(
                       height: 110,

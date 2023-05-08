@@ -25,15 +25,18 @@ class _Main_Cctv extends State<Main_Cctv>{
   Widget viewCCTV() {
     return Column(
       children: [
-        Mjpeg(
-          isLive: _isPlaying,
-          error: (context, error, stack) {
-            print(error);
-            print(stack);
-            return Text(error.toString(), style: const TextStyle(color: Colors.red));
-          },
-          stream:
-          'http://203.249.22.164:5000/video_feed', //'http://192.168.1.37:8081',
+        Container(
+          padding: EdgeInsets.all(5),
+          child: Mjpeg(
+            isLive: _isPlaying,
+            error: (context, error, stack) {
+              print(error);
+              print(stack);
+              return Text(error.toString(), style: const TextStyle(color: Colors.red));
+            },
+            stream:
+            'http://203.249.22.164:5000/video_feed', //'http://192.168.1.37:8081',
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

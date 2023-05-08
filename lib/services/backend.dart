@@ -159,3 +159,27 @@ growthService(int babyId, double height, double weight, DateTime date) async{
     return response.data;
   }
 }
+
+vaccineCheckByIdService(int id) async {
+  try{
+    dio.options.headers['Authorization'] = await getToken();
+    Response response = await dio.post('$PATH/api/health/$id/get/');
+    return response.data;
+  }on DioError catch (e) {
+    dio.options.headers['Authorization'] = await refresh();
+    Response response = await dio.post('$PATH/api/health/$id/get/');
+    return response.data;
+  }
+}
+
+vaccineSetService(int id, String checkName, int mode, String state) async {
+  try{
+    dio.options.headers['Authorization'] = await getToken();
+    Response response = await dio.post('$PATH/api/health/set/', data:{"baby":id, "check_name":checkName, "mode":mode, "state":state});
+    return response.data;
+  }on DioError catch (e) {
+    dio.options.headers['Authorization'] = await refresh();
+    Response response = await dio.post('$PATH/api/health/set/', data:{"baby":id, "check_name":checkName, "mode":mode, "state":state});
+    return response.data;
+  }
+}
