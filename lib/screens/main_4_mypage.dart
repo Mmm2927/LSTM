@@ -45,8 +45,6 @@ class _MainMyPage extends State<MainMyPage>{
         disactiveBabies[baby.relationInfo.BabyId] = baby;
       }
     }
-    print(activeBabies);
-    print(disactiveBabies);
     super.initState();
   }
   @override
@@ -99,12 +97,13 @@ class _MainMyPage extends State<MainMyPage>{
                           ],
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Container(
                         padding: const EdgeInsets.all(5),
                         width: 120,
                         decoration: BoxDecoration(
-                          color: Colors.grey[200],
+                          color : Color(0xffffdbe6),  //F8B5C5FF
+                          //color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Column(
@@ -124,56 +123,6 @@ class _MainMyPage extends State<MainMyPage>{
               )
           ),
           Divider(color: Colors.grey[200], thickness: 7),
-          Container(
-              margin: const EdgeInsets.all(10),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('main4_manageBaby'.tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color:Color(0xfffa625f),)),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                      height: 110,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: activeBabies.length + 1,
-                          itemBuilder: (BuildContext context, int index){
-                            if(index < activeBabies.length){
-                              return drawBaby(activeBabies[activeBabies.keys.toList()[index]]!);
-                            }else{
-                              return Container(
-                                  padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                                  child: Column(
-                                      children:[
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(width: 0.5, color: Colors.grey),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: IconButton(
-                                              onPressed: () async{
-                                                await Get.to(ManageBabyWidget(activeBabies.values.toList()));
-                                                await reloadBabies();
-                                              },
-                                              iconSize: 40,
-                                              color: Colors.grey,
-                                              icon: const Icon(Icons.add)),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text('main4_addBaby'.tr)
-                                      ]
-                                  )
-                              );
-                            }
-                          }
-                      )
-                  )
-                ],
-              )
-          ),
           Expanded(
             child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -183,11 +132,62 @@ class _MainMyPage extends State<MainMyPage>{
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Container(
+                          //margin: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('main4_manageBaby'.tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color:Color(0xfffa625f),)),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                  height: 110,
+                                  child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: activeBabies.length + 1,
+                                      itemBuilder: (BuildContext context, int index){
+                                        if(index < activeBabies.length){
+                                          return drawBaby(activeBabies[activeBabies.keys.toList()[index]]!);
+                                        }else{
+                                          return Container(
+                                              padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                              child: Column(
+                                                  children:[
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(width: 0.5, color: Colors.grey),
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: IconButton(
+                                                          onPressed: () async{
+                                                            await Get.to(ManageBabyWidget(activeBabies.values.toList()));
+                                                            await reloadBabies();
+                                                          },
+                                                          iconSize: 40,
+                                                          color: Colors.grey,
+                                                          icon: const Icon(Icons.add)),
+                                                    ),
+                                                    const SizedBox(height: 8),
+                                                    Text('main4_addBaby'.tr)
+                                                  ]
+                                              )
+                                          );
+                                        }
+                                      }
+                                  )
+                              )
+                            ],
+                          )
+                      ),
                       getSettingScreen('main4_babyAddModify'.tr, const Icon(Icons.edit_attributes_sharp),() async{
                         await Get.to(ManageBabyWidget(activeBabies.values.toList()));
                         await reloadBabies();
                       }),
                       getSettingScreen('main4_InviteBabysitter'.tr, const Icon(Icons.diamond_outlined),() async{
+                        //print(disactiveBabies.length);
                         await Get.to(() => Invitation(activeBabies.values.toList(), disactiveBabies.values.toList()));
                         await reloadBabies();
                       }),
@@ -264,6 +264,8 @@ class _MainMyPage extends State<MainMyPage>{
   }
   reloadBabies() async{
     List<int> existedIds = activeBabies.keys.toList() + disactiveBabies.keys.toList();
+    activeBabies.clear();
+    disactiveBabies.clear();
     List<dynamic> babyRelationList = await getMyBabies();
     for(int i=0; i < babyRelationList.length; i++){
       var baby = await getBaby(babyRelationList[i]['baby']);
