@@ -11,7 +11,7 @@ import 'package:bob/services/backend.dart';
 import 'models/model.dart';
 import 'package:bob/services/storage.dart';
 import 'package:jwt_decode/jwt_decode.dart';
-import 'package:get/get.dart' as GET;
+import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'langauges.dart';
 
@@ -23,18 +23,19 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return GET.GetMaterialApp(
+    return GetMaterialApp(
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
+
       /*supportedLocales: const [
         Locale('ko', 'KR'),
         Locale('en', 'US'),
       ],
       path: 'assets/translations',*/
       translations: Languages(),
-      locale: GET.Get.deviceLocale,  // 기기에 설정한 언어
+      locale: Get.deviceLocale,  // 기기에 설정한 언어
       fallbackLocale:  const Locale('ko','KR'),
       theme: ThemeData(
         fontFamily: 'basic',

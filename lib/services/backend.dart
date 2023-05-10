@@ -105,7 +105,6 @@ deleteBabyService(int babyID) async{
     Response response = await dio.get('$PATH/api/baby/$babyID/delete/');
     return response.statusCode;
   }on DioError catch (e) {
-    print(e.response?.statusCode);
     return 405;
   }
 }

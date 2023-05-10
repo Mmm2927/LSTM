@@ -221,7 +221,6 @@ class _InvitationNew extends State<InvitationNew> {
     var tmp = relation.toJson();
     tmp['email'] = targetemail;
     var i = await invitationService(tmp);
-    print(i);
     GET.Get.back();    // 2. 돌아가기
   }
   void duplicateCheck() async{

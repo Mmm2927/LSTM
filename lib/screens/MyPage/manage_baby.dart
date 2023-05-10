@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:dio/dio.dart';
-import 'package:bob/screens/MyPage/modifyBaby.dart';
+import 'package:bob/screens/MyPage/modifyBaby2.dart';
 import 'package:intl/intl.dart';
 import '../../models/model.dart';
 import 'package:bob/services/backend.dart';
 import 'package:get/get.dart' as GET;
-
+import './modifyBaby.dart';
 class ManageBabyWidget extends StatefulWidget{
   final List<Baby> babies;
   const ManageBabyWidget(this.babies, {Key?key}):super(key:key);
@@ -83,7 +83,8 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
                 controller: _tabController,
                 children: [
                   addBaby(),
-                  modifyBaby(context),
+                  ModifyBabyWidget(widget.babies)
+                  //modifyBaby(context),
                 ],
               )
           )
@@ -91,64 +92,7 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
       )
     );
   }
-  Widget modifyBaby(BuildContext rootContext){
-    List<Baby> myBabies = [];
-    for (var value in widget.babies) {
-      if(value.relationInfo.relation == 0){
-        myBabies.add(value);
-      }
-    }
-    return Expanded(
-            child: GridView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: myBabies.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1 / 1,
-                ),
-                itemBuilder: (BuildContext context, int index){
-                  return drawBaby(myBabies[index], rootContext);
-                },
-            )
-    );
-  }
-  drawBaby(Baby baby, BuildContext rootContext){
-    return Container(
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          border: Border.all(color: Colors.grey)
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset('assets/images/baby.png',scale: 10),
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-            child : Text(baby.name, style: TextStyle(fontSize: 24)),
-          ),
-          Row(
-            children: [
-              Expanded(
-                  child: OutlinedButton(onPressed: (){
-                    Navigator.push(
-                        rootContext,
-                        CupertinoPageRoute(builder: (context)=> ModifyBaby(baby))
-                    );
-                  }, child: const Text('수정', style: TextStyle(color: Color(0xfffa625f)))),
-              ),
-              Padding(padding: EdgeInsets.all(2)),
-              Expanded(
-                  child: OutlinedButton(onPressed: (){}, child: Text('삭제',style: TextStyle(color: Colors.black)))
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
+
   @override
   void dispose() {
     nameController.dispose();
@@ -249,6 +193,8 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
       print('errorr');
     }
   }
+
+
 }
 
 
