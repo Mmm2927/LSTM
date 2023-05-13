@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:bob/widgets/appbar.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bob/screens/Login/initPage.dart';
 import 'package:bob/services/backend.dart';
@@ -13,7 +12,6 @@ class WithdrawService extends StatefulWidget{
   State<WithdrawService> createState() => _WithdrawService();
 }
 class _WithdrawService extends State<WithdrawService> {
-  final dio = Dio();    // 서버와 통신을 하기 위해 필요한 패키지
   bool _isCheked = false;
   @override
   Widget build(BuildContext context) {

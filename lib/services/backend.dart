@@ -98,6 +98,17 @@ deleteUserService() async{
     return 405;
   }
 }
+
+deleteBabyService(int babyID) async{
+  try{
+    dio.options.headers['Authorization'] = await getToken();
+    Response response = await dio.get('$PATH/api/baby/$babyID/delete/');
+    return response.statusCode;
+  }on DioError catch (e) {
+    return 405;
+  }
+}
+
 // 추가 양육자 초대
 invitationService(data) async{
   try{

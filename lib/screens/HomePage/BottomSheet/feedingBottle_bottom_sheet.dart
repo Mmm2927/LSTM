@@ -7,7 +7,7 @@ import '../../../services/backend.dart';
 class FeedingBottleBottomSheet extends StatefulWidget {
 
   final int babyId;
-  final void Function(String id) timeFeedingBottle;
+  final void Function(int mode, String data) timeFeedingBottle;
 
   const FeedingBottleBottomSheet (this.babyId, this.timeFeedingBottle, {Key? key}) : super(key: key);
   //final String feedingTime;
@@ -294,7 +294,7 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
                         var result = await lifesetService(widget.babyId, 1, content.toString());
 
                         String feedingBottleTime = '${DateTime.now().difference(dateTimeList![1]).inMinutes}분 전';
-                        widget.timeFeedingBottle(feedingBottleTime);
+                        widget.timeFeedingBottle(1, feedingBottleTime);
                         Navigator.pop(context);
                       },
                       child: Text('확인',style: TextStyle(fontSize: 25),),

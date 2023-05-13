@@ -7,7 +7,7 @@ import '../../../services/backend.dart';
 class SleepBottomSheet extends StatefulWidget {
 
   final int babyId;
-  final void Function(String id) timeSleep;
+  final void Function(int mode, String id) timeSleep;
   const SleepBottomSheet (this.babyId, this.timeSleep, {Key? key}) : super(key: key);
   //final String feedingTime;
 
@@ -201,7 +201,7 @@ class _SleepBottomSheet extends State<SleepBottomSheet> {
                         var result = await lifesetService(widget.babyId, 4, content.toString());
 
                         String sleepTime = '${DateTime.now().difference(dateTimeList![1]).inMinutes}분 전';
-                        widget.timeSleep(sleepTime);
+                        widget.timeSleep(4, sleepTime);
                         Navigator.pop(context);
                       },
                       child: Text('확인',style: TextStyle(fontSize: 25),),
