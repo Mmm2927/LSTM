@@ -1,6 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:bob/screens/Login/initPage.dart';
 import 'package:bob/screens/MyPage/manage_baby.dart';
 import 'package:get/get_utils/get_utils.dart';
@@ -15,7 +16,7 @@ import 'package:get/get.dart' hide Trans;
 import 'package:bob/services/backend.dart';
 import '../services/storage.dart';
 import 'package:easy_localization/easy_localization.dart' hide StringTranslateExtension;
-import '../langauges.dart';
+
 // 앱에서 지원하는 언어 리스트 변수
 final supportedLocales = [
   Locale('en', 'US'),
@@ -23,28 +24,22 @@ final supportedLocales = [
 ];
 class MainMyPage extends StatefulWidget{
   final User userinfo;
-  final List<Baby> babies;
-  const MainMyPage(this.userinfo, this.babies, {Key?key}):super(key:key);
+  final getBabiesFuction; // 아기 불러오는 fuction
+  final reloadBabiesFunction;
+  const MainMyPage(this.userinfo, {Key?key, this. getBabiesFuction, this.reloadBabiesFunction}):super(key:key);
   @override
-  State<MainMyPage> createState() => _MainMyPage();
+  State<MainMyPage> createState() => MainMyPageState();
 }
-class _MainMyPage extends State<MainMyPage>{
-  late Map<int, Baby> activeBabies={};
-  late Map<int, Baby> disactiveBabies={};
+class MainMyPageState extends State<MainMyPage>{
+  late List<Baby> activateBabies;
+  late List<Baby> disActivateBabies;
   String selectedLanguageMode = '한국어';
-  //late List<int> babyIds;
-  //var locale = Locale('en','US');
 
   @override
   void initState() {
-    for(int i=0;i<widget.babies.length;i++){
-      Baby baby = widget.babies[i];
-      if(baby.relationInfo.active){
-        activeBabies[baby.relationInfo.BabyId] = baby;
-      }else{
-        disactiveBabies[baby.relationInfo.BabyId] = baby;
-      }
-    }
+    activateBabies = widget.getBabiesFuction(true);
+    disActivateBabies = widget.getBabiesFuction(false);
+    log('MyPage : ${activateBabies.length} | ${disActivateBabies.length}');
     super.initState();
   }
   @override
@@ -91,7 +86,7 @@ class _MainMyPage extends State<MainMyPage>{
                           children: [
                             Text('관리중인 아기', style: TextStyle(color: Colors.grey[600])),
                             Center(
-                              child: Text(activeBabies.length.toString(), style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25)),
+                              child: Text(activateBabies.length.toString(), style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25)),
                             ),
                             const SizedBox(height: 15)
                           ],
@@ -102,7 +97,7 @@ class _MainMyPage extends State<MainMyPage>{
                         padding: const EdgeInsets.all(5),
                         width: 120,
                         decoration: BoxDecoration(
-                          color : Color(0xffffdbe6),  //F8B5C5FF
+                          color: Colors.grey[200],
                           //color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(5),
                         ),
@@ -141,16 +136,16 @@ class _MainMyPage extends State<MainMyPage>{
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('main4_manageBaby'.tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color:Color(0xfffa625f),)),
+                              Text('main4_manageBaby'.tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color:Color(0xfffa625f))),
                               const SizedBox(height: 10),
                               SizedBox(
                                   height: 110,
                                   child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
-                                      itemCount: activeBabies.length + 1,
+                                      itemCount: activateBabies.length + 1,
                                       itemBuilder: (BuildContext context, int index){
-                                        if(index < activeBabies.length){
-                                          return drawBaby(activeBabies[activeBabies.keys.toList()[index]]!);
+                                        if(index < activateBabies.length){
+                                          return drawBaby(activateBabies[index]!);
                                         }else{
                                           return Container(
                                               padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
@@ -163,8 +158,8 @@ class _MainMyPage extends State<MainMyPage>{
                                                       ),
                                                       child: IconButton(
                                                           onPressed: () async{
-                                                            await Get.to(ManageBabyWidget(activeBabies.values.toList()));
-                                                            await reloadBabies();
+                                                            await Get.to(ManageBabyWidget(activateBabies));
+                                                            await widget.reloadBabiesFunction();
                                                           },
                                                           iconSize: 40,
                                                           color: Colors.grey,
@@ -183,16 +178,15 @@ class _MainMyPage extends State<MainMyPage>{
                           )
                       ),
                       getSettingScreen('main4_babyAddModify'.tr, const Icon(Icons.edit_attributes_sharp),() async{
-                        await Get.to(ManageBabyWidget(activeBabies.values.toList()));
-                        await reloadBabies();
+                        await Get.to(() => ManageBabyWidget(activateBabies));
+                        await widget.reloadBabiesFunction();
                       }),
                       getSettingScreen('main4_InviteBabysitter'.tr, const Icon(Icons.diamond_outlined),() async{
-                        //print(disactiveBabies.length);
-                        await Get.to(() => Invitation(activeBabies.values.toList(), disactiveBabies.values.toList()));
-                        await reloadBabies();
+                        await Get.to(() => Invitation(activateBabies, disActivateBabies));
+                        await widget.reloadBabiesFunction();
                       }),
                       getSettingScreen('main4_switch_Alarm'.tr, const Icon(Icons.notifications_off_outlined),(){
-                        Get.to(() => SwitchNotice(activeBabies.values.toList()));
+                        Get.to(() => SwitchNotice(activateBabies));
                       }),
                       const Text('Common'),
                       const SizedBox(height: 10),
@@ -262,30 +256,12 @@ class _MainMyPage extends State<MainMyPage>{
         )
     );
   }
-  reloadBabies() async{
-    List<int> existedIds = activeBabies.keys.toList() + disactiveBabies.keys.toList();
-    activeBabies.clear();
-    disactiveBabies.clear();
-    List<dynamic> babyRelationList = await getMyBabies();
-    for(int i=0; i < babyRelationList.length; i++){
-      var baby = await getBaby(babyRelationList[i]['baby']);
-      baby['relationInfo'] = (Baby_relation.fromJson(babyRelationList[i])).toJson();
-      setState(() {
-        if(babyRelationList[i]['active']){
-          activeBabies[babyRelationList[i]['baby']] = Baby.fromJson(baby);
-        }else{
-          disactiveBabies[babyRelationList[i]['baby']] = Baby.fromJson(baby);
-        }
-      });
-    }
-  }
+
   logout() async{
-    //await reloadBabies();
-    //print(babiesIndexingMap);
-    //print(babyRelationList);
     await deleteLogin();
-    Get.offAll(LoginInit());
+    Get.offAll(const LoginInit());
   }
+
   Container getLanguageModeScreen(title){
     return Container(
       padding: const EdgeInsets.all(8),

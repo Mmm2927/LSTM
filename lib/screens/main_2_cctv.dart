@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:flutter_mjpeg/flutter_mjpeg.dart';
+import '../models/model.dart';
 
 class Main_Cctv extends StatefulWidget{
+  final getMyBabyFuction;
+  const Main_Cctv({super.key, this.getMyBabyFuction});
   @override
-  _Main_Cctv createState() => _Main_Cctv();
+  State<Main_Cctv> createState() => MainCCTVState();
 }
-class _Main_Cctv extends State<Main_Cctv>{
+class MainCCTVState extends State<Main_Cctv>{
   bool _isPlaying = false;
+  late Baby baby;
+
   @override
   void initState() {
     super.initState();
+    baby = widget.getMyBabyFuction();
+    print(baby.name);
   }
   @override
   Widget build(BuildContext context) {
@@ -77,7 +84,8 @@ class _Main_Cctv extends State<Main_Cctv>{
                   color:Colors.black),
             ),
           ],
-        )
+        ),
+        Text('현재 아기 : ${baby.name}')
       ],
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bob/screens/MyPage/manage_baby.dart';
 import 'package:flutter/material.dart';
 import 'package:bob/screens/main_1_home.dart';
@@ -18,49 +20,80 @@ class BaseWidget extends StatefulWidget{
   State<BaseWidget> createState() => _BaseWidget();
 }
 class _BaseWidget extends State<BaseWidget>{
+  GlobalKey<MainCCTVState> _cctvKey = GlobalKey();
+  GlobalKey<MainMyPageState> _mypageKey = GlobalKey();
+  GlobalKey<MainHomeState> _homepageKey = GlobalKey();
+
+  late List<Baby> activeBabies;
+  late List<Baby> disactiveBabies;
+  int cIdx = 0;
   int _selectedIndex = 0; // 인덱싱
-  late List<int> babyIds;
+  @override
+  void initState() {
+    super.initState();
+    classifyByActive();
+  }
+  // 1. active / disActive 분류
+  classifyByActive(){
+    activeBabies = [];
+    disactiveBabies = [];
+    for(int i=0; i<widget.MyBabies.length; i++){
+      Baby b = widget.MyBabies[i];
+      if(b.relationInfo.active){
+        activeBabies.add(b);
+      }else{
+        disactiveBabies.add(b);
+      }
+    }
+    log('classify 결과 : {active : ${activeBabies.length}, disactive : ${disactiveBabies.length}}');
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-  @override
-  void initState() {
-    super.initState();
-    babyIds = [];
-    for(int i=0;i<widget.MyBabies.length;i++){
-      babyIds.add(widget.MyBabies[i].relationInfo.BabyId);
-    }
-    if(widget.MyBabies.isEmpty){
-      loadData();
+  changeCurrentBaby(int i){
+    setState(() {
+      cIdx = i;
+    });
+  }
+  getBabies(bool isActive){
+    print('call getBabiesFuction : $isActive');
+    if(isActive) {
+      return activeBabies;
+    } else {
+      return disactiveBabies;
     }
   }
-  Future<void> loadData() async {
-    await GET.Get.to(ManageBabyWidget(widget.MyBabies));
+  getCurrentBaby(){
+    return activeBabies[cIdx];
+  }
+
+  reloadBabies() async{
+    activeBabies.clear();
+    disactiveBabies.clear();
     List<dynamic> babyRelationList = await getMyBabies();
-    print(babyRelationList);
-    for(int i=0; i<babyRelationList.length;i++){
-      // 기존에 있는 아이디인지 확인
-      if(!babyIds.contains(babyRelationList[i]['baby'])){
-        // 없으면 ADD  // 2. 아기 등록
-        Baby_relation relation = Baby_relation.fromJson(babyRelationList[i]);
-        var baby = await getBaby(babyRelationList[i]['baby']);
-        baby['relationInfo'] = relation.toJson();
-        setState(() {
-          babyIds.add(babyRelationList[i]['baby']);
-          widget.MyBabies.add(Baby.fromJson(baby));
-        });
-      }
+    for(int i=0; i < babyRelationList.length; i++){
+      var baby = await getBaby(babyRelationList[i]['baby']);
+      baby['relationInfo'] = (Baby_relation.fromJson(babyRelationList[i])).toJson();
+      setState(() {
+        if(babyRelationList[i]['active']){
+          activeBabies.add(Baby.fromJson(baby));
+        }else{
+          disactiveBabies.add(Baby.fromJson(baby));
+        }
+      });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> widgetOptions = <Widget>[
-      Main_Home(widget.MyBabies, widget.userinfo),
-      Main_Cctv(),
+      Main_Home(widget.userinfo, key : _homepageKey, getBabiesFunction: getBabies,getCurrentBabyFunction: getCurrentBaby, changeCurrentBabyFunction: changeCurrentBaby),
+      Main_Cctv(key:_cctvKey, getMyBabyFuction: getCurrentBaby),
       const MainDiary(),
-      MainMyPage(widget.userinfo, widget.MyBabies)
+      MainMyPage(widget.userinfo, key: _mypageKey, getBabiesFuction: getBabies, reloadBabiesFunction: reloadBabies)
     ];
     return DefaultTabController(
         length: 3,

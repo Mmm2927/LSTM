@@ -7,32 +7,19 @@ import '../../services/backend.dart';
 
 class BabyMedicalCheckup extends StatefulWidget {
   final Baby baby;
-  const BabyMedicalCheckup(this.baby, {Key? key}) : super(key: key);
+  final List<MedicalCheckUp> medicalCheckUps;
+  const BabyMedicalCheckup(this.baby, this.medicalCheckUps, {Key? key}) : super(key: key);
 
   @override
   State<BabyMedicalCheckup> createState() => _BabyMedicalCheckup();
 }
 
 class _BabyMedicalCheckup extends State<BabyMedicalCheckup> {
-  late List<MedicalCheckUp> medicalCheckUps;
   late int finishCheck;
   late Future getCheckUpFuture;
   @override
   void initState() {
-    medicalCheckUps = [
-      MedicalCheckUp(0, '1차 건강검진',[1, 14, 35], widget.baby.birth),
-      MedicalCheckUp(1, '2차 건강검진',[0, 4, 6], widget.baby.birth),
-      MedicalCheckUp(2, '3차 건강검진',[0, 9, 12], widget.baby.birth),
-      MedicalCheckUp(3, '4차 건강검진',[0, 18, 24], widget.baby.birth),
-      MedicalCheckUp(4, '1차 구강검진',[0, 18, 24], widget.baby.birth),
-      MedicalCheckUp(5, '5차 건강검진',[0, 30, 36], widget.baby.birth),
-      MedicalCheckUp(6, '2차 구강검진',[0, 30, 41], widget.baby.birth),
-      MedicalCheckUp(7, '6차 건강검진',[0, 42, 48], widget.baby.birth),
-      MedicalCheckUp(8, '3차 구강검진',[0, 42, 53], widget.baby.birth),
-      MedicalCheckUp(9, '7차 건강검진',[0, 54, 60], widget.baby.birth),
-      MedicalCheckUp(10, '4차 구강검진',[0, 54, 65], widget.baby.birth),
-      MedicalCheckUp(11, '8차 건강검진',[0, 66, 71], widget.baby.birth)
-    ];
+    super.initState();
     getCheckUpFuture = getMyCheckUpInfo();
   }
   Future getMyCheckUpInfo() async{
@@ -47,8 +34,8 @@ class _BabyMedicalCheckup extends State<BabyMedicalCheckup> {
       setState(() {
         finishCheck +=1;
       });
-      medicalCheckUps[mode-50].isInoculation = true;
-      medicalCheckUps[mode-50].checkUpDate = DateTime.parse(medicalCheckList[i]['date']);
+      widget.medicalCheckUps[mode-50].isInoculation = true;
+      widget.medicalCheckUps[mode-50].checkUpDate = DateTime.parse(medicalCheckList[i]['date']);
     }
     return true;
   }
@@ -67,7 +54,7 @@ class _BabyMedicalCheckup extends State<BabyMedicalCheckup> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 30),
-              Container(
+              SizedBox(
                 height: 25,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(30),
@@ -79,7 +66,7 @@ class _BabyMedicalCheckup extends State<BabyMedicalCheckup> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -108,26 +95,26 @@ class _BabyMedicalCheckup extends State<BabyMedicalCheckup> {
                     return Expanded(
                         child: ListView(
                           children: [
-                            drawDate(medicalCheckUps[0].drawDateString()),
-                            drawMedicalCheckUpOne(medicalCheckUps[0]),
-                            drawDate(medicalCheckUps[1].drawDateString()),
-                            drawMedicalCheckUpOne(medicalCheckUps[1]),
-                            drawDate(medicalCheckUps[2].drawDateString()),
-                            drawMedicalCheckUpOne(medicalCheckUps[2]),
-                            drawDate(medicalCheckUps[3].drawDateString()),
-                            drawMedicalCheckUpOne(medicalCheckUps[3]),
-                            drawMedicalCheckUpOne(medicalCheckUps[4]),
-                            drawDate(medicalCheckUps[5].drawDateString()),
-                            drawMedicalCheckUpOne(medicalCheckUps[5]),
-                            drawMedicalCheckUpOne(medicalCheckUps[6]),
-                            drawDate(medicalCheckUps[7].drawDateString()),
-                            drawMedicalCheckUpOne(medicalCheckUps[7]),
-                            drawMedicalCheckUpOne(medicalCheckUps[8]),
-                            drawDate(medicalCheckUps[9].drawDateString()),
-                            drawMedicalCheckUpOne(medicalCheckUps[9]),
-                            drawMedicalCheckUpOne(medicalCheckUps[10]),
-                            drawDate(medicalCheckUps[11].drawDateString()),
-                            drawMedicalCheckUpOne(medicalCheckUps[11]),
+                            drawDate(widget.medicalCheckUps[0].drawDateString()),
+                            drawMedicalCheckUpOne(widget.medicalCheckUps[0]),
+                            drawDate(widget.medicalCheckUps[1].drawDateString()),
+                            drawMedicalCheckUpOne(widget.medicalCheckUps[1]),
+                            drawDate(widget.medicalCheckUps[2].drawDateString()),
+                            drawMedicalCheckUpOne(widget.medicalCheckUps[2]),
+                            drawDate(widget.medicalCheckUps[3].drawDateString()),
+                            drawMedicalCheckUpOne(widget.medicalCheckUps[3]),
+                            drawMedicalCheckUpOne(widget.medicalCheckUps[4]),
+                            drawDate(widget.medicalCheckUps[5].drawDateString()),
+                            drawMedicalCheckUpOne(widget.medicalCheckUps[5]),
+                            drawMedicalCheckUpOne(widget.medicalCheckUps[6]),
+                            drawDate(widget.medicalCheckUps[7].drawDateString()),
+                            drawMedicalCheckUpOne(widget.medicalCheckUps[7]),
+                            drawMedicalCheckUpOne(widget.medicalCheckUps[8]),
+                            drawDate(widget.medicalCheckUps[9].drawDateString()),
+                            drawMedicalCheckUpOne(widget.medicalCheckUps[9]),
+                            drawMedicalCheckUpOne(widget.medicalCheckUps[10]),
+                            drawDate(widget.medicalCheckUps[11].drawDateString()),
+                            drawMedicalCheckUpOne(widget.medicalCheckUps[11]),
                             const SizedBox(height: 30),
                           ],
                         )

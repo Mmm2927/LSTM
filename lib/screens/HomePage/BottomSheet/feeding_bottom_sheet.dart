@@ -7,7 +7,7 @@ import '../../../services/backend.dart';
 class FeedingBottomSheet extends StatefulWidget {
 
   final int babyId;
-  final void Function(String id) timeFeeding;
+  final void Function(int mode, String data) timeFeeding;
   const FeedingBottomSheet (this.babyId, this.timeFeeding, {Key? key}) : super(key: key);
   //final String feedingTime;
 
@@ -228,7 +228,7 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
                         var result = await lifesetService(widget.babyId, 0, content.toString());
 
                         String feedingTime = '${DateTime.now().difference(dateTimeList![1]).inMinutes}분 전';
-                        widget.timeFeeding(feedingTime);
+                        widget.timeFeeding(0, feedingTime);
                         Navigator.pop(context);
                       },
                       style: OutlinedButton.styleFrom(

@@ -26,77 +26,44 @@ import 'HomePage/StopwatchBottomSheet/babyFood_stopwatch_sheet.dart';
 
 class Main_Home extends StatefulWidget{
   final User userinfo;
-  final List<Baby> babies;
-  const Main_Home(this.babies, this.userinfo, {Key? key}) : super(key: key);
+  final getBabiesFunction;
+  final getCurrentBabyFunction;
+  final changeCurrentBabyFunction;
+  const Main_Home(this.userinfo, {Key? key, this.getBabiesFunction, this.getCurrentBabyFunction, this.changeCurrentBabyFunction}) : super(key: key);
   @override
-  State<Main_Home> createState() => _MainHome();
+  State<Main_Home> createState() => MainHomeState();
 }
 
-class _MainHome extends State<Main_Home>{
+class MainHomeState extends State<Main_Home>{
   GlobalKey<StopwatchState> _stopwatchKey = GlobalKey();
   late List<Baby> activeBabies;
-  late int babyIdx;
+  late Baby currentBaby;
   String _feeding = '-';        // 모유
   String _feedingBottle = '-';  // 젖병
   String _babyfood = '-';       // 이유식
   String _diaper = '-';         // 기저귀
   String _sleep = '-';          // 수면
-
-  late DateTime _feedingtimer = DateTime.now();
-  late String _feedingmemo ='';
-  late int _feedingtype = 0;
-
-  void _timerFeeding(a, b, c){
-    setState(() {
-      _feedingtype = a;
-      _feedingtimer = b;
-      _feedingmemo = c;
-    });
-  }
-
-  void _timeFeeding(val){
-    setState(() {
-      _feeding = val;
-    });
-  }
-  void _timeFeedingBottle(val){
-    setState(() {
-      _feedingBottle = val;
-    });
-  }
-
-  void _timeBabyFood(val){
-    setState(() {
-      _babyfood = val;
-    });
-  }
-
-  void _timeDiaper(val){
-    setState(() {
-      _diaper = val;
-    });
-  }
-  void _timeSleep(val){
-    setState(() {
-      _sleep = val;
-    });
-  }
+  List<Vaccine> myBabyvaccineList = [];
+  late List<MedicalCheckUp> myBabyMedicalCheckList;
+  bool timerClosed = true;
   void addLifeRecord(int type, String val){
-    if(type==0){
-      _timeFeeding(val);
-    }
-    else if(type==1){
-      _timeFeedingBottle(val);
-    }
-    else if(type==2){
-      _timeBabyFood(val);
-    }
-    else if(type==3){
-      _timeDiaper(val);
-    }
-    else{
-      _timeFeeding(val);
-    }
+    setState(() {
+      if(type==0){
+        _feeding = val;
+      }
+      else if(type==1){
+        _feedingBottle = val;
+      }
+      else if(type==2){
+        _babyfood = val;
+      }
+      else if(type==3){
+        _diaper = val;
+      }
+      else{
+        _sleep = val;
+      }
+    });
   }
   closeOffset(){
     setState(() {
@@ -108,21 +75,98 @@ class _MainHome extends State<Main_Home>{
   Color timerBackgroundColor = const Color(0xffffdbd9);
   int timerType = 0;
   late StopWatch stopWatchWidget;
+  String nextVaccineDate = '';
+  String nextMedicalCheckUpDate = '';
   @override
   void initState() {
     super.initState();
-    babyIdx = 0;
-    activeBabies = [];
-    for(int i=0; i<widget.babies.length; i++){
-      Baby baby = widget.babies[i];
-      if(baby.relationInfo.active){
-        activeBabies.add(baby);
+    activeBabies = widget.getBabiesFunction(true);
+    currentBaby = widget.getCurrentBabyFunction();
+    stopWatchWidget = StopWatch(currentBaby, key : _stopwatchKey, closeFuction: closeOffset, saveFuction: showTimerBottomSheet);
+    loadMyBabyVaccineInfo();
+    loadMyBabyMedicalCheckInfo();
+  }
+  loadMyBabyVaccineInfo(){
+    myBabyvaccineList = [
+      Vaccine(ID: 0, title: '결핵 경피용', times: 'BCG 1회/기타', recommendationDate: '2023.01.20 ~ 2023.02.19', detail: '생후 4주 이내 접종, 민간의료기관, 유료'),
+      Vaccine(ID: 1, title: '결핵 피내용', times: 'BCG 1회/기타', recommendationDate: '2023.01.20 ~ 2023.02.19', detail: '생후 4주 이내 접종, 민간의료기관, 유료'),
+      Vaccine(ID: 2, title: 'B형 간염', times: 'HepB 1차/국가', recommendationDate: '2023.01.20', detail: '생후 12시간 이내 접종(모체가 양성일 경우 HBIG와 함께 접종)'), // 2
+      Vaccine(ID: 3, title: 'B형 간염', times: 'HepB 2차/국가', recommendationDate: '2023.02.20', detail: '만 1개월에 접종'),
+      Vaccine(ID: 4, title: '디프테리아, 파상풍, 백일해', times: 'DTaP 1회/국가', recommendationDate: '2023.03.20', detail: 'DTaP-IPV 폴리오와 혼합 접종 가능'),
+      Vaccine(ID: 5, title: '폴리오', times: 'IPV 1회/국가', recommendationDate: '2023.03.20', detail: 'DTaP-IPV 혼합 접종 가능'),
+      Vaccine(ID: 6, title: 'b형 헤모필루스인플루엔자', times: 'Hib 1차/국가', recommendationDate: '2023.03.20', detail: '뇌수막염 예방접종'),
+      Vaccine(ID: 7, title: '폐렴구균', times: 'PCV(단백결합) 1차/국가', recommendationDate: '2023.03.20', detail: ''),
+      Vaccine(ID: 8, title: '로타바이러스(로타릭스)', times: 'RV1 1차/기타', recommendationDate: '2023.03.20', detail: '유료, 로타릭스/로타텍 중 선택 접종'),
+      Vaccine(ID: 9, title: '로타바이러스(로타텍)', times: 'RV5 1차/기타', recommendationDate: '2023.03.20', detail: '유료, 로타릭스/로타텍 중 선택 접종'),
+      Vaccine(ID: 10, title: '디프테리아, 파상풍, 백일해', times: 'DTaP 2차/국가', recommendationDate: '2023.05.20', detail: 'DTaP-IPV 폴리오와 혼합 접종 가능'),
+      Vaccine(ID: 11, title: '폴리오', times: 'IPV 2차/국가', recommendationDate: '2023.05.20', detail: 'DTaP-IPV 혼합 접종 가능'),
+      Vaccine(ID: 12, title: 'b형 헤모필루스인플루엔자', times: 'Hib 2차/국가', recommendationDate: '2023.05.20', detail: '뇌수막염 예방접종, 만 4개월에 접종'),
+      Vaccine(ID: 13, title: '폐렴구균', times: 'PCV(단백결합) 2차/국가', recommendationDate: '2023.05.20', detail: '만 4개월에 접종'),
+      Vaccine(ID: 14, title: '로타바이러스(로타릭스)', times: 'RV1 2차/기타', recommendationDate: '2023.05.20', detail: '유료, 로타릭스/로타텍 중 선택 접종'),
+      Vaccine(ID: 15, title: '로타바이러스(로타텍)', times: 'RV5 2차/기타', recommendationDate: '2023.05.20', detail: '유료, 로타릭스/로타텍 중 선택 접종'),
+      Vaccine(ID: 16, title: 'B형 간염', times: 'HepB 3차/국가', recommendationDate: '2023.07.20', detail: '만 6개월에 접종'),
+      Vaccine(ID: 17, title: '디프테리아, 파상풍, 백일해', times: 'DTaP 3차/국가', recommendationDate: '2023.07.20', detail: 'DTaP-IPV 폴리오와 혼합 접종 가능'),
+      Vaccine(ID: 18, title: '폴리오', times: 'IPV 3차/국가', recommendationDate: '2023.07.20', detail: 'DTaP-IPV 혼합 접종 가능'),
+      Vaccine(ID: 19, title: 'b형 헤모필루스인플루엔자', times: 'Hib 3차/국가', recommendationDate: '2023.07.20', detail: '뇌수막염 예방접종, 만 6개월에 접종'),
+      Vaccine(ID: 20,title: '폐렴구균', times: 'PCV(단백결합) 3차/국가', recommendationDate: '2023.07.20', detail: '만 6개월에 접종'),
+      Vaccine(ID: 21,title: '로타바이러스(로타텍)', times: 'RV5 3차/기타', recommendationDate: '2023.07.20', detail: '유료, 로타릭스/로타텍 중 선택 접종'),
+      Vaccine(ID: 22,title: '인플루엔자', times: 'IIV 1차/국가', recommendationDate: '2023.07.20 ~ 2023.08.19', detail: '만 6개월 후 지정기간에서 접종\n생애 최초 시 4주 후 2차 접종'),
+      Vaccine(ID: 23,title: '인플루엔자', times: 'IIV 2차/국가', recommendationDate: '2023.07.20 ~ 2023.08.19', detail: '만 6개월 후 지정기간에서 접종\n생애 최초 시 4주 후 2차 접종'),
+      Vaccine(ID: 24,title: 'b형 헤모필루스인플루엔자', times: 'Hib 추가 4차/국가', recommendationDate: '2024.01.20 ~ 2024.05.19', detail: '뇌수막염 접종, 만 12~15개월에 접종'),
+      Vaccine(ID: 25,title: '폐렴구균', times: 'PCV(단백결합) 추가 4차/국가', recommendationDate: '2024.01.20 ~ 2024.05.19', detail: '만 12~15세 접종'),
+      Vaccine(ID: 26,title: '홍역, 유행성이하선염, 풍진', times: 'MMR 1차/국가', recommendationDate: '2024.01.20 ~ 2024.05.19', detail: '만 12~15세 접종'),
+      Vaccine(ID: 27,title: '수두', times: 'VAR 1회/국가', recommendationDate: '2024.01.20 ~ 2024.05.19', detail: '만 12~15세 접종'),
+      Vaccine(ID: 28,title: '디프테리아 / 파상풍 / 백일해', times: 'DTaP 추가 4차/국가', recommendationDate: '2024.04.20 ~ 2024.08.19', detail: '만 15~18세 접종'),
+      Vaccine(ID: 29,title: 'A형 간염', times: 'HepA 1차/국가', recommendationDate: '2024.01.20 ~ 2024.12.19', detail: '만 12~23세 접종'),
+      Vaccine(ID: 30, title: 'A형 간염', times: 'HepA 2차/국가', recommendationDate: '2024.01.20 ~ 2024.12.19', detail: '만 12~23세 접종'),
+      Vaccine(ID: 31, title: '일본뇌염 사백신', times: 'IJEV 1차/국가', recommendationDate: '2024.01.20 ~ 2024.12.19', detail: '사백신 총 5회 접종'),
+      Vaccine(ID: 32, title: '일본뇌염 사백신', times: 'IJEV 2차/국가', recommendationDate: '2024.01.20 ~ 2024.12.19', detail: '1차 접종 1개월 후 접종'),
+      Vaccine(ID: 33, title: '일본뇌염 사백신', times: 'IJEV 3차/국가', recommendationDate: '2025.12.20 ~ 2027.01.19', detail: '2차 접종 11개월 후 접종'),
+      Vaccine(ID: 34, title: '일본뇌염 생백신', times: 'LJEV 1차/국가', recommendationDate: '2024.01.20 ~ 2025.12.19', detail: '총 2회 접종, 1차 접종 12개월 후 2차 접종(무료/유료)'),
+      Vaccine(ID: 35, title: '일본뇌염 생백신', times: 'LJEV 2차/국가', recommendationDate: '2024.01.20 ~ 2025.12.19', detail: '총 2회 접종, 1차 접종 12개월 후 2차 접종(무료/유료)'),
+      Vaccine(ID: 36, title: '인플루엔자', times: 'IIV 1회/국가', recommendationDate: '2024.12.20 ~ 2025.12.19', detail: '국가지정기간에서 접종(보통 10월중순 즘 시작)'),
+      Vaccine(ID: 37, title: '인플루엔자', times: 'IIV 2회/국가', recommendationDate: '2025.12.20 ~ 2027.12.19', detail: '국가지정기간에서 접종(보통 10월중순 즘 시작)'),
+      Vaccine(ID: 38, title: '디프테리아 / 파상풍 / 백일해', times: 'DTaP 추가 5차/국가', recommendationDate: '2027.01.20 ~ 2030.01.19', detail: '만 4~6세 접종'),
+      Vaccine(ID: 39, title: '디프테리아 / 파상풍 / 백일해', times: 'DTaP 추가 6차/국가', recommendationDate: '2034.01.20 ~ 2036.01.19', detail: '만 11~12세 접종'),
+      Vaccine(ID: 40, title: '폴리오', times: 'IPV 추가 4차/국가', recommendationDate: '2027.01.20 ~ 2030.01.19', detail: '만 4~6세 접종'),
+      Vaccine(ID: 41, title: '홍역 / 유행성 이하선염 / 풍진', times: 'MMR 2차/국가', recommendationDate: '2027.01.20 ~ 2030.01.19', detail: '만 4~6세 접종'),
+      Vaccine(ID: 42, title: '일본뇌염 사백신', times: 'IJEV(사백신) 추가 4차/국가', recommendationDate: '2029.01.20', detail: '총 5회 접종, 4차 접종'),
+      Vaccine(ID: 43, title: '일본뇌염 사백신', times: 'IJEV(사백신) 추가 5차/국가', recommendationDate: '2035.01.20', detail: '총 5회 접종, 5차 접종'),
+      Vaccine(ID: 44, title: '인유두종 바이러스 감염증', times: 'HPV 1차/국가', recommendationDate: '2035.01.20 ~ 2036.01.19', detail: '자궁경부암백신, 여아만 해당\n만 12세에 6개월 간격으로 2회 접종')
+    ];
+    for(int i=0; i<myBabyvaccineList.length; i++){
+      if(!myBabyvaccineList[i].isInoculation){
+        setState(() {
+          nextVaccineDate = myBabyvaccineList[i].title;
+        });
+        return;
       }
     }
-    stopWatchWidget = StopWatch(activeBabies[babyIdx], key : _stopwatchKey, closeFuction: closeOffset, saveFuction: showTimerBottomSheet);
   }
-  bool timerClosed = true;
-
+  loadMyBabyMedicalCheckInfo(){
+    myBabyMedicalCheckList = [
+      MedicalCheckUp(0, '1차 건강검진',[1, 14, 35], currentBaby.birth),
+      MedicalCheckUp(1, '2차 건강검진',[0, 4, 6], currentBaby.birth),
+      MedicalCheckUp(2, '3차 건강검진',[0, 9, 12], currentBaby.birth),
+      MedicalCheckUp(3, '4차 건강검진',[0, 18, 24], currentBaby.birth),
+      MedicalCheckUp(4, '1차 구강검진',[0, 18, 24], currentBaby.birth),
+      MedicalCheckUp(5, '5차 건강검진',[0, 30, 36], currentBaby.birth),
+      MedicalCheckUp(6, '2차 구강검진',[0, 30, 41], currentBaby.birth),
+      MedicalCheckUp(7, '6차 건강검진',[0, 42, 48], currentBaby.birth),
+      MedicalCheckUp(8, '3차 구강검진',[0, 42, 53], currentBaby.birth),
+      MedicalCheckUp(9, '7차 건강검진',[0, 54, 60], currentBaby.birth),
+      MedicalCheckUp(10, '4차 구강검진',[0, 54, 65], currentBaby.birth),
+      MedicalCheckUp(11, '8차 건강검진',[0, 66, 71], currentBaby.birth)
+    ];
+    for(int i=0; i<myBabyMedicalCheckList.length; i++){
+      if(!myBabyMedicalCheckList[i].isInoculation){
+        setState(() {
+          nextMedicalCheckUpDate = myBabyMedicalCheckList[i].title;
+        });
+        return;
+      }
+    }
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -191,7 +235,7 @@ class _MainHome extends State<Main_Home>{
                                 bottomLeft: Radius.circular(40)
                             )
                         ),
-                        child: drawBaby(activeBabies[babyIdx].name, activeBabies[babyIdx].birth)
+                        child: drawBaby(currentBaby.name, currentBaby.birth)
                     ),
                     //아기 정보 구현
                     Container(
@@ -346,7 +390,7 @@ class _MainHome extends State<Main_Home>{
                                                   isScrollControlled: true,
                                                   context: context,
                                                   builder: ( BuildContext context ) {
-                                                    return GrowthRecordBottomSheet(widget.babies[babyIdx].relationInfo.BabyId);
+                                                    return GrowthRecordBottomSheet(currentBaby.relationInfo.BabyId);
                                                   }
                                               );
                                             },
@@ -375,11 +419,11 @@ class _MainHome extends State<Main_Home>{
                                   children: [
                                     GestureDetector(
                                         onTap: () {
-                                          Get.to(()=>BabyVaccination(widget.babies[babyIdx]));
+                                          Get.to(() => BabyVaccination(currentBaby, myBabyvaccineList));
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(10),
-                                          height: 80,
+                                          height: 85,
                                           decoration: BoxDecoration(
                                               color: Colors.white,
                                               borderRadius: BorderRadius.circular(10),
@@ -393,39 +437,31 @@ class _MainHome extends State<Main_Home>{
                                           child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text('예방 접종', style: TextStyle(fontSize: 20, color: Colors.black),),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      '다음 예방 접종 -> ',
-                                                      style: TextStyle(
-                                                          fontSize: 15,
-                                                          color: Colors.grey[700]
-                                                      ),
-                                                    ),
-                                                    const Text(
-                                                      '(예시)',
-                                                      style: TextStyle(
-                                                          fontSize: 18,
-                                                          color: Colors.black
-                                                      ),
-                                                    ),
-                                                  ],
+                                                const Text('예방 접종', style: TextStyle(fontSize: 20, color: Colors.black)),
+                                                const Text(
+                                                  '다음 예방 검진',
+                                                  style: TextStyle(fontSize: 13, color: Colors.grey),
                                                 ),
-
+                                                Center(
+                                                    child: Text(
+                                                      nextVaccineDate,
+                                                      style: const TextStyle(fontSize: 18, color: Color(0xfffa625f)),
+                                                    )
+                                                )
                                               ]
                                           ),
                                         )
                                     ),
                                     //예방 접종 페이지 이동
-                                    const SizedBox(height: 20),
+                                    const SizedBox(height: 10),
                                     GestureDetector(
                                         onTap: () {
-                                          Get.to(()=>BabyMedicalCheckup(widget.babies[babyIdx]));
+                                          Get.to(()=>BabyMedicalCheckup(currentBaby, myBabyMedicalCheckList));
                                         },
                                         child: Container(
-                                          padding: EdgeInsets.all(10),
-                                          height: 80,
+                                          padding: const EdgeInsets.all(10),
+                                          width: double.infinity,
+                                          height: 85,
                                           decoration: BoxDecoration(
                                               color: Colors.white,
                                               borderRadius: BorderRadius.circular(15),
@@ -439,26 +475,17 @@ class _MainHome extends State<Main_Home>{
                                           child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text('건강 검진', style: TextStyle(fontSize: 20, color: Colors.black),),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      '다음 건강 검진 -> ',
-                                                      style: TextStyle(
-                                                          fontSize: 15,
-                                                          color: Colors.grey[700]
-                                                      ),
-                                                    ),
-                                                    const Text(
-                                                      '(예시)',
-                                                      style: TextStyle(
-                                                          fontSize: 18,
-                                                          color: Colors.black
-                                                      ),
-                                                    ),
-                                                  ],
+                                                const Text('건강 검진', style: TextStyle(fontSize: 20, color: Colors.black)),
+                                                const Text(
+                                                  '다음 건강 검진',
+                                                  style: TextStyle(fontSize: 13, color: Colors.grey),
                                                 ),
-
+                                                Center(
+                                                  child: Text(
+                                                    nextMedicalCheckUpDate,
+                                                    style: const TextStyle(fontSize: 18, color: Color(0xfffa625f)),
+                                                  )
+                                                )
                                               ]
                                           ),
                                         )
@@ -483,7 +510,7 @@ class _MainHome extends State<Main_Home>{
       Get.bottomSheet(
         Container(
           color: Colors.white,
-          child: FeedingStopwatchBottomSheet(activeBabies[babyIdx].relationInfo.BabyId, startTime, endTime, changeRecord: _timeFeeding)
+          child: FeedingStopwatchBottomSheet(currentBaby.relationInfo.BabyId, startTime, endTime, changeRecord: addLifeRecord)
         ),
         isScrollControlled: true
       );
@@ -493,7 +520,7 @@ class _MainHome extends State<Main_Home>{
           Container(
               color: Colors.white,
               child: FeedingBottleStopwatchBottomSheet(
-                  activeBabies[babyIdx].relationInfo.BabyId, startTime, endTime, changeRecord: _timeFeedingBottle)
+                  currentBaby.relationInfo.BabyId, startTime, endTime, changeRecord: addLifeRecord)
           ),
           isScrollControlled: true
       );
@@ -503,7 +530,7 @@ class _MainHome extends State<Main_Home>{
           Container(
               color: Colors.white,
               child: BabyFoodStopwatchBottomSheet(
-                  activeBabies[babyIdx].relationInfo.BabyId, startTime, endTime, changeRecord: _timeBabyFood)
+                  currentBaby.relationInfo.BabyId, startTime, endTime, changeRecord: addLifeRecord)
           ),
           isScrollControlled: true
       );
@@ -513,7 +540,7 @@ class _MainHome extends State<Main_Home>{
           Container(
               color: Colors.white,
               child: SleepStopwatchBottomSheet(
-                  activeBabies[babyIdx].relationInfo.BabyId, startTime, endTime, changeRecord: _timeSleep),
+                  currentBaby.relationInfo.BabyId, startTime, endTime, changeRecord: addLifeRecord),
           ),
         isScrollControlled: true
       );
@@ -529,7 +556,8 @@ class _MainHome extends State<Main_Home>{
             InkWell(
                 onTap: (){
                   setState(() {
-                    babyIdx = i;
+                    widget.changeCurrentBabyFunction(i);
+                    currentBaby = widget.getCurrentBabyFunction();
                   });
                   Navigator.pop(context);
                 },
@@ -588,7 +616,7 @@ class _MainHome extends State<Main_Home>{
                         TextButton(
                             onPressed: () async {
                               var content = {"type": 0, "startTime": now, "endTime": now, "memo": null};
-                              var result = await lifesetService(activeBabies[babyIdx].relationInfo.BabyId, 3, content.toString());
+                              var result = await lifesetService(currentBaby.relationInfo.BabyId, 3, content.toString());
                               print(result);
                               Get.back();
                             },
@@ -598,7 +626,7 @@ class _MainHome extends State<Main_Home>{
                         TextButton(
                             onPressed: () async{
                               var content = {"type": 1, "startTime": now, "endTime": now, "memo": null};
-                              var result = await lifesetService(activeBabies[babyIdx].relationInfo.BabyId, 3, content.toString());
+                              var result = await lifesetService(currentBaby.relationInfo.BabyId, 3, content.toString());
                               print(result);
                               Get.back();
                             },
@@ -616,7 +644,7 @@ class _MainHome extends State<Main_Home>{
             setState(() {
               timerClosed = false;
               // 타이머 시작
-              _stopwatchKey.currentState?.openWidget(tapMode, activeBabies[babyIdx]);
+              _stopwatchKey.currentState?.openWidget(tapMode, currentBaby);
             });
           }
           //globalKeys[tapMode].currentState?.start();
@@ -652,18 +680,18 @@ class _MainHome extends State<Main_Home>{
         context: rootContext,
         builder: (BuildContext context) {
           if(tapMode==0){
-            return FeedingBottomSheet(activeBabies[babyIdx].relationInfo.BabyId, _timeFeeding);
+            return FeedingBottomSheet(currentBaby.relationInfo.BabyId, addLifeRecord);
           }else if(tapMode==1){
-            return FeedingBottleBottomSheet(activeBabies[babyIdx].relationInfo.BabyId, _timeFeedingBottle);
+            return FeedingBottleBottomSheet(currentBaby.relationInfo.BabyId, addLifeRecord);
           }
           else if(tapMode==2){
-            return BabyFoodBottomSheet(activeBabies[babyIdx].relationInfo.BabyId, _timeBabyFood);
+            return BabyFoodBottomSheet(currentBaby.relationInfo.BabyId, addLifeRecord);
           }
           else if(tapMode==3){
-            return DiaperBottomSheet(activeBabies[babyIdx].relationInfo.BabyId, _timeDiaper);
+            return DiaperBottomSheet(currentBaby.relationInfo.BabyId, addLifeRecord);
           }
           else{
-            return SleepBottomSheet(activeBabies[babyIdx].relationInfo.BabyId, _timeSleep);
+            return SleepBottomSheet(currentBaby.relationInfo.BabyId, addLifeRecord);
           }
         }
     );

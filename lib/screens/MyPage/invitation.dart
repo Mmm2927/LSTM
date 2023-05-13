@@ -14,15 +14,15 @@ class Invitation extends StatefulWidget{
   State<Invitation> createState() => _Invitation();
 }
 class _Invitation extends State<Invitation> {
-  //late List<Baby> notAllowedBabies;
+  late List<Baby> relation0Babies;
   @override
   void initState() {
-    /*notAllowedBabies = [];
-    for(int i=0; i<widget.babies.length;i++){
-      if(!widget.babies[i].relationInfo.active){
-        notAllowedBabies.add(widget.babies[i]);
+    relation0Babies = [];
+    for(int i=0; i<widget.activebabies.length; i++){
+      if(widget.activebabies[i].relationInfo.relation==0) {
+        relation0Babies.add(widget.activebabies[i]);
       }
-    }*/
+    }
     super.initState();
   }
   @override
@@ -39,7 +39,7 @@ class _Invitation extends State<Invitation> {
                 if(widget.activebabies.isEmpty){
                   Get.snackbar('초대 불가', '아이를 먼저 등록해주세요', snackPosition: SnackPosition.TOP, duration: const Duration(seconds: 2));
                 }else{
-                  Get.to(() => InvitationNew(widget.activebabies));
+                  Get.to(() => InvitationNew(relation0Babies));
                 }
               },
               child: Container(
