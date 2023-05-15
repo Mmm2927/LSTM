@@ -65,6 +65,7 @@ class MainHomeState extends State<Main_Home>{
       }
     });
   }
+
   closeOffset(){
     setState(() {
       timerClosed = true;
@@ -211,7 +212,6 @@ class MainHomeState extends State<Main_Home>{
                                 children: getDrawerDatas(2, context, Colors.grey)
                             ),
                           ),
-
                         ],
                       ),
                     ),
@@ -350,6 +350,7 @@ class MainHomeState extends State<Main_Home>{
                           child: stopWatchWidget
                         )
                     ),
+                    //타이머 구현
                     Row(
                       children: [
                         Expanded(
@@ -498,19 +499,22 @@ class MainHomeState extends State<Main_Home>{
                         //예방 접종, 건강 검진 구현
                       ],
                     ),
-                    //성장기록, 예방접종, 검강검진
+                    //성장 기록, 예방 접종, 검강 검진
                   ],
                 )
             )
         )
     );
   }
+
+  //타이머 종료 시 bottomsheet
   showTimerBottomSheet(int type, DateTime startTime, DateTime endTime){
     if(type == 0){        // 모유
       Get.bottomSheet(
         Container(
           color: Colors.white,
-          child: FeedingStopwatchBottomSheet(currentBaby.relationInfo.BabyId, startTime, endTime, changeRecord: addLifeRecord)
+          child: FeedingStopwatchBottomSheet(
+              currentBaby.relationInfo.BabyId, startTime, endTime, changeRecord: addLifeRecord)
         ),
         isScrollControlled: true
       );
@@ -545,8 +549,9 @@ class MainHomeState extends State<Main_Home>{
         isScrollControlled: true
       );
     }
-
   }
+
+  //Drawer 데이터
   List<InkWell> getDrawerDatas(int relation, BuildContext context, Color color){
     List<InkWell> datas = [];
     for(int i=0; i<activeBabies.length; i++){
@@ -600,6 +605,7 @@ class MainHomeState extends State<Main_Home>{
     return datas;
   }
 
+  //기록 버튼 롱 클릭 시
   InkWell drawRecordButton(BuildContext rootContext, String type, IconData iconData, Color background, Color color, int tapMode){
     return InkWell(
         onTap: () => record_with_ModalBottomSheet(rootContext, tapMode),
@@ -667,6 +673,8 @@ class MainHomeState extends State<Main_Home>{
         )
     );
   }
+
+  //기록 버튼 클릭 시
   record_with_ModalBottomSheet(BuildContext rootContext, int tapMode){
     showModalBottomSheet(
         shape: const RoundedRectangleBorder(
@@ -696,10 +704,9 @@ class MainHomeState extends State<Main_Home>{
         }
     );
   }
-
 }
 
-//아기 정보 그리기
+//아기 정보
 Widget drawBaby(String name, DateTime birth){
   final now = DateTime.now();
   return Container(
