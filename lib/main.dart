@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:bob/screens/BaseWidget.dart';
 import 'package:bob/screens/Login/initPage.dart';
@@ -8,14 +6,16 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import 'package:bob/services/backend.dart';
+import 'fcmSetting.dart';
 import 'models/model.dart';
 import 'package:bob/services/storage.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:get/get.dart';
-import 'package:dio/dio.dart';
 import 'langauges.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  String? firebaseToken = await fcmSetting();
   runApp(const MyApp());
 }
 

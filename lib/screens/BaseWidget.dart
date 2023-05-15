@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:bob/screens/MyPage/manage_baby.dart';
 import 'package:flutter/material.dart';
 import 'package:bob/screens/main_1_home.dart';
 import 'package:bob/screens/main_2_cctv.dart';
@@ -9,7 +8,6 @@ import 'package:bob/screens/main_4_mypage.dart';
 import '../models/model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bob/widgets/bottomNav.dart';
-import 'package:get/get.dart' as GET;
 import 'package:bob/services/backend.dart';
 
 class BaseWidget extends StatefulWidget{
@@ -91,7 +89,7 @@ class _BaseWidget extends State<BaseWidget>{
   Widget build(BuildContext context) {
     final List<Widget> widgetOptions = <Widget>[
       Main_Home(widget.userinfo, key : _homepageKey, getBabiesFunction: getBabies,getCurrentBabyFunction: getCurrentBaby, changeCurrentBabyFunction: changeCurrentBaby),
-      Main_Cctv(key:_cctvKey, getMyBabyFuction: getCurrentBaby),
+      Main_Cctv(widget.userinfo, key:_cctvKey, getMyBabyFuction: getCurrentBaby),
       const MainDiary(),
       MainMyPage(widget.userinfo, key: _mypageKey, getBabiesFuction: getBabies, reloadBabiesFunction: reloadBabies)
     ];
