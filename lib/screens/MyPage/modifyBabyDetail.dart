@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:bob/widgets/form.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
+import '../../models/validate.dart';
+import '../../services/backend.dart';
 
 class ModifyBabyDetail extends StatefulWidget{
   final Baby baby;
@@ -11,6 +14,7 @@ class ModifyBabyDetail extends StatefulWidget{
   State<ModifyBabyDetail> createState() => _ModifyBabyDetail();
 }
 class _ModifyBabyDetail extends State<ModifyBabyDetail> {
+  TextEditingController nameController = TextEditingController();
   late int _valueGender;
   late DateTime birth;
   @override
@@ -18,6 +22,7 @@ class _ModifyBabyDetail extends State<ModifyBabyDetail> {
     super.initState();
     _valueGender = widget.baby.gender;
     birth = widget.baby.birth;
+    nameController.text = widget.baby.name;
   }
   @override
   Widget build(BuildContext context) {
@@ -30,8 +35,9 @@ class _ModifyBabyDetail extends State<ModifyBabyDetail> {
             children: [
               drawTitle('아기 이름', 0),
               TextFormField(
-                decoration: formDecoration(widget.baby.name),
-                enabled: false,
+                controller: nameController,
+                //initialValue: widget.baby.name,
+                decoration: formDecoration('아기 이름을 입력해주세요.'),
               ),
               drawTitle('생일', 40),
               CupertinoButton(
@@ -76,9 +82,7 @@ class _ModifyBabyDetail extends State<ModifyBabyDetail> {
               ),
               const SizedBox(height: 100),
               ElevatedButton(
-                  onPressed: (){
-                    print(_valueGender);
-                  },
+                  onPressed: () async => await modifyBabyInfo(),
                   style:ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       foregroundColor: Colors.white,
@@ -117,5 +121,21 @@ class _ModifyBabyDetail extends State<ModifyBabyDetail> {
     // validate
     //print(_valueGender);
     //print(birth);
+  }
+
+  modifyBabyInfo() async{
+    int bId = widget.baby.relationInfo.BabyId;
+    String bName = nameController.text;
+    if(!validateName(bName)){
+      return;
+    }
+    String gender = (_valueGender==0?'F':'M');
+    if(await editBabyService(widget.baby.relationInfo.BabyId, bName, gender) == 200){
+      Get.back();
+      Get.back(); // 2. BasePage 이동
+    }
+    //var re = await editBabyService(widget.baby.relationInfo.BabyId, bName, gender);
+    //Navigator.pop(context);
+
   }
 }
