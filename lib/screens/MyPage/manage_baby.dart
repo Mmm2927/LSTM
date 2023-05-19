@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:dio/dio.dart';
-import 'package:bob/screens/MyPage/modifyBaby2.dart';
+import 'package:bob/screens/MyPage/modifyBabyDetail.dart';
 import 'package:intl/intl.dart';
 import '../../models/model.dart';
 import 'package:bob/services/backend.dart';
