@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bob/widgets/appbar.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mjpeg/flutter_mjpeg.dart';
 import '../models/model.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +13,7 @@ class Main_Cctv extends StatefulWidget{
   State<Main_Cctv> createState() => MainCCTVState();
 }
 class MainCCTVState extends State<Main_Cctv>{
+  bool _isFlipped = true;
   bool _isPlaying = false;
   late Baby baby;
 
@@ -81,17 +83,9 @@ class MainCCTVState extends State<Main_Cctv>{
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Hero(
-                tag: 'video',
-                child: TextButton(
-                  onPressed: () {},
-                  child: const Icon(
-                      Icons.fast_rewind,
-                      size: 28,
-                      color: Colors.black),
-                ),
-              ),
+              SizedBox(width: 64,),
               TextButton(
+                style: TextButton.styleFrom(padding:const EdgeInsets.fromLTRB(50,0,50,0)),
                 onPressed: () {
                   if (_isPlaying) {
                     setState(() {
@@ -106,14 +100,36 @@ class MainCCTVState extends State<Main_Cctv>{
                 child: Icon(
                     _isPlaying ? Icons.pause : Icons.play_arrow,
                     size: 28,
-                    color: Colors.black),
+                    color: Color(0x83fa625f)),
               ),
               TextButton(
-                onPressed: () {},
+                style: TextButton.styleFrom(alignment: Alignment.centerRight),
+                onPressed: () {
+                  if (_isFlipped) {
+                    setState(() {
+                      WidgetsFlutterBinding.ensureInitialized();
+                      SystemChrome.setPreferredOrientations([
+                        DeviceOrientation.landscapeLeft,
+                        DeviceOrientation.landscapeRight,
+                      ]);
+                      _isFlipped = false;
+
+                    });
+                  } else {
+                    setState(() {
+                      WidgetsFlutterBinding.ensureInitialized();
+                      SystemChrome.setPreferredOrientations([
+                        DeviceOrientation.portraitUp,
+                        DeviceOrientation.portraitDown,
+                      ]);
+                      _isFlipped = true;
+                    });
+                  }
+                },
                 child: const Icon(
-                    Icons.fast_forward,
+                    Icons.autorenew,
                     size: 28,
-                    color: Colors.black),
+                    color: Color(0x83fa625f)),
               ),
             ],
           ),
