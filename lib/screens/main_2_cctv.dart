@@ -27,10 +27,7 @@ class MainCCTVState extends State<Main_Cctv>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: renderAppbar_with_alarm('BoB', context),
-      body: SingleChildScrollView(
-        child:
-        viewCCTV(),
-      ),
+      body: viewCCTV(),
     );
   }
 
@@ -47,7 +44,7 @@ class MainCCTVState extends State<Main_Cctv>{
       case 'Tuesday':
         realE = 1;
         break;
-      case 'Wednesdady':
+      case 'Wednesday':
         realE = 2;
         break;
       case 'Thursday':
@@ -64,81 +61,125 @@ class MainCCTVState extends State<Main_Cctv>{
         break;
     }
     if (baby.relationInfo.relation == 0 || week[realE] == 1 && hour.compareTo(baby.relationInfo.Access_startTime) == -1 && hour.compareTo(baby.relationInfo.Access_endTime) == 1) {
-      return Column(
-        children: [
-          Container(
-            padding: EdgeInsets.all(5),
-            child: Mjpeg(
-              isLive: _isPlaying,
-              error: (context, error, stack) {
-                print(error);
-                print(stack);
-                return Text(error.toString(),
-                    style: const TextStyle(color: Colors.red));
-              },
-              stream:
-              'http://203.249.22.164:5000/video_feed', //'http://192.168.1.37:8081',
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(width: 64,),
-              TextButton(
-                style: TextButton.styleFrom(padding:const EdgeInsets.fromLTRB(50,0,50,0)),
-                onPressed: () {
-                  if (_isPlaying) {
-                    setState(() {
-                      _isPlaying = false;
-                    });
-                  } else {
-                    setState(() {
-                      _isPlaying = true;
-                    });
-                  }
-                },
-                child: Icon(
-                    _isPlaying ? Icons.pause : Icons.play_arrow,
-                    size: 28,
-                    color: Color(0x83fa625f)),
-              ),
-              TextButton(
-                style: TextButton.styleFrom(alignment: Alignment.centerRight),
-                onPressed: () {
-                  if (_isFlipped) {
-                    setState(() {
-                      WidgetsFlutterBinding.ensureInitialized();
-                      SystemChrome.setPreferredOrientations([
-                        DeviceOrientation.landscapeLeft,
-                        DeviceOrientation.landscapeRight,
-                      ]);
-                      _isFlipped = false;
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: Mjpeg(
+                    isLive: _isPlaying,
+                    error: (context, error, stack) {
+                      print(error);
+                      print(stack);
+                      return Text(error.toString(),
+                          style: const TextStyle(color: Colors.red));
+                    },
+                    stream:
+                    'http://203.249.22.164:5000/video_feed', //'http://192.168.1.37:8081',
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(width: 64,),
+                    TextButton(
+                      style: TextButton.styleFrom(padding:const EdgeInsets.fromLTRB(50,0,50,0)),
+                      onPressed: () {
+                        if (_isPlaying) {
+                          setState(() {
+                            _isPlaying = false;
+                          });
+                        } else {
+                          setState(() {
+                            _isPlaying = true;
+                          });
+                        }
+                      },
+                      child: Icon(
+                          _isPlaying ? Icons.pause : Icons.play_arrow,
+                          size: 28,
+                          color: Color(0x83fa625f)),
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(alignment: Alignment.centerRight),
+                      onPressed: () {
+                        if (_isFlipped) {
+                          setState(() {
+                            WidgetsFlutterBinding.ensureInitialized();
+                            SystemChrome.setPreferredOrientations([
+                              DeviceOrientation.landscapeLeft,
+                              DeviceOrientation.landscapeRight,
+                            ]);
+                            _isFlipped = false;
 
-                    });
-                  } else {
-                    setState(() {
-                      WidgetsFlutterBinding.ensureInitialized();
-                      SystemChrome.setPreferredOrientations([
-                        DeviceOrientation.portraitUp,
-                        DeviceOrientation.portraitDown,
-                      ]);
-                      _isFlipped = true;
-                    });
-                  }
-                },
-                child: const Icon(
-                    Icons.autorenew,
-                    size: 28,
-                    color: Color(0x83fa625f)),
-              ),
-            ],
-          ),
-          Text('현재 아기 : ${baby.name}'),
-        ],
+                          });
+                        } else {
+                          setState(() {
+                            WidgetsFlutterBinding.ensureInitialized();
+                            SystemChrome.setPreferredOrientations([
+                              DeviceOrientation.portraitUp,
+                              DeviceOrientation.portraitDown,
+                            ]);
+                            _isFlipped = true;
+                          });
+                        }
+                      },
+                      child: const Icon(
+                          Icons.autorenew,
+                          size: 28,
+                          color: Color(0x83fa625f)),
+                    ),
+                  ],
+                ),
+                Text('현재 아기 : ${baby.name}'),
+              ],
+            ),
+          ],
+        ),
       );
     }
     else {
-      return Container(height: 100, alignment: Alignment(0,0), child: Text('현재 ${baby.name}의 홈캠에 접근할 수 없습니다.\n', style: TextStyle(fontSize: 20)));
+      String accessDay = '';
+      for (int i=0; i<7; i++) {
+        if (week[i] == '1') {
+          switch (i) {
+            case 0:
+              accessDay += '월 ';
+              break;
+            case 1:
+              accessDay += '화 ';
+              break;
+            case 2:
+              accessDay += '수 ';
+              break;
+            case 3:
+              accessDay += '목 ';
+              break;
+            case 4:
+              accessDay += '금 ';
+              break;
+            case 5:
+              accessDay += '토 ';
+              break;
+            case 6:
+              accessDay += '일 ';
+              break;
+          }
+        }
+      };
+      return Center(
+        child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+            Text('현재 ${baby.name}의 홈캠에 접근할 수 없습니다.\n', style: TextStyle(fontSize: 20)),
+            Text('접근 가능 요일 : ${accessDay}\n', style: TextStyle(fontSize: 20)),
+            Text('접근 가능 시간 : ${baby.relationInfo.Access_startTime} ~ ${baby.relationInfo.Access_endTime}\n', style: TextStyle(fontSize: 20))
+          ]
+        ),
+      );
     }
   }
 }
