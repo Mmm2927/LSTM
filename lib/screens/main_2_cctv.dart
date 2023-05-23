@@ -27,10 +27,11 @@ class MainCCTVState extends State<Main_Cctv>{
     return Scaffold(
       backgroundColor: Color(0xffffeeec),
       appBar: AppBar(
+        centerTitle: false,
         backgroundColor: const Color(0xffffeeec),
         elevation: 0.5,
         iconTheme : const IconThemeData(color: Colors.black),
-        title: const Text('홈캠', style:const TextStyle(fontSize: 18, color: Color(0xffdf8570)),),
+        title: const Text('홈캠', style:const TextStyle(fontSize: 18, color: Color(0xffdf8570))),
       ),
       body: viewCCTV(),
     );
