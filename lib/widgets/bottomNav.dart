@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Widget bottomNavBar(_selectedIndex, _onItemTapped){
   return BottomNavigationBar(
@@ -11,7 +10,7 @@ Widget bottomNavBar(_selectedIndex, _onItemTapped){
         ),
         BottomNavigationBarItem(
             icon: Icon( Icons.camera, size: 20,),
-            label: 'cctv'
+            label: '홈캠'
         ),
         BottomNavigationBarItem(
             icon: Icon(Icons.menu_book, size: 20,),

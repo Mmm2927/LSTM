@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:bob/widgets/appbar.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mjpeg/flutter_mjpeg.dart';
 import '../models/model.dart';
@@ -26,7 +25,13 @@ class MainCCTVState extends State<Main_Cctv>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar_with_alarm('BoB', context),
+      backgroundColor: Color(0xffffeeec),
+      appBar: AppBar(
+        backgroundColor: const Color(0xffffeeec),
+        elevation: 0.5,
+        iconTheme : const IconThemeData(color: Colors.black),
+        title: const Text('홈캠', style:const TextStyle(fontSize: 18, color: Color(0xffdf8570)),),
+      ),
       body: viewCCTV(),
     );
   }
@@ -64,76 +69,91 @@ class MainCCTVState extends State<Main_Cctv>{
       return SingleChildScrollView(
         child: Column(
           children: [
+            Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5)),
+                alignment:Alignment.centerRight,
+                padding: EdgeInsets.all(10),
+                margin: const EdgeInsets.fromLTRB(10, 10, 10, 5),
+                child: Text('아이 : ${baby.name}', style:const TextStyle(fontSize: 20, color: Color(0xffdf8570)))),
             Column(
               children: [
                 Container(
-                  padding: EdgeInsets.all(5),
-                  child: Mjpeg(
-                    isLive: _isPlaying,
-                    error: (context, error, stack) {
-                      print(error);
-                      print(stack);
-                      return Text(error.toString(),
-                          style: const TextStyle(color: Colors.red));
-                    },
-                    stream:
-                    'http://203.249.22.164:5000/video_feed', //'http://192.168.1.37:8081',
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: ClipRRect(
+                    borderRadius : BorderRadius.circular(5.0),
+                    child: Mjpeg(
+                      isLive: _isPlaying,
+                      error: (context, error, stack) {
+                        print(error);
+                        print(stack);
+                        return Text(error.toString(),
+                            style: const TextStyle(color: Color(0xffdf8570)));
+                      },
+                      stream:
+                      'http://203.249.22.164:5000/video_feed', //'http://192.168.1.37:8081',
+                    ),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(width: 64,),
-                    TextButton(
-                      style: TextButton.styleFrom(padding:const EdgeInsets.fromLTRB(50,0,50,0)),
-                      onPressed: () {
-                        if (_isPlaying) {
-                          setState(() {
-                            _isPlaying = false;
-                          });
-                        } else {
-                          setState(() {
-                            _isPlaying = true;
-                          });
-                        }
-                      },
-                      child: Icon(
-                          _isPlaying ? Icons.pause : Icons.play_arrow,
-                          size: 28,
-                          color: Color(0x83fa625f)),
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(alignment: Alignment.centerRight),
-                      onPressed: () {
-                        if (_isFlipped) {
-                          setState(() {
-                            WidgetsFlutterBinding.ensureInitialized();
-                            SystemChrome.setPreferredOrientations([
-                              DeviceOrientation.landscapeLeft,
-                              DeviceOrientation.landscapeRight,
-                            ]);
-                            _isFlipped = false;
+                Container(
+                  margin: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5)), //모서리를 둥글게
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(width: 64,),
+                      TextButton(
+                        style: TextButton.styleFrom(padding:const EdgeInsets.fromLTRB(50,0,50,0)),
+                        onPressed: () {
+                          if (_isPlaying) {
+                            setState(() {
+                              _isPlaying = false;
+                            });
+                          } else {
+                            setState(() {
+                              _isPlaying = true;
+                            });
+                          }
+                        },
+                        child: Icon(
+                            _isPlaying ? Icons.pause : Icons.play_arrow,
+                            size: 28,
+                            color: Color(0xffdf8570)),
+                      ),
+                      TextButton(
+                        style: TextButton.styleFrom(alignment: Alignment.centerRight),
+                        onPressed: () {
+                          if (_isFlipped) {
+                            setState(() {
+                              WidgetsFlutterBinding.ensureInitialized();
+                              SystemChrome.setPreferredOrientations([
+                                DeviceOrientation.landscapeLeft,
+                                DeviceOrientation.landscapeRight,
+                              ]);
+                              _isFlipped = false;
 
-                          });
-                        } else {
-                          setState(() {
-                            WidgetsFlutterBinding.ensureInitialized();
-                            SystemChrome.setPreferredOrientations([
-                              DeviceOrientation.portraitUp,
-                              DeviceOrientation.portraitDown,
-                            ]);
-                            _isFlipped = true;
-                          });
-                        }
-                      },
-                      child: const Icon(
-                          Icons.autorenew,
-                          size: 28,
-                          color: Color(0x83fa625f)),
-                    ),
-                  ],
+                            });
+                          } else {
+                            setState(() {
+                              WidgetsFlutterBinding.ensureInitialized();
+                              SystemChrome.setPreferredOrientations([
+                                DeviceOrientation.portraitUp,
+                                DeviceOrientation.portraitDown,
+                              ]);
+                              _isFlipped = true;
+                            });
+                          }
+                        },
+                        child: const Icon(
+                            Icons.autorenew,
+                            size: 28,
+                            color: Color(0xffdf8570)),
+                      ),
+                    ],
+                  ),
                 ),
-                Text('현재 아기 : ${baby.name}'),
+                Container(margin: const EdgeInsets.fromLTRB(12, 0, 12, 0), height: 0.2, color: const Color(0xffdf8570)),
               ],
             ),
           ],
