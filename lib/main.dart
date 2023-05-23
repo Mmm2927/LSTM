@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       locale: Get.deviceLocale,  // 기기에 설정한 언어
       fallbackLocale:  const Locale('ko','KR'),
       theme: ThemeData(
-        fontFamily: 'basic',
+        fontFamily: 'omew',
       ),
       debugShowCheckedModeBanner: false,
       home: const Splash(),
