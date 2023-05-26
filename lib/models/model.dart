@@ -126,14 +126,14 @@ class lifeRecord{
   }
 }
 
-class growthRecord{
+class GrowthRecord{
   final int babyId;
   final double height;
   final double weight;
-  final DateTime date;
-  growthRecord(this.babyId, this.height, this.weight, this.date);
+  late DateTime date;
+  GrowthRecord(this.babyId, this.height, this.weight, this.date);
 
-  growthRecord.fromJson(Map<dynamic, dynamic> json)
+  GrowthRecord.fromJson(Map<dynamic, dynamic> json)
       : babyId = json['babyId'], height = json['height'], weight = json['weight'], date = DateTime.parse(json['date']);
 
   Map<String, dynamic> toJson() => {

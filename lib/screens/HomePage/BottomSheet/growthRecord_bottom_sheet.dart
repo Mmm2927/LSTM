@@ -41,18 +41,18 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.62,
+        height: MediaQuery.of(context).size.height * 0.6,
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.only(left: 25, top: 5),
+              padding: const EdgeInsets.only(left: 25, top: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('키, 몸무게',
+                  Text('키, 몸무게 입력해주세요',
                     style: TextStyle(
-                      fontSize: 30,
-                      color: Colors.orange,
+                      fontSize: 32,
+                      color: Colors.black,
                     ),
                   ),
                 ],
@@ -133,9 +133,8 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                       itemTextStyle: TextStyle(color: Colors.orange),
                       textColor: Colors.black
                     );
-
-                    //ymdtController.text = '${DateFormat('yyyy년 MM월 dd일').format(datePicked!)}';
-                    ymdtController.text = datePicked.toString();
+                    ymdtController.text = '${DateFormat('yyyy-MM-dd').format(datePicked!)}';
+                    //ymdtController.text = datePicked.toString();
                   },
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width*0.9,
@@ -149,13 +148,14 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                             filled: false, //색 지정
                             enabledBorder:OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(color: Colors.orangeAccent)
+                                borderSide: BorderSide(color: Colors.black)
                             ),
                             contentPadding: EdgeInsets.all(10)
                         ),
                         onSaved: (val) {
-                          yearMonthDayTime = '${DateFormat('yyyy년 MM월 dd일').format(DateTime.parse(ymdtController.text))}';
-                         // yearMonthDayTime = ymdtController.text;
+                          yearMonthDayTime = '${DateFormat('yyyy-MM-dd').parse(ymdtController.text)}';
+
+                          // yearMonthDayTime = ymdtController.text;
                         },
                         validator: (val) {
                           if (val == null || val.isEmpty) {
@@ -168,7 +168,7 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -188,13 +188,15 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                     ),
                     OutlinedButton(
                       onPressed: () async{
-                        print(widget.babyId);
+                        //print(widget.babyId);
                         double? growthHeight = height;
                         double? growthWeight = weight;
-                        DateTime growthDate = DateTime.parse(ymdtController.text);
+                        String growthDate = ymdtController.text;
 
                         var result = await growthService(widget.babyId, growthHeight!, growthWeight!, growthDate);
+                        print('$growthHeight cm, $growthWeight kg, $growthDate');
                         Navigator.pop(context);
+                        print(result);
                       },
                       child: Text('확인',style: TextStyle(fontSize: 25),),
                       style: OutlinedButton.styleFrom(
@@ -204,7 +206,7 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                               borderRadius: BorderRadius.all(Radius.circular(10))
                           ),
                           side: BorderSide(
-                            color: Colors.orangeAccent,
+                            color: Colors.red,
                           )
                       ),
                     )

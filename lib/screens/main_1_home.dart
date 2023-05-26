@@ -23,6 +23,7 @@ import 'HomePage/StopwatchBottomSheet/feeding_stopwatch_sheet.dart';
 import 'HomePage/StopwatchBottomSheet/feedingBottle_stopwatch_sheet.dart';
 import 'HomePage/StopwatchBottomSheet/sleep_stopwatch_sheet.dart';
 import 'HomePage/StopwatchBottomSheet/babyFood_stopwatch_sheet.dart';
+import 'HomePage/baby_growthStatistics.dart';
 
 class Main_Home extends StatefulWidget{
   final User userinfo;
@@ -45,6 +46,7 @@ class MainHomeState extends State<Main_Home>{
   String _sleep = '-';          // 수면
   List<Vaccine> myBabyvaccineList = [];
   late List<MedicalCheckUp> myBabyMedicalCheckList;
+  late List<GrowthRecord> myBabyGrowthRecordList = [];
   bool timerClosed = true;
   void addLifeRecord(int type, String val){
     setState(() {
@@ -356,7 +358,10 @@ class MainHomeState extends State<Main_Home>{
                         Expanded(
                             flex:1,
                             child: GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                Get.to(()=>BabyGrowthStatistics(currentBaby, myBabyGrowthRecordList)
+                                );
+                              },
                               child: Container(
                                 height: 180,
                                 margin: const EdgeInsets.fromLTRB(20, 0, 5, 10),
@@ -387,7 +392,7 @@ class MainHomeState extends State<Main_Home>{
                                                           topLeft: Radius.circular(20)
                                                       )
                                                   ),
-                                                  backgroundColor: Colors.purple[50],
+                                                  backgroundColor: Colors.grey[50],
                                                   isScrollControlled: true,
                                                   context: context,
                                                   builder: ( BuildContext context ) {
@@ -395,7 +400,7 @@ class MainHomeState extends State<Main_Home>{
                                                   }
                                               );
                                             },
-                                            icon: const Icon(Icons.add_circle)
+                                            icon: const Icon(Icons.add_circle, size: 28,)
                                         ),
                                       ],
                                     ),

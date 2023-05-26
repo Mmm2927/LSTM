@@ -40,7 +40,7 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.58,
+        height: MediaQuery.of(context).size.height * 0.50,
         child: Column(
           children: [
             Container(
@@ -103,7 +103,7 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
               ],
             ),
             const SizedBox(
-              height: 5,
+              height: 10,
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width*0.9,
@@ -147,7 +147,7 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
                 keyboardType: TextInputType.number,   //키보드 타입
               ),
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 20),
             Column(
               children: [
                 GestureDetector(
@@ -232,7 +232,7 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
                   ),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 20,
                 ),
                 GestureDetector(
                   onTap: () {
@@ -264,7 +264,7 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
                   ),
                 ),
                 SizedBox(
-                  height: 8,
+                  height: 15,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,

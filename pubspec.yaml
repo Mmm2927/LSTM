@@ -33,7 +33,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   table_calendar: ^3.0.8
-  intl: ^0.18.0
+  intl: ^0.17.0
   flutter_vlc_player: 6.0.0
   flutter_mjpeg:
   checkbox_formfield: ^0.2.0
@@ -49,6 +49,7 @@ dependencies:
   flutter_spinner_picker: ^0.0.7
   horizontal_picker: ^1.2.0
   flutter_holo_date_picker: ^1.1.0
+  fl_chart: ^0.62.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
