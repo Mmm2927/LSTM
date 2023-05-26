@@ -1,3 +1,5 @@
+import 'dart:developer';
+import 'dart:ffi';
 import 'package:bob/models/model.dart';
 import 'package:bob/services/backend.dart';
 import 'package:bob/widgets/appbar.dart';
@@ -14,14 +16,16 @@ class BabyGrowthStatistics extends StatefulWidget {
 }
 
 class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with TickerProviderStateMixin {
-
+  List<Color> gradientColors = [
+    Colors.black,
+    Colors.blue
+  ];
   late TabController _tabController;
   late Future getGrowthFuture;
   bool showAvg = false;
-  var babyheight = [];
-  var babyweight = [];
-  var growthdate = [];
 
+  List<FlSpot> weightPoints = [];
+  List<FlSpot> heightPoints = [];
 
   @override
   void initState() {
@@ -31,20 +35,28 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
         vsync: this,
     );
     super.initState();
-    print(widget.baby.relationInfo.BabyId);
+    //print(widget.baby.relationInfo.BabyId);
     getGrowthFuture = getMyGrowthInfo();
   }
+  double maxD = DateTime.now().millisecondsSinceEpoch.toDouble();
+  double minD = DateTime.now().millisecondsSinceEpoch.toDouble();
 
   Future getMyGrowthInfo() async{
-
     List<dynamic> growthRecordList = await growthGetService(widget.baby.relationInfo.BabyId);
-    print(growthRecordList);
     for(int i=0; i<growthRecordList.length; i++) {
-      babyheight.add(growthRecordList[i]['height']);
-      babyweight.add(growthRecordList[i]['weight']);
-      growthdate.add(growthRecordList[i]['date']);
+      double timestamp = (DateTime.parse(growthRecordList[i]['date'])).millisecondsSinceEpoch.toDouble();
+      if (timestamp < minD){
+        minD = timestamp;
+      }
+      if(timestamp > maxD){
+        maxD = timestamp;
+      }
+
+      weightPoints.add(FlSpot(timestamp, growthRecordList[i]['weight'].toDouble()));
+      heightPoints.add(FlSpot(timestamp, growthRecordList[i]['weight'].toDouble()));
     }
-    print(babyheight);
+    log(weightPoints.toString());
+    log(heightPoints.toString());
     return 0;
   }
   @override
@@ -54,8 +66,8 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
       appBar: AppBar(
         backgroundColor: Color(0xffffc8c7),
         elevation: 0.0,
-        iconTheme : IconThemeData(color: Colors.black),
-        title: Text('성장 통계', style: TextStyle(color: Colors.black,fontSize: 20)),
+        iconTheme : const IconThemeData(color: Colors.black),
+        title: const Text('성장 통계', style: TextStyle(color: Colors.black,fontSize: 20)),
       ),
       body: Column(
         children: [
@@ -88,7 +100,7 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
                 tallChart(),
                 TextButton(onPressed: () {
 
-                }, child: Text('bye')),
+                }, child: const Text('bye')),
               ],
             ),
           ),
@@ -96,7 +108,54 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
       ),
     );
   }
+  Widget leftTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 15,
+    );
+    String text;
+    switch (value.toInt()) {
+      case 1:
+        text = '10K';
+        break;
+      case 3:
+        text = '30k';
+        break;
+      case 5:
+        text = '50k';
+        break;
+      default:
+        return Container();
+    }
 
+    return Text(text, style: style, textAlign: TextAlign.left);
+  }
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    Widget text;
+    switch (value.toInt()) {
+      case 2:
+        text = const Text('MAR', style: style);
+        break;
+      case 5:
+        text = const Text('JUN', style: style);
+        break;
+      case 8:
+        text = const Text('SEP', style: style);
+        break;
+      default:
+        text = const Text('', style: style);
+        break;
+    }
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: text,
+    );
+  }
   Widget tallChart(){
     return SingleChildScrollView(
       child: Container(
@@ -108,9 +167,6 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
                  if (snapshot.hasData == false){
                    return Container(
                        width: double.infinity,
-                       decoration: const BoxDecoration(
-                         color: Color(0xfffa625f),
-                       ),
                        child : Column(
                          mainAxisAlignment: MainAxisAlignment.center,
                          children: [
@@ -134,26 +190,40 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
                      ),
                    );
                  }else{
+
                    return Container(
+                     height: 100,
                      child: LineChart(
-                       LineChartData(
-                           lineBarsData:[
+                         LineChartData(
+
+                           minX: minD,
+                           maxX: maxD,
+                           minY: 0,
+                           maxY: 150,
+                           lineBarsData: [
                              LineChartBarData(
-                               spots: [
-                                 FlSpot(0, 3.44),
-                                 FlSpot(2.6, 3.44),
-                                 FlSpot(4.9, 3.44),
-                                 FlSpot(6.8, 3.44),
-                                 FlSpot(8, 3.44),
-                                 FlSpot(9.5, 3.44),
-                                 FlSpot(11, 3.44),
-                               ]
-                             )
-                           ]
-                   ),
-                 swapAnimationDuration: Duration(milliseconds: 150), // Optional
-                 swapAnimationCurve: Curves.linear, // Optional
-                 )
+                               spots: heightPoints,
+                               isCurved: true,
+                               gradient: const LinearGradient(
+                                 colors: [Colors.pink, Colors.pinkAccent],
+                               ),
+                               barWidth: 5,
+                               isStrokeCapRound: true,
+                               dotData:  FlDotData(
+                                 show: false,
+                               ),
+                               belowBarData: BarAreaData(
+                                 show: true,
+                                 gradient: LinearGradient(
+                                   colors: gradientColors
+                                       .map((color) => color.withOpacity(0.3))
+                                       .toList(),
+                                 ),
+                               ),
+                             ),
+                           ],
+                         )
+                     ),
                    );
                  }
                },

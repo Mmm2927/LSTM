@@ -382,7 +382,7 @@ class MainHomeState extends State<Main_Home>{
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const Text('성장 기록',style: TextStyle(fontSize: 22, color: Colors.black)),
+                                        const Text('성장 기록',style: TextStyle(fontSize: 18, color: Colors.black)),
                                         IconButton(
                                             onPressed: () {
                                               showModalBottomSheet(
@@ -400,7 +400,7 @@ class MainHomeState extends State<Main_Home>{
                                                   }
                                               );
                                             },
-                                            icon: const Icon(Icons.add_circle, size: 28,)
+                                            icon: const Icon(Icons.add_circle, size: 20)
                                         ),
                                       ],
                                     ),
@@ -443,11 +443,12 @@ class MainHomeState extends State<Main_Home>{
                                           child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                const Text('예방 접종', style: TextStyle(fontSize: 20, color: Colors.black)),
+                                                const Text('예방 접종', style: TextStyle(fontSize: 15, color: Colors.black)),
                                                 const Text(
                                                   '다음 예방 검진',
-                                                  style: TextStyle(fontSize: 13, color: Colors.grey),
+                                                  style: TextStyle(fontSize: 10, color: Colors.grey),
                                                 ),
+                                                const SizedBox(height: 5),
                                                 Center(
                                                     child: Text(
                                                       nextVaccineDate,
@@ -481,11 +482,12 @@ class MainHomeState extends State<Main_Home>{
                                           child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                const Text('건강 검진', style: TextStyle(fontSize: 20, color: Colors.black)),
+                                                const Text('건강 검진', style: TextStyle(fontSize: 15, color: Colors.black)),
                                                 const Text(
                                                   '다음 건강 검진',
-                                                  style: TextStyle(fontSize: 13, color: Colors.grey),
+                                                  style: TextStyle(fontSize: 10, color: Colors.grey),
                                                 ),
+                                                const SizedBox(height: 5),
                                                 Center(
                                                   child: Text(
                                                     nextMedicalCheckUpDate,
@@ -725,15 +727,15 @@ Widget drawBaby(String name, DateTime birth){
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(name,style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold)),
+                    Text(name,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                     const SizedBox(height: 5),
                     Text(
                       '${birth.year}.${birth.month}.${birth.day}',
-                      style: const TextStyle(fontSize: 25),
+                      style: const TextStyle(fontSize: 15),
                     ),
                     Text(
                       'D+ ${DateTime(now.year, now.month, now.day).difference(birth).inDays+2}',
-                      style: const TextStyle(fontSize: 25),
+                      style: const TextStyle(fontSize: 15),
                     ),
                   ],
                 )
