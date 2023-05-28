@@ -64,7 +64,7 @@ class MainMyPageState extends State<MainMyPage>{
                         children: [
                           Text('${widget.userinfo.name} 님', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
                           const SizedBox(height: 5),
-                          const Text('실시간으로 갱신합니다.')
+                          const Text('좋은 아침입니다!', style: TextStyle(color: Colors.grey))
                         ],
                       ),
                       Image.asset('assets/images/person.png',scale: 12, color: Colors.grey[800])
@@ -76,7 +76,7 @@ class MainMyPageState extends State<MainMyPage>{
                     children: [
                       Container(
                         padding: const EdgeInsets.all(5),
-                        width: 120,
+                        width: 130,
                         decoration: BoxDecoration(
                           color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(5),
@@ -84,31 +84,32 @@ class MainMyPageState extends State<MainMyPage>{
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('관리중인 아기', style: TextStyle(color: Colors.grey[600])),
+                            Text('나의 아기', style: TextStyle(color: Colors.grey[600])),
+                            const SizedBox(height: 5),
                             Center(
-                              child: Text(activateBabies.length.toString(), style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25)),
+                              child: Text(activateBabies.length.toString(), style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
                             ),
-                            const SizedBox(height: 15)
+                            const SizedBox(height: 10)
                           ],
                         ),
                       ),
                       const SizedBox(width: 10),
                       Container(
                         padding: const EdgeInsets.all(5),
-                        width: 120,
+                        width: 130,
                         decoration: BoxDecoration(
                           color: Colors.grey[200],
-                          //color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Like', style: TextStyle(color: Colors.grey[600])),
-                            const Center(
-                              child: Text('7', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25)),
+                            Text('초대 수락 대기 중', style: TextStyle(color: Colors.grey[600])),
+                            const SizedBox(height: 5),
+                            Center(
+                              child: Text(disActivateBabies.length.toString(), style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
                             ),
-                            const SizedBox(height: 15)
+                            const SizedBox(height: 10)
                           ],
                         ),
                       ),
@@ -188,7 +189,8 @@ class MainMyPageState extends State<MainMyPage>{
                       getSettingScreen('main4_switch_Alarm'.tr, const Icon(Icons.notifications_off_outlined),(){
                         Get.to(() => SwitchNotice(activateBabies));
                       }),
-                      const Text('Common'),
+                      const SizedBox(height: 30),
+                      const Text('Common', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.grey)),
                       const SizedBox(height: 10),
                       getSettingScreen('main4_logout'.tr, const Icon(Icons.logout),() => logout()),
                       getSettingScreen('main4_modifyUserInfo'.tr, const Icon(Icons.mode_edit_outlined),() async {
@@ -290,7 +292,7 @@ class MainMyPageState extends State<MainMyPage>{
           onTap: func,
           child : Column(
             children: [
-              Row(children: [icon, const SizedBox(width: 30), Text(title)]),
+              Row(children: [icon, const SizedBox(width: 25), Text(title, style: const TextStyle(fontSize: 13))]),
               const SizedBox(height: 8),
               Divider(thickness: 1, color: Colors.grey[300]),
             ],
@@ -306,7 +308,7 @@ class MainMyPageState extends State<MainMyPage>{
               children:[
                 Image.asset('assets/images/baby.png',scale: 10),
                 const SizedBox(height: 8),
-                Text(baby.name)
+                Text(baby.name, style: TextStyle(fontSize: 12))
               ]
           )
       ),
