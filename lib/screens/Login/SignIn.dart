@@ -1,3 +1,4 @@
+import 'package:bob/screens/MyPage/addBaby.dart';
 import 'package:flutter/material.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:dio/dio.dart';
@@ -26,82 +27,92 @@ class _SignUp extends State<SignIn>{
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: renderAppbar('회원 가입', true),
-        body : SingleChildScrollView(
-          child: Form(
-            key : formKey,
-            child: Container(
-              margin: const EdgeInsets.all(20),
-              child : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  drawTitle('아이디', 0),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 7,
-                        child:
-                          renderForm(
-                            TextInputType.emailAddress, false, '이메일 입력', (val){  return validateEmail2String(email);}, (val){  setState(() {email = val!;});}
-                          ),
+        body :
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                  children : [
+                    Expanded(
+                        child: SingleChildScrollView(
+                            child: Form(
+                                key : formKey,
+                                child: Container(
+                                  margin: const EdgeInsets.all(20),
+                                  child : Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      drawTitle('아이디', 0),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 7,
+                                            child:
+                                            renderForm(
+                                                TextInputType.emailAddress, false, '이메일 입력', (val){  return validateEmail2String(email);}, (val){  setState(() {email = val!;});}
+                                            ),
 
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                          flex: 3,
-                          child: TextButton(onPressed: ()=> duplicateCheck(),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.deepOrange,
-                                backgroundColor: Colors.white,
-                                padding: const EdgeInsets.all(15),
-                                side: const BorderSide(width: 1, color: Colors.deepOrange)
-                              ),
-                              child: const Text('중복 검사'))
-                      )
-                    ],
-                  ),
-                  drawTitle('비밀번호', 40),
-                  renderForm(
-                      TextInputType.text, true, '비밀번호', (val){  return validatePassword2String(pass);}, (val){  setState(() {pass = val!;});}
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    autovalidateMode : AutovalidateMode.always,
-                    obscureText: true,
-                    decoration: formDecoration('비밀번호 확인'),
-                    validator: (val){
-                      if(pass != val){
-                        return '비밀번호와 일치하지 않습니다';
-                      }
-                      return null;
-                    },
-                    onSaved: (val){
-                      setState(() {});
-                    },
-                  ),
-                  drawTitle('닉네임', 40),
-                  renderForm(
-                      TextInputType.text, false, '닉네임', (val){  return validateName2String(name);}, (val){  setState(() {name = val!;});}
-                  ),
-                  drawTitle('휴대폰 번호', 20),
-                  renderForm(
-                    TextInputType.phone, false, '핸드폰 번호를 입력해주세요(- 없이)', (val){  return validatePhone2String(phone);}, (val){  setState(() {phone = val!;});}
-                  ),
-                  const SizedBox(height: 50),
-                  ElevatedButton(
-                      onPressed: () => _register(),
-                      style:ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          foregroundColor: Colors.white,
-                          minimumSize: const Size.fromHeight(55),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))
-                      ),
-                      child: const Text('회원가입')
-                  )
-                ],
-              ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                              flex: 3,
+                                              child: TextButton(onPressed: ()=> duplicateCheck(),
+                                                  style: OutlinedButton.styleFrom(
+                                                      foregroundColor: Colors.deepOrange,
+                                                      backgroundColor: Colors.white,
+                                                      padding: const EdgeInsets.all(15),
+                                                      side: const BorderSide(width: 1, color: Colors.deepOrange)
+                                                  ),
+                                                  child: const Text('중복 검사'))
+                                          )
+                                        ],
+                                      ),
+                                      drawTitle('비밀번호', 40),
+                                      renderForm(
+                                          TextInputType.text, true, '비밀번호', (val){  return validatePassword2String(pass);}, (val){  setState(() {pass = val!;});}
+                                      ),
+                                      const SizedBox(height: 10),
+                                      TextFormField(
+                                        autovalidateMode : AutovalidateMode.always,
+                                        obscureText: true,
+                                        decoration: formDecoration('비밀번호 확인'),
+                                        validator: (val){
+                                          if(pass != val){
+                                            return '비밀번호와 일치하지 않습니다';
+                                          }
+                                          return null;
+                                        },
+                                        onSaved: (val){
+                                          setState(() {});
+                                        },
+                                      ),
+                                      drawTitle('닉네임', 40),
+                                      renderForm(
+                                          TextInputType.text, false, '닉네임', (val){  return validateName2String(name);}, (val){  setState(() {name = val!;});}
+                                      ),
+                                      drawTitle('휴대폰 번호', 20),
+                                      renderForm(
+                                          TextInputType.phone, false, '핸드폰 번호를 입력해주세요(- 없이)', (val){  return validatePhone2String(phone);}, (val){  setState(() {phone = val!;});}
+                                      ),
+                                      const SizedBox(height: 80),
+                                      ElevatedButton(
+                                          onPressed: () => _register(),
+                                          style:ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.black,
+                                              foregroundColor: Colors.white,
+                                              minimumSize: const Size.fromHeight(55),
+                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))
+                                          ),
+                                          child: const Text('회원가입')
+                                      )
+                                    ],
+                                  ),
+                                )
+                            )
+                        )
+                    ),
+                  ]
+              )
             )
-          )
-        )
     );
   }
 
