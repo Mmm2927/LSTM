@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:ffi';
+import 'dart:math';
 import 'package:bob/models/model.dart';
 import 'package:bob/services/backend.dart';
 import 'package:bob/widgets/appbar.dart';
@@ -17,15 +18,22 @@ class BabyGrowthStatistics extends StatefulWidget {
 
 class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with TickerProviderStateMixin {
   List<Color> gradientColors = [
-    Colors.black,
-    Colors.blue
+    Color(0xffffdbd9),
+    Color(0xffef759d)
+  ];
+  List<Color> gradientColors2 = [
+    Colors.grey,
+    Colors.lightBlueAccent
   ];
   late TabController _tabController;
   late Future getGrowthFuture;
   bool showAvg = false;
 
-  List<FlSpot> weightPoints = [];
   List<FlSpot> heightPoints = [];
+  List<FlSpot> weightPoints = [];
+  List heightList = [];
+  List weightList = [];
+  List dateList = [];
 
   @override
   void initState() {
@@ -43,20 +51,27 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
 
   Future getMyGrowthInfo() async{
     List<dynamic> growthRecordList = await growthGetService(widget.baby.relationInfo.BabyId);
+    print(growthRecordList);
     for(int i=0; i<growthRecordList.length; i++) {
       double timestamp = (DateTime.parse(growthRecordList[i]['date'])).millisecondsSinceEpoch.toDouble();
       if (timestamp < minD){
         minD = timestamp;
       }
+      if (timestamp > minD){
+        maxD = timestamp;
+      }
       if(timestamp > maxD){
         maxD = timestamp;
       }
-
+      heightPoints.add(FlSpot(timestamp, growthRecordList[i]['height'].toDouble()));
       weightPoints.add(FlSpot(timestamp, growthRecordList[i]['weight'].toDouble()));
-      heightPoints.add(FlSpot(timestamp, growthRecordList[i]['weight'].toDouble()));
+      heightList.add(growthRecordList[i]['height']);
+      weightList.add(growthRecordList[i]['weight']);
+      dateList.add(growthRecordList[i]['date']);
     }
-    log(weightPoints.toString());
-    log(heightPoints.toString());
+    print(heightPoints.toString());
+    print(weightPoints.toString());
+    print(dateList);
     return 0;
   }
   @override
@@ -98,9 +113,7 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
               controller: _tabController,
               children: [
                 tallChart(),
-                TextButton(onPressed: () {
-
-                }, child: const Text('bye')),
+                weightChart(),
               ],
             ),
           ),
@@ -108,6 +121,7 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
       ),
     );
   }
+
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
@@ -130,14 +144,16 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
 
     return Text(text, style: style, textAlign: TextAlign.left);
   }
+
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 16,
+      color: Colors.black
     );
     Widget text;
     switch (value.toInt()) {
-      case 2:
+      case 1 :
         text = const Text('MAR', style: style);
         break;
       case 5:
@@ -147,87 +163,209 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
         text = const Text('SEP', style: style);
         break;
       default:
-        text = const Text('', style: style);
+        text = const Text('hi', style: style);
         break;
     }
+    for(int i=0; i<heightPoints.length; i++) {
+      if (heightPoints[i] == false) {
+        text = Text(dateList[i], style: style);
+      }
+    }
+      return SideTitleWidget(
+        axisSide: meta.axisSide,
+        child: text,
+      );
 
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      child: text,
+  }
+
+  Widget tallChart(){
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Text('"${widget.baby.name}"의 성장 기록', style: TextStyle(fontSize: 30, color: Colors.grey[700]),),
+          const SizedBox(height: 20),
+          FutureBuilder(
+            future: getGrowthFuture,
+            builder: (context, snapshot) {
+              if (snapshot.hasData == false){
+                return Container(
+                    width: double.infinity,
+                    child : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/images/baby.png', width: 150),
+                        const SizedBox(height: 50),
+                        const CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(
+                            Colors.black,
+                          ),
+                        ),
+                      ],
+                    )
+                );
+              }
+              else if(snapshot.hasError){
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Error: ${snapshot.error}', // 에러명을 텍스트에 뿌려줌
+                    style: const TextStyle(fontSize: 15),
+                  ),
+                );
+              }else{
+                return Container(
+                  height: 600,
+                  child: LineChart(
+                      LineChartData(
+                        minX: minD,
+                        maxX: maxD,
+                        minY: heightList.first-1,
+                        maxY: heightList.last+0.5,
+                        titlesData: FlTitlesData(
+                            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+
+                            bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: false,
+                                  getTitlesWidget: bottomTitleWidgets,
+                                  reservedSize: 35,
+                                )
+                            )
+                        ),
+                        gridData: FlGridData(
+                          show: true,
+                          getDrawingHorizontalLine: (value) {
+                            return FlLine(
+                                color: Colors.grey,
+                                strokeWidth: 1
+                            );
+                          },
+                        ),
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: heightPoints,
+                            isCurved: false,
+                            gradient: const LinearGradient(
+                              colors: [Colors.red, Colors.redAccent],
+                            ),
+                            barWidth: 5,
+                            isStrokeCapRound: true,
+                            dotData:  FlDotData(
+                              show: true,
+                            ),
+                            belowBarData: BarAreaData(
+                              show: true,
+                              gradient: LinearGradient(
+                                colors: gradientColors
+                                    .map((color) => color.withOpacity(0.3))
+                                    .toList(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                  ),
+                );
+              }
+              },
+          )
+        ],
+      ),
     );
   }
-  Widget tallChart(){
+
+  Widget weightChart(){
     return SingleChildScrollView(
       child: Container(
         child: Column(
           children: [
-             FutureBuilder(
-               future: getGrowthFuture,
-               builder: (context, snapshot) {
-                 if (snapshot.hasData == false){
-                   return Container(
-                       width: double.infinity,
-                       child : Column(
-                         mainAxisAlignment: MainAxisAlignment.center,
-                         children: [
-                           Image.asset('assets/images/baby.png', width: 150),
-                           const SizedBox(height: 50),
-                           const CircularProgressIndicator(
-                             valueColor: AlwaysStoppedAnimation(
-                               Colors.white,
-                             ),
-                           ),
-                         ],
-                       )
-                   );
-                 }
-                 else if(snapshot.hasError){
-                   return Padding(
-                     padding: const EdgeInsets.all(8.0),
-                     child: Text(
-                       'Error: ${snapshot.error}', // 에러명을 텍스트에 뿌려줌
-                       style: const TextStyle(fontSize: 15),
-                     ),
-                   );
-                 }else{
+            Text('"${widget.baby.name}"의 몸무게 기록', style: TextStyle(fontSize: 30, color: Colors.grey[700])),
+            const SizedBox(height: 20),
+            FutureBuilder(
+              future: getGrowthFuture,
+              builder: (context, snapshot) {
+                if (snapshot.hasData == false){
+                  return Container(
+                      width: double.infinity,
+                      child : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset('assets/images/baby.png', width: 150),
+                          const SizedBox(height: 50),
+                          const CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation(
+                              Colors.white,
+                            ),
+                          ),
+                        ],
+                      )
+                  );
+                }
+                else if(snapshot.hasError){
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Error: ${snapshot.error}', // 에러명을 텍스트에 뿌려줌
+                      style: const TextStyle(fontSize: 15),
+                    ),
+                  );
+                }else{
+                  return Container(
+                    height: 600,
+                    child: LineChart(
+                        LineChartData(
+                          minX: minD,
+                          maxX: maxD,
+                          minY: weightList.first-0.5,
+                          maxY: weightList.last+0.5,
+                          titlesData: FlTitlesData(
+                              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
 
-                   return Container(
-                     height: 100,
-                     child: LineChart(
-                         LineChartData(
-
-                           minX: minD,
-                           maxX: maxD,
-                           minY: 0,
-                           maxY: 150,
-                           lineBarsData: [
-                             LineChartBarData(
-                               spots: heightPoints,
-                               isCurved: true,
-                               gradient: const LinearGradient(
-                                 colors: [Colors.pink, Colors.pinkAccent],
-                               ),
-                               barWidth: 5,
-                               isStrokeCapRound: true,
-                               dotData:  FlDotData(
-                                 show: false,
-                               ),
-                               belowBarData: BarAreaData(
-                                 show: true,
-                                 gradient: LinearGradient(
-                                   colors: gradientColors
-                                       .map((color) => color.withOpacity(0.3))
-                                       .toList(),
-                                 ),
-                               ),
-                             ),
-                           ],
-                         )
-                     ),
-                   );
-                 }
-               },
-             )
+                              bottomTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: false,
+                                    getTitlesWidget: bottomTitleWidgets,
+                                    reservedSize: 35,
+                                  )
+                              )
+                          ),
+                          gridData: FlGridData(
+                            show: true,
+                            getDrawingHorizontalLine: (value) {
+                              return FlLine(
+                                  color: Colors.grey,
+                                  strokeWidth: 1
+                              );
+                            },
+                          ),
+                          lineBarsData: [
+                            LineChartBarData(
+                              spots: weightPoints,
+                              isCurved: false,
+                              gradient: const LinearGradient(
+                                colors: [Colors.blue, Colors.blueAccent],
+                              ),
+                              barWidth: 5,
+                              isStrokeCapRound: true,
+                              dotData:  FlDotData(
+                                show: true,
+                              ),
+                              belowBarData: BarAreaData(
+                                show: true,
+                                gradient: LinearGradient(
+                                  colors: gradientColors2
+                                      .map((color) => color.withOpacity(0.3))
+                                      .toList(),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                    ),
+                  );
+                }
+              },
+            )
           ],
         ),
       ),

@@ -44,14 +44,14 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.only(left: 25, top: 5),
+              padding: const EdgeInsets.only(left: 25, top: 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text('젖병',
                     style: TextStyle(
                         fontSize: 35,
-                        color: Colors.orange,
+                        color: Color(0xffE59E57),
                     ),
                   ),
                 ],
@@ -83,8 +83,8 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
                   child: Text('모유',style: TextStyle(fontSize: 20),),
                   style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.black,
-                      backgroundColor: isSelect ? Colors.orangeAccent : null,
-                      minimumSize: Size((MediaQuery.of(context).size.width)/2*0.8, 30)
+                      backgroundColor: isSelect ? Colors.orange[300] : null,
+                      minimumSize: Size((MediaQuery.of(context).size.width)/2*0.8, 35)
                   ),
                 ),
                 OutlinedButton(
@@ -96,24 +96,24 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
                   child: Text('분유',style: TextStyle(fontSize: 20),),
                   style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.black,
-                      backgroundColor: !isSelect ? Colors.orangeAccent : null,
-                      minimumSize: Size((MediaQuery.of(context).size.width)/2*0.8, 30)
+                      backgroundColor: !isSelect ? Colors.orange[300] : null,
+                      minimumSize: Size((MediaQuery.of(context).size.width)/2*0.8, 35)
                   ),
                 )
               ],
             ),
             const SizedBox(
-              height: 10,
+              height: 15,
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width*0.9,
               child: TextFormField(
                 controller: amountController,
-                style: const TextStyle(fontSize: 22),
+                style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                     floatingLabelBehavior:FloatingLabelBehavior.always, // labelText위치
                     labelText: '수유량 (ml)',
-                    labelStyle: TextStyle(fontSize: 25),
+                    labelStyle: TextStyle(fontSize: 23),
                     suffixIcon: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
                       mainAxisSize: MainAxisSize.min,
@@ -136,11 +136,11 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
                     ),
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Colors.orangeAccent)
+                        borderSide: BorderSide(color: Colors.grey)
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Colors.orangeAccent)
+                        borderSide: BorderSide(color: Colors.grey)
                     ),
                     contentPadding: EdgeInsets.only(left: 15)
                 ),
@@ -214,7 +214,7 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
                             filled: false, //색 지정
                             enabledBorder:OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(color: Colors.orangeAccent)
+                                borderSide: BorderSide(color: Colors.grey)
                             ),
                             contentPadding: EdgeInsets.all(10)
                         ),
@@ -244,18 +244,18 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
                     child: TextFormField(
                       controller: memoController,
                       maxLines: 2,
-                      style: TextStyle(fontSize: 24),
+                      style: const TextStyle(fontSize: 20),
                       decoration: const InputDecoration(
                           floatingLabelBehavior:FloatingLabelBehavior.always, // labelText위치
                           labelText: '메모',
-                          labelStyle: TextStyle(fontSize: 30),
+                          labelStyle: TextStyle(fontSize: 30, color:Colors.black),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: BorderSide(color: Colors.orangeAccent)
+                              borderSide: BorderSide(color: Colors.grey)
                           ),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: BorderSide(color: Colors.orangeAccent)
+                              borderSide: BorderSide(color: Colors.grey)
                           ),
                           contentPadding: EdgeInsets.all(12)
                       ),
@@ -300,13 +300,13 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
                       child: Text('확인',style: TextStyle(fontSize: 25),),
                       style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.black,
-                          backgroundColor: !isSelect ? Colors.orangeAccent : null,
+                          backgroundColor: Colors.orange[300],
                           minimumSize: Size((MediaQuery.of(context).size.width)/2*0.8, 40),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10))
                           ),
                           side: BorderSide(
-                            color: Colors.orangeAccent,
+                            color: Colors.orange,
                           )
                       ),
                     )

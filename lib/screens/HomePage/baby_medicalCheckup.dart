@@ -46,7 +46,7 @@ class _BabyMedicalCheckup extends State<BabyMedicalCheckup> {
         backgroundColor: const Color(0xffffc8c7),
         elevation: 0.0,
         iconTheme : const IconThemeData(color: Colors.black),
-        title: const Text('생활기록', style: TextStyle(color: Colors.black,fontSize: 20)),
+        title: const Text('건강검진', style: TextStyle(color: Colors.black,fontSize: 20)),
       ),
       body: Container(
           padding: const EdgeInsets.all(15),

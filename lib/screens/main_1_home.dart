@@ -690,7 +690,7 @@ class MainHomeState extends State<Main_Home>{
                 topLeft: Radius.circular(20)
             )
         ),
-        backgroundColor: Colors.purple[50],
+        backgroundColor: Colors.grey[50],
         isScrollControlled: true,
         context: rootContext,
         builder: (BuildContext context) {
@@ -727,15 +727,16 @@ Widget drawBaby(String name, DateTime birth){
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(name,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 5),
+                    Text(name,style: TextStyle(fontSize: 33,fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
                     Text(
                       '${birth.year}.${birth.month}.${birth.day}',
-                      style: const TextStyle(fontSize: 15),
+                      style: const TextStyle(fontSize: 20),
                     ),
+                    const SizedBox(height: 5),
                     Text(
                       'D+ ${DateTime(now.year, now.month, now.day).difference(birth).inDays+2}',
-                      style: const TextStyle(fontSize: 15),
+                      style: const TextStyle(fontSize: 20),
                     ),
                   ],
                 )

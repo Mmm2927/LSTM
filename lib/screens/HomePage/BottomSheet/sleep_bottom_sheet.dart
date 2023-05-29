@@ -40,7 +40,7 @@ class _SleepBottomSheet extends State<SleepBottomSheet> {
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.only(left: 25, top: 5),
+              padding: const EdgeInsets.only(left: 25, top: 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

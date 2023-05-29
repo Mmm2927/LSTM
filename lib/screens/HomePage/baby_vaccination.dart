@@ -132,6 +132,7 @@ class _BabyVaccination extends State<BabyVaccination> {
               const SizedBox(height: 5),
               Row(
                 children: const [
+                  SizedBox(width: 10),
                   Icon(Icons.error_outline),
                   SizedBox(width: 10,),
                   Text('기준 : 질병관리청 표준 예방접종 일정표'),

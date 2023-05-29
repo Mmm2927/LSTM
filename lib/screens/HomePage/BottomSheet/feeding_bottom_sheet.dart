@@ -37,16 +37,16 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.48,
+        height: MediaQuery.of(context).size.height * 0.45,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.only(left: 25, top: 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('수유', style: TextStyle(fontSize: 35, color: Colors.red)),
+                  const Text('수유', style: TextStyle(fontSize: 35, color: Color(0xfff77b72))),
                   IconButton(
                       onPressed: (){
                         Navigator.pop(context);
@@ -79,11 +79,12 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
                                 backgroundColor: isSelect ? const Color(0xfff77b72) : null,
                             ),
                             child: const Padding(
-                                padding: EdgeInsets.all(10),
+                                padding: EdgeInsets.all(5),
                                 child: Text('왼쪽',style: TextStyle(fontSize: 20))
                             ),
                           ),
                         ),
+                        const SizedBox(width: 15,),
                         Expanded(
                             flex: 1,
                             child: OutlinedButton(
@@ -96,13 +97,14 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
                                 foregroundColor: Colors.black,
                                 backgroundColor: !isSelect ? const Color(0xfff77b72) : null,
                               ),
-                              child: const Padding(padding:EdgeInsets.all(10), child:Text('오른쪽',style: TextStyle(fontSize: 20))),
+                              child: const Padding(padding:EdgeInsets.all(5), child:Text('오른쪽',style: TextStyle(fontSize: 20))),
 
                             )
                         )
                       ],
                     ),
                   ),
+                  const SizedBox(height: 5),
                   GestureDetector(
                     onTap: () async {
                       dateTimeList = await showOmniDateTimeRangePicker(
@@ -184,7 +186,7 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 22),
                   GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
@@ -194,7 +196,7 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
                       child: TextFormField(
                         controller: memoController,
                         maxLines: 2,
-                        style: const TextStyle(fontSize: 24),
+                        style: const TextStyle(fontSize: 20),
                         decoration: const InputDecoration(
                             floatingLabelBehavior:FloatingLabelBehavior.always,
                             labelText: '메모',
@@ -213,7 +215,7 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 20),
                   Container(
                     width: double.infinity,
                     child: OutlinedButton(

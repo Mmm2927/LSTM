@@ -44,7 +44,7 @@ class _BabyFoodBottomSheet extends State<BabyFoodBottomSheet> {
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.only(left: 25, top: 5),
+              padding: const EdgeInsets.only(left: 25, top: 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -58,7 +58,7 @@ class _BabyFoodBottomSheet extends State<BabyFoodBottomSheet> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 20,
             ),
             GestureDetector(
               onTap: () {
@@ -69,11 +69,11 @@ class _BabyFoodBottomSheet extends State<BabyFoodBottomSheet> {
                 width: MediaQuery.of(context).size.width*0.9,
                 child: TextFormField(
                   controller: amountController,
-                  style: TextStyle(fontSize: 22),
+                  style: TextStyle(fontSize: 20),
                   decoration: InputDecoration(
                       floatingLabelBehavior:FloatingLabelBehavior.always, // labelText위치
                       labelText: '이유식 양 (ml)',
-                      labelStyle: TextStyle(fontSize: 25),
+                      labelStyle: TextStyle(fontSize: 23),
                       suffixIcon: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
                         mainAxisSize: MainAxisSize.min,

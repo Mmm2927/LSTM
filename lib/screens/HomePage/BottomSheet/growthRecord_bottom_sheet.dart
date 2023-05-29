@@ -94,8 +94,8 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                     Divider(),
                     HorizontalPicker(
                       minValue: 0,
-                      maxValue: 20,
-                      divisions: 200,
+                      maxValue: 15,
+                      divisions: 150,
                       height: 100,
                       suffix: " kg",
                       showCursor: false,
