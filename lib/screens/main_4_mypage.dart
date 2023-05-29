@@ -1,6 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:bob/screens/Login/initPage.dart';
 import 'package:bob/screens/MyPage/manage_baby.dart';
 import 'package:get/get_utils/get_utils.dart';
@@ -15,7 +16,7 @@ import 'package:get/get.dart' hide Trans;
 import 'package:bob/services/backend.dart';
 import '../services/storage.dart';
 import 'package:easy_localization/easy_localization.dart' hide StringTranslateExtension;
-import '../langauges.dart';
+
 // 앱에서 지원하는 언어 리스트 변수
 final supportedLocales = [
   Locale('en', 'US'),
@@ -23,30 +24,22 @@ final supportedLocales = [
 ];
 class MainMyPage extends StatefulWidget{
   final User userinfo;
-  final List<Baby> babies;
-  const MainMyPage(this.userinfo, this.babies, {Key?key}):super(key:key);
+  final getBabiesFuction; // 아기 불러오는 fuction
+  final reloadBabiesFunction;
+  const MainMyPage(this.userinfo, {Key?key, this. getBabiesFuction, this.reloadBabiesFunction}):super(key:key);
   @override
-  State<MainMyPage> createState() => _MainMyPage();
+  State<MainMyPage> createState() => MainMyPageState();
 }
-class _MainMyPage extends State<MainMyPage>{
-  late Map<int, Baby> activeBabies={};
-  late Map<int, Baby> disactiveBabies={};
+class MainMyPageState extends State<MainMyPage>{
+  late List<Baby> activateBabies;
+  late List<Baby> disActivateBabies;
   String selectedLanguageMode = '한국어';
-  //late List<int> babyIds;
-  //var locale = Locale('en','US');
 
   @override
   void initState() {
-    for(int i=0;i<widget.babies.length;i++){
-      Baby baby = widget.babies[i];
-      if(baby.relationInfo.active){
-        activeBabies[baby.relationInfo.BabyId] = baby;
-      }else{
-        disactiveBabies[baby.relationInfo.BabyId] = baby;
-      }
-    }
-    print(activeBabies);
-    print(disactiveBabies);
+    activateBabies = widget.getBabiesFuction(true);
+    disActivateBabies = widget.getBabiesFuction(false);
+    log('MyPage : ${activateBabies.length} | ${disActivateBabies.length}');
     super.initState();
   }
   @override
@@ -57,68 +50,75 @@ class _MainMyPage extends State<MainMyPage>{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-              width: double.infinity,
-              color: const Color(0xffffc8c7),
-              padding: const EdgeInsets.all(20),
-              child : Column(
+            width: double.infinity,
+            margin: const EdgeInsets.fromLTRB(10,0,10,0),
+            padding: const EdgeInsets.all(20),
+              child :Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 10),
-                  Text(widget.userinfo.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
-                  const SizedBox(height: 10),
-                ],
-              )
-          ),
-          Container(
-              margin: const EdgeInsets.all(10),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('main4_manageBaby'.tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                      height: 110,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: activeBabies.length + 1,
-                          itemBuilder: (BuildContext context, int index){
-                            if(index < activeBabies.length){
-                              return drawBaby(activeBabies[activeBabies.keys.toList()[index]]!);
-                            }else{
-                              return Container(
-                                  padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                                  child: Column(
-                                      children:[
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(width: 0.5, color: Colors.grey),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: IconButton(
-                                              onPressed: () async{
-                                                await Get.to(ManageBabyWidget(activeBabies.values.toList()));
-                                                await reloadBabies();
-                                              },
-                                              iconSize: 40,
-                                              color: Colors.grey,
-                                              icon: const Icon(Icons.add)),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text('main4_addBaby'.tr)
-                                      ]
-                                  )
-                              );
-                            }
-                          }
-                      )
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('${widget.userinfo.name} 님', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+                          const SizedBox(height: 5),
+                          const Text('좋은 아침입니다!', style: TextStyle(color: Colors.grey))
+                        ],
+                      ),
+                      Image.asset('assets/images/person.png',scale: 12, color: Colors.grey[800])
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        width: 130,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('나의 아기', style: TextStyle(color: Colors.grey[600])),
+                            const SizedBox(height: 5),
+                            Center(
+                              child: Text(activateBabies.length.toString(), style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
+                            ),
+                            const SizedBox(height: 10)
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        width: 130,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('초대 수락 대기 중', style: TextStyle(color: Colors.grey[600])),
+                            const SizedBox(height: 5),
+                            Center(
+                              child: Text(disActivateBabies.length.toString(), style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
+                            ),
+                            const SizedBox(height: 10)
+                          ],
+                        ),
+                      ),
+                    ],
                   )
                 ],
               )
           ),
+          Divider(color: Colors.grey[200], thickness: 7),
           Expanded(
             child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -128,18 +128,69 @@ class _MainMyPage extends State<MainMyPage>{
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Container(
+                          //margin: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('main4_manageBaby'.tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color:Color(0xfffa625f))),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                  height: 110,
+                                  child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: activateBabies.length + 1,
+                                      itemBuilder: (BuildContext context, int index){
+                                        if(index < activateBabies.length){
+                                          return drawBaby(activateBabies[index]!);
+                                        }else{
+                                          return Container(
+                                              padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                              child: Column(
+                                                  children:[
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(width: 0.5, color: Colors.grey),
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: IconButton(
+                                                          onPressed: () async{
+                                                            await Get.to(ManageBabyWidget(activateBabies));
+                                                            await widget.reloadBabiesFunction();
+                                                          },
+                                                          iconSize: 40,
+                                                          color: Colors.grey,
+                                                          icon: const Icon(Icons.add)),
+                                                    ),
+                                                    const SizedBox(height: 8),
+                                                    Text('main4_addBaby'.tr)
+                                                  ]
+                                              )
+                                          );
+                                        }
+                                      }
+                                  )
+                              )
+                            ],
+                          )
+                      ),
                       getSettingScreen('main4_babyAddModify'.tr, const Icon(Icons.edit_attributes_sharp),() async{
-                        await Get.to(ManageBabyWidget(activeBabies.values.toList()));
-                        await reloadBabies();
+                        await Get.to(() => ManageBabyWidget(activateBabies));
+                        await widget.reloadBabiesFunction();
                       }),
                       getSettingScreen('main4_InviteBabysitter'.tr, const Icon(Icons.diamond_outlined),() async{
-                        await Get.to(() => Invitation(activeBabies.values.toList(), disactiveBabies.values.toList()));
-                        await reloadBabies();
+                        await Get.to(() => Invitation(activateBabies, disActivateBabies));
+                        await widget.reloadBabiesFunction();
                       }),
                       getSettingScreen('main4_switch_Alarm'.tr, const Icon(Icons.notifications_off_outlined),(){
-                        Get.to(() => SwitchNotice(activeBabies.values.toList()));
+                        Get.to(() => SwitchNotice(activateBabies));
                       }),
-                      const Text('Common'),
+                      const SizedBox(height: 30),
+                      const Text('Common', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.grey)),
                       const SizedBox(height: 10),
                       getSettingScreen('main4_logout'.tr, const Icon(Icons.logout),() => logout()),
                       getSettingScreen('main4_modifyUserInfo'.tr, const Icon(Icons.mode_edit_outlined),() async {
@@ -207,28 +258,12 @@ class _MainMyPage extends State<MainMyPage>{
         )
     );
   }
-  reloadBabies() async{
-    List<int> existedIds = activeBabies.keys.toList() + disactiveBabies.keys.toList();
-    List<dynamic> babyRelationList = await getMyBabies();
-    for(int i=0; i < babyRelationList.length; i++){
-      var baby = await getBaby(babyRelationList[i]['baby']);
-      baby['relationInfo'] = (Baby_relation.fromJson(babyRelationList[i])).toJson();
-      setState(() {
-        if(babyRelationList[i]['active']){
-          activeBabies[babyRelationList[i]['baby']] = Baby.fromJson(baby);
-        }else{
-          disactiveBabies[babyRelationList[i]['baby']] = Baby.fromJson(baby);
-        }
-      });
-    }
-  }
+
   logout() async{
-    //await reloadBabies();
-    //print(babiesIndexingMap);
-    //print(babyRelationList);
     await deleteLogin();
-    Get.offAll(LoginInit());
+    Get.offAll(const LoginInit());
   }
+
   Container getLanguageModeScreen(title){
     return Container(
       padding: const EdgeInsets.all(8),
@@ -257,7 +292,7 @@ class _MainMyPage extends State<MainMyPage>{
           onTap: func,
           child : Column(
             children: [
-              Row(children: [icon, const SizedBox(width: 30), Text(title)]),
+              Row(children: [icon, const SizedBox(width: 25), Text(title, style: const TextStyle(fontSize: 13))]),
               const SizedBox(height: 8),
               Divider(thickness: 1, color: Colors.grey[300]),
             ],
@@ -273,7 +308,7 @@ class _MainMyPage extends State<MainMyPage>{
               children:[
                 Image.asset('assets/images/baby.png',scale: 10),
                 const SizedBox(height: 8),
-                Text(baby.name)
+                Text(baby.name, style: TextStyle(fontSize: 12))
               ]
           )
       ),

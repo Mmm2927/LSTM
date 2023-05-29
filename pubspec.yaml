@@ -49,6 +49,7 @@ dependencies:
   flutter_spinner_picker: ^0.0.7
   horizontal_picker: ^1.2.0
   flutter_holo_date_picker: ^1.1.0
+  fl_chart: ^0.62.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -58,7 +59,14 @@ dependencies:
   flutter_switch: ^0.3.2
   time_range_picker : any
   easy_localization: ^3.0.1
-
+  font_awesome_flutter: ^10.4.0
+  bottom_picker: ^2.0.2
+  firebase_core: ^2.12.0
+  firebase_auth:
+  cloud_firestore:
+  firebase_messaging:
+  flutter_local_notifications: ^13.0.0
+  flutter_launcher_icons:
 
 dev_dependencies:
   flutter_test:
@@ -69,10 +77,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-
+  stop_watch_timer:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter packages.
 flutter:
 
@@ -86,6 +93,11 @@ flutter:
     - assets/translations/
     - assets/images/logo.png
     - assets/images/baby.png
+    - assets/images/injection.png
+    - assets/images/tooth.png
+    - assets/images/medicalHeart.png
+    - assets/images/person.png
+    - assets/images/logo_bob.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -103,6 +115,10 @@ flutter:
      - family: basic
        fonts:
          - asset: assets/font/basic/basic.otf
+           weight: 300
+     - family: omew
+       fonts:
+         - asset: assets/font/omew/omew.ttf
            weight: 300
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic

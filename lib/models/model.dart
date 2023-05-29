@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
+
 class User {
   late final String email;
   late String password1;
@@ -124,14 +126,14 @@ class lifeRecord{
   }
 }
 
-class growthRecord{
+class GrowthRecord{
   final int babyId;
   final double height;
   final double weight;
-  final DateTime date;
-  growthRecord(this.babyId, this.height, this.weight, this.date);
+  late DateTime date;
+  GrowthRecord(this.babyId, this.height, this.weight, this.date);
 
-  growthRecord.fromJson(Map<dynamic, dynamic> json)
+  GrowthRecord.fromJson(Map<dynamic, dynamic> json)
       : babyId = json['babyId'], height = json['height'], weight = json['weight'], date = DateTime.parse(json['date']);
 
   Map<String, dynamic> toJson() => {
@@ -140,4 +142,36 @@ class growthRecord{
     "weight": weight,
     "date": date
   };
+}
+class Vaccine {
+  final int ID;
+  final String title;    // 타이틀
+  final String times;   // 몇회
+  final String recommendationDate;  // 권장 시기
+  final String detail;   // 내용
+  late DateTime inoculationDate;    // 접종 날짜
+  late bool isInoculation = false;    // 접종 여부
+  Vaccine({required this.ID, required this.title, required this.times, required this.recommendationDate, required this.detail});
+}
+class MedicalCheckUp {
+  final int ID;
+  final String title;    // 타이틀
+  final List<int> checkTiming;   // 검진 시기
+  late String checkPeriod;   // 검진 기간
+  late DateTime checkUpDate;    // 검진 완료일
+  late bool isInoculation = false;    // 접종 여부
+
+  MedicalCheckUp(this.ID, this.title, this.checkTiming, DateTime birth){
+    if(checkTiming[0] == 1){
+      checkPeriod = '${DateFormat('yyyy.MM.dd').format(DateTime(birth.year, birth.month, birth.day + checkTiming[1]))} ~ ${DateFormat('yyyy.MM.dd').format(DateTime(birth.year, birth.month, birth.day + checkTiming[2]))}';
+    }else{
+      checkPeriod = '${DateFormat('yyyy.MM.dd').format(DateTime(birth.year, birth.month + checkTiming[1], birth.day))} ~ ${DateFormat('yyyy.MM.dd').format(DateTime(birth.year, birth.month + checkTiming[2], birth.day))}';
+    }
+  }
+  String checkTimingToString(){
+    return '생후 ${checkTiming[1]}~${checkTiming[2]}${checkTiming[0]==0?'개월':'일'}';
+  }
+  String drawDateString(){
+    return '${checkPeriod.substring(0,4)}년 ${checkPeriod.substring(5,7)}월';
+   }
 }

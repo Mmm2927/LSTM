@@ -89,6 +89,17 @@ editUserService(data) async{
     return response.data;
   }
 }
+editBabyService(int bId, String bName, String bGender) async{
+  try{
+    dio.options.headers['Authorization'] = await refresh(); //await getToken();
+    Response response = await dio.post('${PATH}/api/baby/modify/', data: {"babyid":bId, "baby_name": bName, "gender":bGender});
+    return response.statusCode;
+  }catch(e){
+    dio.options.headers['Authorization'] = await refresh();
+    Response response = await dio.post('${PATH}/api/baby/modify/', data: {"babyid":bId, "baby_name": bName, "gender":bGender});
+    return response.statusCode;
+  }
+}
 deleteUserService() async{
   try{
     dio.options.headers['Authorization'] = await getToken();
@@ -98,6 +109,17 @@ deleteUserService() async{
     return 405;
   }
 }
+
+deleteBabyService(int babyID) async{
+  try{
+    dio.options.headers['Authorization'] = await getToken();
+    Response response = await dio.get('$PATH/api/baby/$babyID/delete/');
+    return response.statusCode;
+  }on DioError catch (e) {
+    return 405;
+  }
+}
+
 // 추가 양육자 초대
 invitationService(data) async{
   try{
@@ -148,14 +170,50 @@ lifesetService(int babyId, int mode, String content) async{
   }
 }
 
-growthService(int babyId, double height, double weight, DateTime date) async{
+growthService(int babyId, double height, double weight, String date) async{
   try{
     dio.options.headers['Authorization'] = await getToken();
-    Response response = await dio.post('${PATH}/api/growth/set/',data: {"babyid": babyId, "height" : height, "weight":weight, "date":date});
+    Response response = await dio.post('${PATH}/api/growth/set/',data: {"baby": babyId, "height" : height, "weight":weight, "date":date});
     return response.data;
   }on DioError catch (e) {
     dio.options.headers['Authorization'] = await refresh();
-    Response response = await dio.post('${PATH}/api/growth/set/',data: {"babyid": babyId});
+    Response response = await dio.post('${PATH}/api/growth/set/',data: {"baby": babyId, "height" : height, "weight":weight, "date":date});
+    return response.data;
+  }
+}
+
+growthGetService(int babyId) async {
+  try{
+    dio.options.headers['Authorization'] = await getToken();
+    Response response = await dio.post('${PATH}/api/growth/$babyId/get/');
+    return response.data;
+  }on DioError catch (e) {
+    dio.options.headers['Authorization'] = await refresh();
+    Response response = await dio.post('${PATH}/api/growth/$babyId/get/');
+    return response.data;
+  }
+}
+
+vaccineCheckByIdService(int id) async {
+  try{
+    dio.options.headers['Authorization'] = await getToken();
+    Response response = await dio.post('$PATH/api/health/$id/get/');
+    return response.data;
+  }on DioError catch (e) {
+    dio.options.headers['Authorization'] = await refresh();
+    Response response = await dio.post('$PATH/api/health/$id/get/');
+    return response.data;
+  }
+}
+
+vaccineSetService(int id, String checkName, int mode, String state) async {
+  try{
+    dio.options.headers['Authorization'] = await getToken();
+    Response response = await dio.post('$PATH/api/health/set/', data:{"baby":id, "check_name":checkName, "mode":mode, "state":state});
+    return response.data;
+  }on DioError catch (e) {
+    dio.options.headers['Authorization'] = await refresh();
+    Response response = await dio.post('$PATH/api/health/set/', data:{"baby":id, "check_name":checkName, "mode":mode, "state":state});
     return response.data;
   }
 }

@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:dio/dio.dart';
-import 'package:bob/screens/MyPage/modifyBaby.dart';
+import 'package:bob/screens/MyPage/modifyBabyDetail.dart';
 import 'package:intl/intl.dart';
 import '../../models/model.dart';
 import 'package:bob/services/backend.dart';
 import 'package:get/get.dart' as GET;
-
+import '../../widgets/form.dart';
+import './modifyBaby.dart';
 class ManageBabyWidget extends StatefulWidget{
   final List<Baby> babies;
   const ManageBabyWidget(this.babies, {Key?key}):super(key:key);
@@ -15,11 +16,11 @@ class ManageBabyWidget extends StatefulWidget{
   State<ManageBabyWidget> createState() => _ManageBabyWidget();
 }
 class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderStateMixin{
-  final dio = Dio();    // 서버와 통신을 하기 위해 필요한 패키지
   late TabController _tabController;
-  int _valueGender = 0;
-  DateTime birth = DateTime(2016, 10, 26);
   var nameController = TextEditingController();
+  DateTime birth = DateTime(2023, 01, 01);
+  List<bool> isSelected = [true, false];
+
   void _showDialog(Widget child) {
     showCupertinoModalPopup<void>(
         context: context,
@@ -83,70 +84,13 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
                 controller: _tabController,
                 children: [
                   addBaby(),
-                  modifyBaby(context),
+                  ModifyBabyWidget(widget.babies)
+                  //modifyBaby(context),
                 ],
               )
           )
         ],
       )
-    );
-  }
-  Widget modifyBaby(BuildContext rootContext){
-    List<Baby> myBabies = [];
-    for (var value in widget.babies) {
-      if(value.relationInfo.relation == 0){
-        myBabies.add(value);
-      }
-    }
-    return Expanded(
-            child: GridView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: myBabies.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1 / 1,
-                ),
-                itemBuilder: (BuildContext context, int index){
-                  return drawBaby(myBabies[index], rootContext);
-                },
-            )
-    );
-  }
-  drawBaby(Baby baby, BuildContext rootContext){
-    return Container(
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          border: Border.all(color: Colors.grey)
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset('assets/images/baby.png',scale: 10),
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-            child : Text(baby.name, style: TextStyle(fontSize: 24)),
-          ),
-          Row(
-            children: [
-              Expanded(
-                  child: OutlinedButton(onPressed: (){
-                    Navigator.push(
-                        rootContext,
-                        CupertinoPageRoute(builder: (context)=> ModifyBaby(baby))
-                    );
-                  }, child: const Text('수정', style: TextStyle(color: Color(0xfffa625f)))),
-              ),
-              Padding(padding: EdgeInsets.all(2)),
-              Expanded(
-                  child: OutlinedButton(onPressed: (){}, child: Text('삭제',style: TextStyle(color: Colors.black)))
-              )
-            ],
-          )
-        ],
-      ),
     );
   }
   @override
@@ -155,85 +99,109 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
     super.dispose();
   }
   Widget addBaby(){
-    return SingleChildScrollView(
-      child: Container(
-          margin: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('아기 이름'),
-              TextFormField(
-                controller: nameController,
-              ),
-              const SizedBox(height: 30),
-              const Text('생일'),
-              CupertinoButton(
-                // Display a CupertinoDatePicker in date picker mode.
-                onPressed: () => _showDialog(
-                  CupertinoDatePicker(
-                    initialDateTime: birth,
-                    mode: CupertinoDatePickerMode.date,
-                    use24hFormat: true,
-                    // This is called when the user changes the date.
-                    onDateTimeChanged: (DateTime newDate) {
-                      setState(() => birth = newDate);
-                    },
-                  ),
-                ),
-                child: Text(
-                  '${birth.year}년 ${birth.month}월 ${birth.day}일',
-                  style: const TextStyle(
-                    fontSize: 22.0,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30),
-              const Text('성별'),
-              const SizedBox(height: 10),
-              Wrap(
-                  spacing: 10.0,
-                  children: List<Widget>.generate(
-                      2, (int index){
-                    List<String> gender = ['남자', '여자'];
-                    return ChoiceChip(
-                        elevation: 6.0,
-                        padding: const EdgeInsets.all(10),
-                        selectedColor: const Color(0xffff846d),
-                        label: Text(gender[index]),
-                        selected: _valueGender == index,
-                        onSelected: (bool selected){
-                          setState((){
-                            _valueGender = (selected ? index : null)!;
-                          });
-                        }
-                    );
-                  }).toList()
-              ),
-              const SizedBox(height: 50),
-              SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.all(20),
-                          elevation: 0.0,
-                          backgroundColor: Colors.white,
-                          foregroundColor: const Color(0xfffa625f),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+    return Column(
+      children: [
+        Expanded(
+            flex : 8,
+            child: SingleChildScrollView(
+                child: Container(
+                    margin: const EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('최소 한명의 아기는 등록되어 있어야 합니다!', style: TextStyle(color: Colors.pink)),
+                        const SizedBox(height: 50),
+                        const Text('아기 이름'),
+                        const SizedBox(height: 8),
+                        TextFormField(
+                          decoration: formDecoration('아기의 이름 또는 별명을 입력해 주세요'),
+                          controller: nameController,
+                        ),
+                        const SizedBox(height: 30),
+                        const Text('생일'),
+                        CupertinoButton(
+                          // Display a CupertinoDatePicker in date picker mode.
+                          onPressed: () => _showDialog(
+                            CupertinoDatePicker(
+                              initialDateTime: birth,
+                              mode: CupertinoDatePickerMode.date,
+                              use24hFormat: true,
+                              // This is called when the user changes the date.
+                              onDateTimeChanged: (DateTime newDate) {
+                                setState(() => birth = newDate);
+                              },
+                            ),
                           ),
-                          side: const BorderSide(
+                          child: Text(
+                            '${birth.year}년 ${birth.month}월 ${birth.day}일',
+                            style: const TextStyle(
+                                fontSize: 22.0,
+                                color: Colors.black
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        const Text('성별'),
+                        const SizedBox(height: 10),
+                        ToggleButtons(
+                            borderRadius: BorderRadius.circular(8.0),
+                            fillColor: const Color(0x98ffd3d2),
+                            selectedColor : const Color(0xfffa625f),
                             color: Colors.grey,
-                            width: 0.5,
-                          )
-                      ),
-                      onPressed: (){
-                        _registerBaby();
-                      },
-                      child: Text('등록'))
-              )
-            ],
-          )
-      )
+                            onPressed: (int idx){
+                              setState(() {
+                                isSelected = [idx == 0, idx == 1];
+                              });
+                            },
+                            isSelected: isSelected,
+                            children: [
+                              SizedBox(
+                                  width: (MediaQuery.of(context).size.width - 36)/5*2,
+                                  child: const Center(
+                                      child: Text('남아', style: TextStyle(fontSize: 18))
+                                  )
+                              ),
+                              SizedBox(
+                                  width: (MediaQuery.of(context).size.width - 36)/5*2,
+                                  child: const Center(
+                                      child: Text('여아', style: TextStyle(fontSize: 18))
+                                  )
+                              ),
+                            ]
+                        ),
+                      ],
+                    )
+                )
+            )
+        ),
+        Expanded(
+            flex : 1,
+            child: Container(
+                padding: const EdgeInsets.all(8),
+                width: double.infinity,
+                child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.all(20),
+                        elevation: 0.0,
+                        backgroundColor: Colors.white,
+                        foregroundColor: const Color(0xfffa625f),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        side: const BorderSide(
+                          color: Colors.grey,
+                          width: 0.5,
+                        )
+                    ),
+                    onPressed: (){
+                      _registerBaby();
+                    },
+                    child: const Text('등록', style: TextStyle(fontSize: 18))
+                )
+            )
+        ),
+        const SizedBox(height: 30)
+      ],
     );
   }
   void _registerBaby() async{
@@ -241,12 +209,9 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
     if(nameController.text.isEmpty && nameController.text.length < 5){
       return;
     }
-    var response = await setBabyService({"baby_name":nameController.text, "birth":DateFormat('yyyy-MM-dd').format(birth), "gender":(_valueGender==0?'F':'M'),"ip":null});
+    var response = await setBabyService({"baby_name":nameController.text, "birth":DateFormat('yyyy-MM-dd').format(birth), "gender":(isSelected[1]==true?'F':'M'),"ip":null});
     if(response['result'] == 'success'){
       GET.Get.back();
-    }
-    else{
-      print('errorr');
     }
   }
 }

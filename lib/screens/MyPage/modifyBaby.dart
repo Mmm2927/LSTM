@@ -1,121 +1,134 @@
-import 'package:bob/models/model.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:bob/widgets/form.dart';
-import 'package:bob/widgets/appbar.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:bob/screens/MyPage/modifyBabyDetail.dart';
+import 'package:flutter/foundation.dart';
+import 'package:bob/services/backend.dart';
+import '../../models/model.dart';
+import '../../widgets/pharse.dart';
+import 'package:get/get.dart';
 
-class ModifyBaby extends StatefulWidget{
-  final Baby baby;
-  const ModifyBaby(this.baby, {super.key});
+class ModifyBabyWidget extends StatefulWidget{
+  final List<Baby> babies;
+  const ModifyBabyWidget(this.babies, {Key?key}):super(key:key);
   @override
-  State<ModifyBaby> createState() => _ModifyBaby();
+  State<ModifyBabyWidget> createState() => _ModifyBabyWidget();
 }
-class _ModifyBaby extends State<ModifyBaby> {
-  late int _valueGender;
-  late DateTime birth;
+class _ModifyBabyWidget extends State<ModifyBabyWidget> with TickerProviderStateMixin{
+  late List<Baby> allowedBabies;
   @override
   void initState() {
     super.initState();
-    _valueGender = widget.baby.gender;
-    birth = widget.baby.birth;
+    allowedBabies = [];
+    for(int i=0; i<widget.babies.length; i++){
+      Baby tmp = widget.babies[i];
+      if(tmp.relationInfo.relation == 0){
+        allowedBabies.add(tmp);  // 자기 자식으로 등록된 아기만 수정가능
+      }
+    }
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar('아기 정보 수정', true),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-          child:Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              drawTitle('아기 이름', 0),
-              TextFormField(
-                decoration: formDecoration(widget.baby.name),
-                enabled: false,
-              ),
-              drawTitle('생일', 40),
-              CupertinoButton(
-                // Display a CupertinoDatePicker in date picker mode.
-                onPressed: () => _showDialog(
-                  CupertinoDatePicker(
-                    initialDateTime: birth,
-                    mode: CupertinoDatePickerMode.date,
-                    use24hFormat: true,
-                    // This is called when the user changes the date.
-                    onDateTimeChanged: (DateTime newDate) {
-                      setState(() => birth = newDate);
-                    },
-                  ),
-                ),
-                child: Text(
-                  '${birth.year}년 ${birth.month}월 ${birth.day}일',
-                  style: const TextStyle(
-                    fontSize: 22.0,
-                  ),
-                ),
-              ),
-              drawTitle('성별', 40),
-              Wrap(
-                spacing: 10.0,
-                children: List<Widget>.generate(
-                    2, (int index){
-                  List<String> gender = ['남자', '여자'];
-                  return ChoiceChip(
-                      elevation: 6.0,
-                      padding: const EdgeInsets.all(10),
-                      selectedColor: const Color(0xffff846d),
-                      label: Text(gender[index]),
-                      selected: _valueGender == index,
-                      onSelected: (bool selected){
-                        setState((){
-                          _valueGender = (selected ? index : null)!;
-                        });
-                      }
-                  );
-                }).toList()
-              ),
-              const SizedBox(height: 100),
-              ElevatedButton(
-                  onPressed: (){
-                    print(_valueGender);
-                  },
-                  style:ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size.fromHeight(55),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))
-                  ),
-                  child: const Text('수정 완료')
+      body: Container(
+        padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
+        child: Column(
+          children: [
+            getErrorPharse('부모 관계인 아기만 수정 가능합니다'),
+            const SizedBox(height: 15),
+            Expanded(
+              child: ListView.builder(
+                itemCount: allowedBabies.length,
+                  itemBuilder: (BuildContext ctx, int idx) {
+                    return drawBaby(allowedBabies[idx], context);
+                  }
               )
-            ],
-          )
+            )
+          ],
+        )
       )
     );
   }
-  void _showDialog(Widget child) {
-    showCupertinoModalPopup<void>(
-        context: context,
-        builder: (BuildContext context) => Container(
-          height: 216,
-          padding: const EdgeInsets.only(top: 6.0),
-          // The Bottom margin is provided to align the popup above the system
-          // navigation bar.
-          margin: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
+  drawBaby(Baby baby, BuildContext rootContext){
+    return Container(
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.fromLTRB(30, 10, 10, 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: const Border(
+          left: BorderSide(
+              color: Color(0xfffa625f),
+              width: 3.0
           ),
-          // Provide a background color for the popup.
-          color: CupertinoColors.systemBackground.resolveFrom(context),
-          // Use a SafeArea widget to avoid system overlaps.
-          child: SafeArea(
-            top: false,
-            child: child,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 5,
+          )
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(baby.name, style: const TextStyle(fontSize: 22)),
+              const SizedBox(width: 5),
+              Text('${baby.relationInfo==0?'여아':'남아'}'),
+            ],
           ),
-        ));
+          Text('생일 : ${DateFormat('yyyy-MM-dd').format(baby.birth)}'),
+          const SizedBox(height: 5),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                    onPressed: (){
+                      Get.to(() => ModifyBabyDetail(baby));
+                    },
+                    child: const Text('수정', style: TextStyle(color: Color(0xfffa625f)))),
+              ),
+              const SizedBox(width: 5),
+              Expanded(
+                child: OutlinedButton(
+                    onPressed: () => delete(baby.relationInfo.BabyId),
+                    child: const Text('삭제',style: TextStyle(color: Colors.black))
+                )
+              ),
+            ],
+          )
+        ],
+      ),
+    );
   }
-  _ModifyBabyinfo(){
-    print(';;ddd');
-    // validate
-    //print(_valueGender);
-    //print(birth);
+  delete(int targetBabyID){
+    Get.dialog(
+     AlertDialog(
+        title: const Text('warning', style: TextStyle(fontWeight: FontWeight.bold)),
+        content: const Text('한 번 삭제한 내용은 복구가 불가능합니다.\n 정말로 삭제하시겠습니까?'),
+        actions: [
+          TextButton(onPressed: () => serviceDeleteBaby(targetBabyID),
+              child: const Text('삭제', style: TextStyle(fontSize: 18, color:Colors.black))
+          ),
+          TextButton(
+              onPressed: (){
+                Get.back();
+              },
+              child: const Text('취소', style: TextStyle(fontSize: 18, color:Colors.black))
+          )
+        ],
+      ),
+      barrierDismissible: false
+    );
+  }
+
+  serviceDeleteBaby(int targetId) async{
+    if(await deleteBabyService(targetId) == 200){
+      Get.back();
+      Get.back(); // 2. BasePage 이동
+    }
+    else{
+      Get.snackbar('삭제 실패', '', snackPosition: SnackPosition.TOP, duration: const Duration(seconds: 2));
+    }
   }
 }

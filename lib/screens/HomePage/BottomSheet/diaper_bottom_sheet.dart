@@ -7,7 +7,7 @@ import '../../../services/backend.dart';
 class DiaperBottomSheet extends StatefulWidget {
 
   final int babyId;
-  final void Function(String id) timeDiaper;
+  final void Function(int mode, String id) timeDiaper;
   const DiaperBottomSheet (this.babyId, this.timeDiaper, {Key? key}) : super(key: key);
   //final String feedingTime;
 
@@ -41,7 +41,7 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.only(left: 25, top: 5),
+              padding: const EdgeInsets.only(left: 25, top: 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -248,7 +248,7 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
                         var result = await lifesetService(widget.babyId, 3, content.toString());
 
                         String diaperTime = '${DateTime.now().difference(dateTimeList![1]).inMinutes}분 전';
-                        widget.timeDiaper(diaperTime);
+                        widget.timeDiaper(3, diaperTime);
                         Navigator.pop(context);
                       },
                       child: Text('확인',style: TextStyle(fontSize: 25),),

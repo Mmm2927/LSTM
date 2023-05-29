@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decode/jwt_decode.dart';
@@ -9,6 +11,8 @@ import 'package:bob/services/backend.dart';
 import 'package:bob/services/storage.dart';
 import 'package:bob/models/model.dart';
 import 'package:bob/models/validate.dart';
+
+import '../MyPage/addBaby.dart';
 
 class SignUp extends StatefulWidget{
   const SignUp({super.key});
@@ -112,7 +116,12 @@ class _SignUp extends State<SignUp>{
         MyBabies.add(Baby.fromJson(baby));
       }
       GET.Get.snackbar('로그인 성공', '환영합니다', snackPosition: GET.SnackPosition.TOP, duration: const Duration(seconds: 2));
-      GET.Get.to(()=> BaseWidget(userInfo, MyBabies));
+      if(MyBabies.isEmpty){
+        GET.Get.to(()=> AddBaby(userInfo, MyBabies));
+      }
+      else{
+        GET.Get.to(()=> BaseWidget(userInfo, MyBabies));
+      }
     }
     else{
       GET.Get.snackbar('로그인 실패', '등록된 사용자가 아닙니다', snackPosition: GET.SnackPosition.TOP, duration: const Duration(seconds: 2));
