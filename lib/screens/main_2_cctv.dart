@@ -31,7 +31,7 @@ class MainCCTVState extends State<Main_Cctv>{
         backgroundColor: const Color(0xffffeeec),
         elevation: 0.5,
         iconTheme : const IconThemeData(color: Colors.black),
-        title: const Text('홈캠', style:const TextStyle(fontSize: 18, color: Color(0xffdf8570))),
+        title: const Text('홈캠', style:TextStyle(fontSize: 18, color: Color(0xffdf8570))),
       ),
       body: viewCCTV(),
     );
@@ -39,6 +39,9 @@ class MainCCTVState extends State<Main_Cctv>{
 
   Widget viewCCTV() {
     String week = baby.relationInfo.Access_week.toRadixString(2);
+    for (int i=week.length; i<7; i++) {
+      week = '0$week';
+    }
     var now = DateTime.now();
     String eeee = DateFormat('EEEE').format(now);
     String hour = DateFormat('hh:mm:ss').format(now);
