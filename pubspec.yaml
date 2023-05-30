@@ -98,6 +98,7 @@ flutter:
     - assets/images/medicalHeart.png
     - assets/images/person.png
     - assets/images/logo_bob.png
+    - assets/icon/bob.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

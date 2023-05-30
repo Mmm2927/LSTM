@@ -14,7 +14,7 @@ class LoginInit extends StatelessWidget{
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Image.asset('assets/images/logo.png',scale: 12),
+                      Image.asset('assets/icon/bob.png',scale: 8),
                       const SizedBox(height: 100),
                       OutlinedButton(
                         style: OutlinedButton.styleFrom(
