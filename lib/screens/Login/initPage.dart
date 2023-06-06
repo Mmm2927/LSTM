@@ -84,7 +84,7 @@ class _LoginInit extends State<LoginInit> {
   bool _isValid(){
     return (validateEmail(idController.text.trim()) && validatePassword(passController.text.trim()));
   }
-  
+
   void _login() async{
     var loginData = await loginService(idController.text.trim(), passController.text.trim());
     if(loginData != null){
