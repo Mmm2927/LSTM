@@ -126,11 +126,11 @@ class _GrowthRecordBottomSheet extends State<GrowthRecordBottomSheet> {
                       dateFormat: "yyyy-MMMM-dd",
                       locale: DateTimePickerLocale.ko,
                       looping: true,
-                      backgroundColor: Colors.purple[50],
+                      backgroundColor: Colors.grey[100],
                       titleText: '측정 날짜를 선택해주세요',
                       cancelText: '취소',
                       confirmText: '확인',
-                      itemTextStyle: TextStyle(color: Colors.orange),
+                      itemTextStyle: const TextStyle(color: Colors.pinkAccent),
                       textColor: Colors.black
                     );
                     ymdtController.text = '${DateFormat('yyyy-MM-dd').format(datePicked!)}';

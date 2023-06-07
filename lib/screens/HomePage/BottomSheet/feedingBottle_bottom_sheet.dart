@@ -57,6 +57,9 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
                 ],
               ),
             ),
+            SizedBox(
+              height: 5,
+            ),
             Container(
               padding: const EdgeInsets.only(left: 25, top: 5),
               child: Row(
@@ -136,7 +139,7 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
                     ),
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Colors.grey)
+                        borderSide: BorderSide(color: Colors.orange)
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -214,7 +217,7 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
                             filled: false, //색 지정
                             enabledBorder:OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(color: Colors.grey)
+                                borderSide: BorderSide(color: Colors.orange)
                             ),
                             contentPadding: EdgeInsets.all(10)
                         ),
@@ -251,7 +254,7 @@ class _FeedingBottleBottomSheet extends State<FeedingBottleBottomSheet> {
                           labelStyle: TextStyle(fontSize: 30, color:Colors.black),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: BorderSide(color: Colors.grey)
+                              borderSide: BorderSide(color: Colors.orange)
                           ),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10)),

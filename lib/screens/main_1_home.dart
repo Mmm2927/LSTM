@@ -281,10 +281,10 @@ class MainHomeState extends State<Main_Home>{
                     //기록 button 구현
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => BabyStatistics()),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => BabyStatistics()),
+                        // );
                       },
                       child: Container(
                         padding: EdgeInsets.all(10),
@@ -392,7 +392,7 @@ class MainHomeState extends State<Main_Home>{
                                                           topLeft: Radius.circular(20)
                                                       )
                                                   ),
-                                                  backgroundColor: Colors.grey[50],
+                                                  backgroundColor: Colors.grey[100],
                                                   isScrollControlled: true,
                                                   context: context,
                                                   builder: ( BuildContext context ) {
@@ -400,7 +400,7 @@ class MainHomeState extends State<Main_Home>{
                                                   }
                                               );
                                             },
-                                            icon: const Icon(Icons.add_circle, size: 20)
+                                            icon: const Icon(Icons.add_circle, size: 28, color: Colors.orangeAccent,)
                                         ),
                                       ],
                                     ),

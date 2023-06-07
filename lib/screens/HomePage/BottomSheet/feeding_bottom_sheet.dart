@@ -169,7 +169,7 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
                               filled: false, //색 지정
                               enabledBorder:OutlineInputBorder(
                                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                                  borderSide: BorderSide(color: Colors.grey)
+                                  borderSide: BorderSide(color: Color(0xfff77b72))
                               ),
                               contentPadding: EdgeInsets.all(10)
                           ),
@@ -203,7 +203,7 @@ class _FeedingBottomSheet extends State<FeedingBottomSheet> {
                             labelStyle: TextStyle(fontSize: 30, color:Colors.black),
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(color: Colors.grey)
+                                borderSide: BorderSide(color: Color(0xfff77b72))
                             ),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10)),
