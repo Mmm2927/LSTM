@@ -29,6 +29,6 @@ class HealthCheckInfoViewSet(viewsets.ModelViewSet):
         return Response({'result': 'success', 'success_id': obj.id}, status=status.HTTP_200_OK)
 
     def retrieve(self, request, *args, **kwargs):
-        health_check_info = HealthCheck.objects.get(baby_id=kwargs["babyid"])
-        serializer = self.serializer_class(health_check_info)
+        health_check_info = HealthCheck.objects.filter(baby_id=kwargs["babyid"])
+        serializer = self.serializer_class(health_check_info, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

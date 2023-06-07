@@ -5,4 +5,4 @@ class LifeLogInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = LifeLog
         #fields = '__all__'
-        fields = ('baby', 'date', 'mode', 'content')
+        fields = ('date', 'mode', 'content')

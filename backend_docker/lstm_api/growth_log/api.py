@@ -24,12 +24,12 @@ class GrowthLogInfoViewSet(viewsets.ModelViewSet):
             
         obj = serializer.save()
         obj.user = request.user
-        obj.date = timezone.now()
+        #obj.date = request.POST.get("date", default=timezone.now())
         obj.save()
         
         return Response({'result': 'success', 'success_id': obj.id}, status=status.HTTP_200_OK)
 
     def retrieve(self, request, *args, **kwargs):
-        growth_info = GrowthLog.objects.get(baby_id=kwargs["babyid"])
-        serializer = self.serializer_class(growth_info)
+        growth_info = GrowthLog.objects.filter(baby_id=kwargs["babyid"])
+        serializer = self.serializer_class(growth_info, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

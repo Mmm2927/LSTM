@@ -38,7 +38,7 @@ class UserModifyViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
     def remove(self, request, *args, **kwargs):
-        user_info = generics.get_object_or_404(User, id=kwargs["userid"])
+        user_info = generics.get_object_or_404(User, id=request.user.id)
         user_info.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -64,6 +64,6 @@ class UserLoginViewSet(viewsets.ModelViewSet):
         serializer.validate_username(request.data['password'])
 
     def remove(self, request, *args, **kwargs):
-        user_info = generics.get_object_or_404(User, id=kwargs["userid"])
+        user_info = generics.get_object_or_404(User, id=request.user.id)
         user_info.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

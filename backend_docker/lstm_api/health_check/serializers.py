@@ -5,4 +5,4 @@ class HealthCheckInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = HealthCheck
         #fields = '__all__'
-        fields = ('baby', 'check_name', 'mode', 'state')
+        fields = ('baby', 'check_name', 'mode', 'state', 'date')
