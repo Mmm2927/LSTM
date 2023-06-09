@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bob/screens/Login/initPage.dart';
 import 'package:bob/screens/MyPage/manage_baby.dart';
@@ -8,19 +7,17 @@ import 'package:get/get_utils/get_utils.dart';
 import 'package:intl/intl.dart';
 import '../models/model.dart';
 import 'package:bob/screens/MyPage/invitation.dart';
-import 'package:bob/screens/MyPage/switchNotice.dart';
 import 'package:bob/screens/MyPage/withdraw.dart';
 import 'package:bob/screens/MyPage/modifyUser.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:get/get.dart' hide Trans;
-import 'package:bob/services/backend.dart';
 import '../services/storage.dart';
 import 'package:easy_localization/easy_localization.dart' hide StringTranslateExtension;
 
 // 앱에서 지원하는 언어 리스트 변수
 final supportedLocales = [
-  Locale('en', 'US'),
-  Locale('ko', 'KR')
+  const Locale('en', 'US'),
+  const Locale('ko', 'KR')
 ];
 class MainMyPage extends StatefulWidget{
   final User userinfo;
@@ -185,9 +182,6 @@ class MainMyPageState extends State<MainMyPage>{
                       getSettingScreen('main4_InviteBabysitter'.tr, const Icon(Icons.diamond_outlined),() async{
                         await Get.to(() => Invitation(activateBabies, disActivateBabies));
                         await widget.reloadBabiesFunction();
-                      }),
-                      getSettingScreen('main4_switch_Alarm'.tr, const Icon(Icons.notifications_off_outlined),(){
-                        Get.to(() => SwitchNotice(activateBabies));
                       }),
                       const SizedBox(height: 30),
                       const Text('Common', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.grey)),
