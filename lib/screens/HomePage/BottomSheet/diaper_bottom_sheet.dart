@@ -37,7 +37,7 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.48,
+        height: MediaQuery.of(context).size.height * 0.45,
         child: Column(
           children: [
             Container(
@@ -68,6 +68,9 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
                 ],
               ),
             ),
+            const SizedBox(
+              height: 10,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -80,7 +83,7 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
                   child: Text('배변',style: TextStyle(fontSize: 20),),
                   style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.black,
-                      backgroundColor: isSelect ? Colors.orangeAccent : null,
+                      backgroundColor: isSelect ? Colors.green[300] : null,
                       minimumSize: Size((MediaQuery.of(context).size.width)/2*0.8, 30)
                   ),
                 ),
@@ -93,14 +96,14 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
                   child: Text('소변',style: TextStyle(fontSize: 20),),
                   style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.black,
-                      backgroundColor: !isSelect ? Colors.orangeAccent : null,
+                      backgroundColor: !isSelect ? Colors.green[300] : null,
                       minimumSize: Size((MediaQuery.of(context).size.width)/2*0.8, 30)
                   ),
                 )
               ],
             ),
             SizedBox(
-              height: 5,
+              height: 10,
             ),
             Column(
               children: [
@@ -168,7 +171,7 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
                             filled: false, //색 지정
                             enabledBorder:OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(color: Colors.orangeAccent)
+                                borderSide: BorderSide(color: Colors.green)
                             ),
                             contentPadding: EdgeInsets.all(10)
                         ),
@@ -186,7 +189,7 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
                   ),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 20,
                 ),
                 GestureDetector(
                   onTap: () {
@@ -205,7 +208,7 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
                           labelStyle: TextStyle(fontSize: 30),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: BorderSide(color: Colors.orangeAccent)
+                              borderSide: BorderSide(color: Colors.green)
                           ),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -218,7 +221,7 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
                   ),
                 ),
                 SizedBox(
-                  height: 8,
+                  height: 15,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -254,13 +257,13 @@ class _DiaperBottomSheet extends State<DiaperBottomSheet> {
                       child: Text('확인',style: TextStyle(fontSize: 25),),
                       style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.black,
-                          backgroundColor: !isSelect ? Colors.orangeAccent : null,
+                          backgroundColor: !isSelect ? Colors.green[300] : null,
                           minimumSize: Size((MediaQuery.of(context).size.width)/2*0.8, 40),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10))
                           ),
                           side: BorderSide(
-                            color: Colors.orangeAccent,
+                            color: Colors.green,
                           )
                       ),
                     )
