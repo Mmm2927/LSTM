@@ -70,12 +70,12 @@ class _BabyVaccination extends State<BabyVaccination> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          elevation: 0.0,
+          elevation: 0.5,
           iconTheme : const IconThemeData(color: Colors.black),
-          title: Text('"${widget.baby.name}" 예방 접종', style: TextStyle(color: Colors.black,fontSize: 24)),
+          title: Text('"${widget.baby.name}" 예방 접종', style: TextStyle(color: Colors.black,fontSize: 20)),
         ),
         body: Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
           child: Column(
             children: [
               Row(
@@ -173,6 +173,7 @@ class _BabyVaccination extends State<BabyVaccination> {
                         child: Container(
                           width: double.infinity,
                           child: ToggleButtons(
+                            selectedColor: const Color(0xfffa625f),
                             constraints: BoxConstraints(minWidth: (MediaQuery.of(context).size.width - 36) / 3, maxHeight: 80),
                             direction: Axis.horizontal,
                             onPressed: (int val){
@@ -198,9 +199,9 @@ class _BabyVaccination extends State<BabyVaccination> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image.asset('assets/images/injection.png',scale: 15,color: Colors.blue),
+                                      Image.asset('assets/images/injection.png',scale: 15,color: Color(0xfffa625f)),
                                       const SizedBox(height: 5,),
-                                      const Text('접종', style: TextStyle(color: Colors.blue))
+                                      const Text('접종', style: TextStyle(color: Color(0xfffa625f)))
                                     ],
                                   )
                               )
@@ -213,7 +214,9 @@ class _BabyVaccination extends State<BabyVaccination> {
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
-                            backgroundColor: const Color(0xffffc8c7),
+                            padding: const EdgeInsets.all(10),
+                            elevation: 0.5,
+                            backgroundColor: const Color(0xfffa625f),
                           ),
                           onPressed: (){
                             if(isSelected[1]){
@@ -243,7 +246,7 @@ class _BabyVaccination extends State<BabyVaccination> {
             title,
             style: TextStyle(
                 color: (currentMode==mode?Colors.black:Colors.grey),
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: (currentMode==mode?FontWeight.bold:FontWeight.normal)
             )
         )
@@ -253,9 +256,9 @@ class _BabyVaccination extends State<BabyVaccination> {
     if(vaccine.isInoculation){
       return Container(
           decoration: BoxDecoration(
-              color: Colors.pink[50],
+              color: Color(0xffffeeee),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(width: 0.5,color: Colors.pinkAccent)
+              border: Border.all(width: 0.5,color: Color(0xfffa625f))
           ),
           margin: const EdgeInsets.all(5),
           padding: const EdgeInsets.all(25),
@@ -264,9 +267,9 @@ class _BabyVaccination extends State<BabyVaccination> {
             children: [
               Column(
                 children: [
-                  Image.asset('assets/images/injection.png',scale: 15, color: Colors.pinkAccent),
+                  Image.asset('assets/images/injection.png',scale: 15, color: const Color(0xfffa625f)),
                   const SizedBox(height: 5),
-                  const Text('접종완료', style: TextStyle(color: Colors.pinkAccent))
+                  const Text('접종완료', style: TextStyle(color: Color(0xfffa625f)))
                 ],
               ),
               Expanded(
@@ -275,7 +278,7 @@ class _BabyVaccination extends State<BabyVaccination> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(vaccine.title,style: TextStyle(color:Colors.pinkAccent, fontWeight: FontWeight.bold, fontSize: 15)),
+                          Text(vaccine.title,style: const TextStyle(color:Color(0xfffa625f), fontWeight: FontWeight.bold, fontSize: 16)),
                           Text(vaccine.times),
                           Text('접종일 : ${DateFormat.yMMMd().format(vaccine.inoculationDate)}')
                         ],
@@ -315,9 +318,9 @@ class _BabyVaccination extends State<BabyVaccination> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(vaccine.title,style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                              Text(vaccine.title,style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                               Text(vaccine.times),
-                              Text('접종권장일 : ${vaccine.recommendationDate}')
+                              Text('접종 권장일 : ${vaccine.recommendationDate}')
                             ],
                           )
                       )

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
+
 class FindLogInfo extends StatefulWidget{
   final int _mode;
   const FindLogInfo(this._mode, {super.key});
@@ -29,7 +31,7 @@ class _FindLogInfo  extends State<FindLogInfo> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: renderAppbar('로그인 정보 찾기', true),
+        appBar: renderAppbar('appbar_findLogInfo'.tr, true),
         body: Column(
           children: [
             Container(
@@ -39,12 +41,12 @@ class _FindLogInfo  extends State<FindLogInfo> with TickerProviderStateMixin{
                   Container(
                       height: 35,
                       alignment: Alignment.center,
-                      child: const Text('로그인 찾기')
+                      child: Text('login_findID'.tr)
                   ),
                   Container(
                       height: 35,
                       alignment: Alignment.center,
-                      child: const Text('비밀번호 찾기')
+                      child: Text('login_findPass'.tr)
                   )
                 ],
                 labelStyle: const TextStyle(fontWeight: FontWeight.bold),

@@ -187,8 +187,8 @@ class MainHomeState extends State<Main_Home>{
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 30),
-                    const Text('아기 리스트', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-                    const Text('클릭하면 해당 아기를 관리할 수 있습니다', style: TextStyle(color: Colors.grey)),
+                    Text('babyList'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 26)),
+                    Text('babyListC'.tr, style: const TextStyle(color: Colors.grey)),
                     const SizedBox(height: 20),
                     Expanded(
                       child: ListView(
@@ -196,21 +196,21 @@ class MainHomeState extends State<Main_Home>{
                           SingleChildScrollView(
                             child:ExpansionTile(
                                 initiallyExpanded: true,
-                                title: const Text('부모', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-                                children: getDrawerDatas(0, context, Colors.pinkAccent)
+                                title: Text('relation0'.tr, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                                children: getDrawerDatas(0, context, Color(0xfffa625f))
                             ),
                           ),
                           SingleChildScrollView(
                             child:ExpansionTile(
                                 initiallyExpanded: true,
-                                title: const Text('가족', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                                title: Text('relation1'.tr, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                                 children: getDrawerDatas(1, context, Colors.blueAccent)
                             ),
                           ),
                           SingleChildScrollView(
                             child:ExpansionTile(
                                 initiallyExpanded: true,
-                                title: const Text('베이비시터', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                                title: Text('relation2'.tr, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                                 children: getDrawerDatas(2, context, Colors.grey)
                             ),
                           ),
@@ -257,7 +257,7 @@ class MainHomeState extends State<Main_Home>{
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Padding(
-                              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                               child: Text('버튼을 길게 누르면 타이머가 작동합니다.',
                                 style: TextStyle(
                                     fontSize: 14,
@@ -598,7 +598,7 @@ class MainHomeState extends State<Main_Home>{
                           flex: 3,
                           child: Column(
                             children: [
-                              Text('${DateFormat('yyyy년 MM월 dd일생').format(b.birth)}, ${b.getGenderString()=='F'?"여자":"남자"}'),
+                              Text('${DateFormat('yyyy-MM-dd').format(b.birth)}, ${b.getGenderString()=='F' ? "genderF".tr : "genderM".tr}'),
                             ],
                           ),
                         )

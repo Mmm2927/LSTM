@@ -15,84 +15,103 @@ class ModifyBabyDetail extends StatefulWidget{
 }
 class _ModifyBabyDetail extends State<ModifyBabyDetail> {
   TextEditingController nameController = TextEditingController();
-  late int _valueGender;
   late DateTime birth;
+  List<bool> isSelected = [true, false];
+
   @override
   void initState() {
     super.initState();
-    _valueGender = widget.baby.gender;
+    int tmpG = widget.baby.gender;
     birth = widget.baby.birth;
     nameController.text = widget.baby.name;
+    isSelected = [tmpG == 0, tmpG == 1];
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar('아기 정보 수정', true),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-          child:Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              drawTitle('아기 이름', 0),
-              TextFormField(
-                controller: nameController,
-                //initialValue: widget.baby.name,
-                decoration: formDecoration('아기 이름을 입력해주세요.'),
-              ),
-              drawTitle('생일', 40),
-              CupertinoButton(
-                // Display a CupertinoDatePicker in date picker mode.
-                onPressed: () => _showDialog(
-                  CupertinoDatePicker(
-                    initialDateTime: birth,
-                    mode: CupertinoDatePickerMode.date,
-                    use24hFormat: true,
-                    // This is called when the user changes the date.
-                    onDateTimeChanged: (DateTime newDate) {
-                      setState(() => birth = newDate);
-                    },
-                  ),
+      appBar: renderAppbar('main4_modifyBaby'.tr, true),
+      body: Container(
+        padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+        child: Column(
+          children: [
+            Expanded(
+                child: SingleChildScrollView(
+                    child:Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        drawTitle('babyName'.tr, 0),
+                        TextFormField(
+                          controller: nameController,
+                          decoration: formDecoration('babyNameHint'.tr),
+                        ),
+                        drawTitle('birth'.tr, 40),
+                        CupertinoButton(
+                          // Display a CupertinoDatePicker in date picker mode.
+                          onPressed: () => _showDialog(
+                            CupertinoDatePicker(
+                              initialDateTime: birth,
+                              mode: CupertinoDatePickerMode.date,
+                              use24hFormat: true,
+                              // This is called when the user changes the date.
+                              onDateTimeChanged: (DateTime newDate) {
+                                setState(() => birth = newDate);
+                              },
+                            ),
+                          ),
+                          child: Text(
+                            '${birth.year}년 ${birth.month}월 ${birth.day}일',
+                            style: const TextStyle(
+                                fontSize: 22.0,
+                                color: Colors.black
+                            ),
+                          ),
+                        ),
+                        drawTitle('gender'.tr, 30),
+                        ToggleButtons(
+                            borderRadius: BorderRadius.circular(8.0),
+                            fillColor: const Color(0x98ffd3d2),
+                            selectedColor : const Color(0xfffa625f),
+                            color: Colors.grey,
+                            onPressed: (int idx){
+                              setState(() {
+                                isSelected = [idx == 0, idx == 1];
+                              });
+                            },
+                            isSelected: isSelected,
+                            children: [
+                              SizedBox(
+                                  width: (MediaQuery.of(context).size.width - 36)/5*2,
+                                  child: Center(
+                                      child: Text('genderM'.tr, style: const TextStyle(fontSize: 18))
+                                  )
+                              ),
+                              SizedBox(
+                                  width: (MediaQuery.of(context).size.width - 36)/5*2,
+                                  child: Center(
+                                      child: Text('genderF'.tr, style: const TextStyle(fontSize: 18))
+                                  )
+                              ),
+                            ]
+                        ),
+                        const SizedBox(height: 100),
+
+                      ],
+                    )
+                )
+            ),
+            ElevatedButton(
+                onPressed: () async => await modifyBabyInfo(),
+                style:ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(20),
+                    foregroundColor: Colors.white,
+                    backgroundColor: const Color(0xfffa625f),
+                    minimumSize: const Size.fromHeight(55),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))
                 ),
-                child: Text(
-                  '${birth.year}년 ${birth.month}월 ${birth.day}일',
-                  style: const TextStyle(
-                    fontSize: 22.0,
-                  ),
-                ),
-              ),
-              drawTitle('성별', 40),
-              Wrap(
-                spacing: 10.0,
-                children: List<Widget>.generate(
-                    2, (int index){
-                  List<String> gender = ['남자', '여자'];
-                  return ChoiceChip(
-                      elevation: 6.0,
-                      padding: const EdgeInsets.all(10),
-                      selectedColor: const Color(0xffff846d),
-                      label: Text(gender[index]),
-                      selected: _valueGender == index,
-                      onSelected: (bool selected){
-                        setState((){
-                          _valueGender = (selected ? index : null)!;
-                        });
-                      }
-                  );
-                }).toList()
-              ),
-              const SizedBox(height: 100),
-              ElevatedButton(
-                  onPressed: () async => await modifyBabyInfo(),
-                  style:ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size.fromHeight(55),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))
-                  ),
-                  child: const Text('수정 완료')
-              )
-            ],
-          )
+                child: Text('login_modified'.tr)
+            )
+          ],
+        ),
       )
     );
   }
@@ -116,21 +135,16 @@ class _ModifyBabyDetail extends State<ModifyBabyDetail> {
           ),
         ));
   }
-  _ModifyBabyinfo(){
-    print(';;ddd');
-    // validate
-    //print(_valueGender);
-    //print(birth);
-  }
 
   modifyBabyInfo() async{
-    int bId = widget.baby.relationInfo.BabyId;
     String bName = nameController.text;
     if(!validateName(bName)){
       return;
     }
-    String gender = (_valueGender==0?'F':'M');
-    if(await editBabyService(widget.baby.relationInfo.BabyId, bName, gender) == 200){
+    //print(widget.baby.relationInfo.BabyId);
+    //print(bName);
+    //print(isSelected[1]==true?'F':'M');
+    if(await editBabyService(widget.baby.relationInfo.BabyId, bName, (isSelected[1]==true?'F':'M')) == 200){
       Get.back();
       Get.back(); // 2. BasePage 이동
     }

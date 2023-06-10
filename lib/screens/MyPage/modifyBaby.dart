@@ -1,11 +1,10 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:bob/screens/MyPage/modifyBabyDetail.dart';
-import 'package:flutter/foundation.dart';
 import 'package:bob/services/backend.dart';
 import '../../models/model.dart';
 import '../../widgets/pharse.dart';
 import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart' hide StringTranslateExtension;
 
 class ModifyBabyWidget extends StatefulWidget{
   final List<Baby> babies;
@@ -33,7 +32,7 @@ class _ModifyBabyWidget extends State<ModifyBabyWidget> with TickerProviderState
         padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
         child: Column(
           children: [
-            getErrorPharse('부모 관계인 아기만 수정 가능합니다'),
+            getErrorPharse('modi_BabyErr'.tr),
             const SizedBox(height: 15),
             Expanded(
               child: ListView.builder(
@@ -74,10 +73,11 @@ class _ModifyBabyWidget extends State<ModifyBabyWidget> with TickerProviderState
             children: [
               Text(baby.name, style: const TextStyle(fontSize: 22)),
               const SizedBox(width: 5),
-              Text('${baby.relationInfo==0?'여아':'남아'}'),
+              Text(baby.relationInfo==0?'genderF'.tr:'genderM'.tr),
             ],
           ),
-          Text('생일 : ${DateFormat('yyyy-MM-dd').format(baby.birth)}'),
+          const SizedBox(height: 2),
+          Text('${'birth'.tr} : ${DateFormat('yyyy-MM-dd').format(baby.birth)}'),
           const SizedBox(height: 5),
           Row(
             children: [
@@ -86,13 +86,13 @@ class _ModifyBabyWidget extends State<ModifyBabyWidget> with TickerProviderState
                     onPressed: (){
                       Get.to(() => ModifyBabyDetail(baby));
                     },
-                    child: const Text('수정', style: TextStyle(color: Color(0xfffa625f)))),
+                    child: Text('modify'.tr, style: const TextStyle(color: Color(0xfffa625f)))),
               ),
               const SizedBox(width: 5),
               Expanded(
                 child: OutlinedButton(
                     onPressed: () => delete(baby.relationInfo.BabyId),
-                    child: const Text('삭제',style: TextStyle(color: Colors.black))
+                    child: Text('delete'.tr,style: const TextStyle(color: Colors.black))
                 )
               ),
             ],

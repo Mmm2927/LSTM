@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:bob/screens/Login/initPage.dart';
 import 'package:bob/screens/MyPage/manage_baby.dart';
@@ -42,7 +41,7 @@ class MainMyPageState extends State<MainMyPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar_with_alarm('bob', context),
+      appBar: renderAppbar_with_alarm('BoB', context),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -59,9 +58,9 @@ class MainMyPageState extends State<MainMyPage>{
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${widget.userinfo.name} 님', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+                          Text('${widget.userinfo.name}'+'main4_profileName'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
                           const SizedBox(height: 5),
-                          const Text('좋은 아침입니다!', style: TextStyle(color: Colors.grey))
+                          Text('main4_profileGreeting'.tr, style: const TextStyle(color: Colors.grey))
                         ],
                       ),
                       Image.asset('assets/images/person.png',scale: 12, color: Colors.grey[800])
@@ -81,7 +80,7 @@ class MainMyPageState extends State<MainMyPage>{
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('나의 아기', style: TextStyle(color: Colors.grey[600])),
+                            Text('main4_profileMyBaby'.tr, style: TextStyle(color: Colors.grey[600])),
                             const SizedBox(height: 5),
                             Center(
                               child: Text(activateBabies.length.toString(), style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
@@ -101,7 +100,7 @@ class MainMyPageState extends State<MainMyPage>{
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('초대 수락 대기 중', style: TextStyle(color: Colors.grey[600])),
+                            Text('main4_profileAwaitingBaby'.tr, style: TextStyle(color: Colors.grey[600])),
                             const SizedBox(height: 5),
                             Center(
                               child: Text(disActivateBabies.length.toString(), style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
@@ -134,7 +133,7 @@ class MainMyPageState extends State<MainMyPage>{
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('main4_manageBaby'.tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color:Color(0xfffa625f))),
+                              Text('main4_manageBaby'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xfffa625f))),
                               const SizedBox(height: 10),
                               SizedBox(
                                   height: 110,
@@ -212,7 +211,7 @@ class MainMyPageState extends State<MainMyPage>{
   changeLanguageMode(){
     Get.dialog(
         AlertDialog(
-          title: const Text('언어모드 변경'),
+          title: Text('main4_changeLM'.tr),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

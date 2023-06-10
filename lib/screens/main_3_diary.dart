@@ -6,6 +6,7 @@ import '../database/diaryDB.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:bob/widgets/appbar.dart';
+import 'package:easy_localization/easy_localization.dart' hide StringTranslateExtension;
 
 class MainDiary extends StatefulWidget {
   const MainDiary({super.key});
@@ -15,7 +16,6 @@ class MainDiary extends StatefulWidget {
 
 class MainDiaryState extends State<MainDiary> {
   final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,6 +74,7 @@ class MainDiaryState extends State<MainDiary> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
 
   diaryList() {
+
     return Column(
       children: [
         TableCalendar(

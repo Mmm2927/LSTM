@@ -4,8 +4,8 @@ import 'package:bob/widgets/appbar.dart';
 import 'package:get/get.dart';
 import 'package:bob/screens/MyPage/invitationNew.dart';
 import 'package:get/get_core/src/get_main.dart';
-
 import '../../services/backend.dart';
+
 class Invitation extends StatefulWidget{
   final List<Baby> activebabies;
   final List<Baby> disactivebabies;
@@ -28,7 +28,7 @@ class _Invitation extends State<Invitation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar('양육자 / 베이비시터 초대', true),
+      appBar: renderAppbar('main4_InviteBabysitter'.tr, true),
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -37,7 +37,7 @@ class _Invitation extends State<Invitation> {
             InkWell(
               onTap: (){
                 if(widget.activebabies.isEmpty){
-                  Get.snackbar('초대 불가', '아이를 먼저 등록해주세요', snackPosition: SnackPosition.TOP, duration: const Duration(seconds: 2));
+                  Get.snackbar('invitation_Err'.tr, 'invitation_ErrC'.tr, snackPosition: SnackPosition.TOP, duration: const Duration(seconds: 2));
                 }else{
                   Get.to(() => InvitationNew(relation0Babies));
                 }
@@ -57,15 +57,16 @@ class _Invitation extends State<Invitation> {
                     color: Colors.white,
                   ),
                   child : Column(
-                    children: const [
-                      Text('초대 하기', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                      Text('공유 코드를 발급해주세요')
+                    children:  [
+                      Text('invitation_invTitle'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                      const SizedBox(height: 5),
+                      Text('invitation_invContent'.tr)
                     ],
                   )
               ),
             ),
             const SizedBox(height: 30),
-            const Text('미수락 초대들', style: TextStyle(fontSize: 20)),
+            Text('invitation_notList'.tr, style: const TextStyle(fontSize: 20)),
             const Divider(thickness: 1, color: Colors.grey),
             Expanded(
                 child: ListView.builder(
@@ -84,7 +85,7 @@ class _Invitation extends State<Invitation> {
   Widget drawBaby(Baby baby){
     Color col;
     if(baby.relationInfo.relation == 0){
-      col = Colors.pinkAccent;
+      col = Color(0xffFF766A);
     }
     else if(baby.relationInfo.relation == 1){
       col = Colors.blueAccent;
@@ -108,42 +109,41 @@ class _Invitation extends State<Invitation> {
           )
         ],
       ),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.fromLTRB(20, 10, 10, 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(baby.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+          Text(baby.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
           OutlinedButton(
             style: ElevatedButton.styleFrom(
-              side: const BorderSide(width: 1.0, color: Color(0xfffa625f)),
+              side: const BorderSide(width: 1.0, color: Color(0xffFF766A)),
             ),
               onPressed: (){
                 Get.dialog(
                   AlertDialog(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                    title: const Text('초대 수락', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                    content: const Text('초대를 수락하시겠습니까?'),
+                    title: Text('invitation_accept'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                    content: Text('invitation_acceptC'.tr),
                     actions: [
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               minimumSize: const Size.fromHeight(50),
-                              backgroundColor: const Color(0xfffa625f),
+                              backgroundColor: const Color(0xffFF766A),
                               foregroundColor: Colors.white
                           ),
                           onPressed: () async{
                             // 1. 초대 수락하는 API 보내기
                             var result = await acceptInvitationService(baby.relationInfo.BabyId);
                             Navigator.pop(context);
-                            // 2. 돌아가면 babyList 다시 로딩하기
                             Get.back();
                           },
-                          child: const Text('확인', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))
+                          child: Text('confirm'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15))
                       )
                     ],
                   ),
                 );
               },
-              child: const Text('수락', style: TextStyle(color : Color(0xfffa625f), fontWeight: FontWeight.bold))
+              child: Text('accept'.tr, style: const TextStyle(color : Color(0xffFF766A), fontWeight: FontWeight.bold))
           )
         ],
       ),
