@@ -4,26 +4,26 @@ import 'package:bob/screens/HomePage/BottomSheet/feedingBottle_bottom_sheet.dart
 import 'package:bob/screens/HomePage/BottomSheet/growthRecord_bottom_sheet.dart';
 import 'package:bob/screens/HomePage/BottomSheet/sleep_bottom_sheet.dart';
 import 'package:bob/screens/HomePage/baby_medicalCheckup.dart';
-import 'package:bob/screens/HomePage/baby_statistics.dart';
 import 'package:bob/screens/HomePage/baby_vaccination.dart';
 import 'package:flutter/material.dart';
 import 'package:bob/models/model.dart';
-import 'package:bob/screens/MyPage/manage_baby.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:path/path.dart';
-import 'package:omni_datetime_picker/omni_datetime_picker.dart';
-import 'package:bob/models/model.dart';
-import 'package:bob/services/backend.dart';
 import 'package:bob/services/backend.dart';
 import 'HomePage/BottomSheet/feeding_bottom_sheet.dart';
 import 'package:bob/screens/HomePage/Stopwatch/stopwatch.dart';
 import 'package:bob/screens/HomePage/StopwatchBottomSheet/feeding_stopwatch_sheet.dart';
-import 'HomePage/StopwatchBottomSheet/feeding_stopwatch_sheet.dart';
 import 'HomePage/StopwatchBottomSheet/feedingBottle_stopwatch_sheet.dart';
 import 'HomePage/StopwatchBottomSheet/sleep_stopwatch_sheet.dart';
 import 'HomePage/StopwatchBottomSheet/babyFood_stopwatch_sheet.dart';
 import 'HomePage/baby_growthStatistics.dart';
+import 'package:easy_localization/easy_localization.dart' hide StringTranslateExtension;
+
+// 앱에서 지원하는 언어 리스트 변수
+final supportedLocales = [
+  const Locale('en', 'US'),
+  const Locale('ko', 'KR')
+];
 
 class Main_Home extends StatefulWidget{
   final User userinfo;
@@ -258,7 +258,7 @@ class MainHomeState extends State<Main_Home>{
                           children: [
                             Padding(
                               padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                              child: Text('버튼을 길게 누르면 타이머가 작동합니다.',
+                              child: Text('timer_explanation'.tr,
                                 style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey[700]
@@ -268,11 +268,11 @@ class MainHomeState extends State<Main_Home>{
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                drawRecordButton(context, '모유', Icons.water_drop_outlined, Colors.red, const Color(0xffffdbd9), 0),
-                                drawRecordButton(context, '젖병', Icons.water_drop, Colors.orange, const Color(0xfffae2be), 1),
-                                drawRecordButton(context, '이유식', Icons.rice_bowl_rounded, const Color(0xfffacc00), const Color(0xfffff7d4), 2),
-                                drawRecordButton(context, '기저귀', Icons.baby_changing_station, Colors.green, const Color(0xffedfce6), 3),
-                                drawRecordButton(context, '수면', Icons.nights_stay_sharp, Colors.blueAccent, const Color(0xffe6eafc), 4)
+                                drawRecordButton(context, 'life0'.tr, Icons.water_drop_outlined, Colors.red, const Color(0xffffdbd9), 0),
+                                drawRecordButton(context, 'life1'.tr, Icons.water_drop, Colors.orange, const Color(0xfffae2be), 1),
+                                drawRecordButton(context, 'life2'.tr, Icons.rice_bowl_rounded, const Color(0xfffacc00), const Color(0xfffff7d4), 2),
+                                drawRecordButton(context, 'life3'.tr, Icons.baby_changing_station, Colors.green, const Color(0xffedfce6), 3),
+                                drawRecordButton(context, 'life4'.tr, Icons.nights_stay_sharp, Colors.blueAccent, const Color(0xffe6eafc), 4)
                               ],
                             ),
                           ],
@@ -302,11 +302,11 @@ class MainHomeState extends State<Main_Home>{
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('생활 기록', style: TextStyle(fontSize: 20, color: Colors.black)),
+                            Text('life_record'.tr, style: TextStyle(fontSize: 20, color: Colors.black)),
                             Row(
                               children: [
-                                Expanded(flex:1,child: Text('모유', style: TextStyle(fontSize: 17, color: Colors.grey[600]))),
-                                Expanded(flex:1,child: Text('젖병', style: TextStyle(fontSize: 17, color: Colors.grey[600])),)
+                                Expanded(flex:1,child: Text('life0'.tr, style: TextStyle(fontSize: 17, color: Colors.grey[600]))),
+                                Expanded(flex:1,child: Text('life1'.tr, style: TextStyle(fontSize: 17, color: Colors.grey[600])),)
                               ],
                             ),
                             Row(
@@ -317,8 +317,8 @@ class MainHomeState extends State<Main_Home>{
                             ),
                             Row(
                               children: [
-                                Expanded(flex:1,child: Text('기저귀', style: TextStyle(fontSize: 17, color: Colors.grey[600]))),
-                                Expanded(flex:1,child: Text('수면', style: TextStyle(fontSize: 17, color: Colors.grey[600])),)
+                                Expanded(flex:1,child: Text('life3'.tr, style: TextStyle(fontSize: 17, color: Colors.grey[600]))),
+                                Expanded(flex:1,child: Text('life4'.tr, style: TextStyle(fontSize: 17, color: Colors.grey[600])),)
                               ],
                             ),
                             Row(
@@ -382,7 +382,7 @@ class MainHomeState extends State<Main_Home>{
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const Text('성장 기록',style: TextStyle(fontSize: 18, color: Colors.black)),
+                                        Text('grow_record'.tr,style: TextStyle(fontSize: 18, color: Colors.black)),
                                         IconButton(
                                             onPressed: () {
                                               showModalBottomSheet(
@@ -405,7 +405,7 @@ class MainHomeState extends State<Main_Home>{
                                       ],
                                     ),
                                     Text(
-                                      '키, 몸무게',
+                                      'height, weight'.tr,
                                       style: TextStyle(
                                           fontSize: 18,
                                           color: Colors.grey[700]
@@ -443,9 +443,9 @@ class MainHomeState extends State<Main_Home>{
                                           child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                const Text('예방 접종', style: TextStyle(fontSize: 15, color: Colors.black)),
-                                                const Text(
-                                                  '다음 예방 검진',
+                                                Text('vaccination'.tr, style: TextStyle(fontSize: 15, color: Colors.black)),
+                                                Text(
+                                                  'next_vaccination'.tr,
                                                   style: TextStyle(fontSize: 10, color: Colors.grey),
                                                 ),
                                                 const SizedBox(height: 5),
@@ -482,9 +482,9 @@ class MainHomeState extends State<Main_Home>{
                                           child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                const Text('건강 검진', style: TextStyle(fontSize: 15, color: Colors.black)),
-                                                const Text(
-                                                  '다음 건강 검진',
+                                                Text('medical_checkup'.tr, style: TextStyle(fontSize: 15, color: Colors.black)),
+                                                Text(
+                                                  'next_medical_checkup'.tr,
                                                   style: TextStyle(fontSize: 10, color: Colors.grey),
                                                 ),
                                                 const SizedBox(height: 5),

@@ -24,6 +24,6 @@ Widget bottomNavBar(_selectedIndex, _onItemTapped){
       currentIndex: _selectedIndex,
       onTap: _onItemTapped,
       unselectedItemColor: Colors.grey,
-      selectedItemColor: const Color(0xfffa625f),
+      selectedItemColor: const Color(0xffFF766A),
   );
 }

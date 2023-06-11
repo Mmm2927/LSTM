@@ -58,7 +58,7 @@ class MainMyPageState extends State<MainMyPage>{
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${widget.userinfo.name}'+'main4_profileName'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+                          Text('${widget.userinfo.name}${'main4_profileName'.tr}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
                           const SizedBox(height: 5),
                           Text('main4_profileGreeting'.tr, style: const TextStyle(color: Colors.grey))
                         ],
