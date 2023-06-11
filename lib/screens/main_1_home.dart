@@ -623,6 +623,7 @@ class MainHomeState extends State<Main_Home>{
             // 2. dialog - 대/소변
             Get.dialog(
                 AlertDialog(
+                  backgroundColor: Color(0xffedfce6),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -633,7 +634,7 @@ class MainHomeState extends State<Main_Home>{
                               print(result);
                               Get.back();
                             },
-                            child: const Text('대변')
+                            child: const Text('대변', style: TextStyle(color: Colors.black),)
                         ),
                         const Divider(thickness: 0.2, color: Colors.grey),
                         TextButton(
@@ -643,7 +644,7 @@ class MainHomeState extends State<Main_Home>{
                               print(result);
                               Get.back();
                             },
-                            child: const Text('소변')
+                            child: const Text('소변',style: TextStyle(color: Colors.black)),
                         ),
                       ],
                     )

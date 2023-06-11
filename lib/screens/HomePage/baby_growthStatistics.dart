@@ -73,6 +73,7 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
     print(heightPoints.toString());
     print(weightPoints.toString());
     print(dateList);
+    print(heightList);
     return growthRecordList;
   }
   @override
@@ -228,8 +229,8 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
                       LineChartData(
                         minX: minD,
                         maxX: maxD,
-                        minY: heightList.first-1,
-                        maxY: heightList.last+0.5,
+                        minY: heightList.reduce((value, element) => value < element? value: element)-0.2,
+                        maxY: heightList.reduce((value, element) => value > element? value: element)+0.1,
                         titlesData: FlTitlesData(
                             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
 
@@ -325,8 +326,8 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
                         LineChartData(
                           minX: minD,
                           maxX: maxD,
-                          minY: weightList.first-0.5,
-                          maxY: weightList.last+0.5,
+                          minY: weightList.reduce((value, element) => value < element? value: element)-0.2,
+                          maxY: weightList.reduce((value, element) => value > element? value: element)+0.1,
                           titlesData: FlTitlesData(
                               topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
 
