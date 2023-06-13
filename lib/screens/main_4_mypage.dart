@@ -12,6 +12,7 @@ import 'package:bob/widgets/appbar.dart';
 import 'package:get/get.dart' hide Trans;
 import '../services/storage.dart';
 import 'package:easy_localization/easy_localization.dart' hide StringTranslateExtension;
+import 'package:badges/badges.dart' as badges;
 
 // 앱에서 지원하는 언어 리스트 변수
 final supportedLocales = [
@@ -211,7 +212,7 @@ class MainMyPageState extends State<MainMyPage>{
   changeLanguageMode(){
     Get.dialog(
         AlertDialog(
-          title: Text('main4_changeLM'.tr),
+          title: Center(child: Text('main4_changeLM'.tr, style: const TextStyle(color: Color(0xfffa625f)))),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -223,7 +224,7 @@ class MainMyPageState extends State<MainMyPage>{
                       });
                       Get.back();
                     },
-                    child: const Text('한국어')
+                    child: const Text('한국어', style: TextStyle(color:Colors.black))
                 ),
                 const Divider(thickness: 0.2, color: Colors.grey),
                 TextButton(
@@ -234,17 +235,15 @@ class MainMyPageState extends State<MainMyPage>{
                       });
                       Get.back();
                     },
-                    child: const Text('English')
+                    child: const Text('English', style: TextStyle(color:Colors.black))
                 ),
                 const Divider(thickness: 0.2, color: Colors.grey),
                 TextButton(
-                    onPressed: (){
-                      setState(() {
-                        selectedLanguageMode = '中国';
-                      });
-                      Get.back();
-                    },
-                    child: const Text('中国')
+                    onPressed: (){},
+                    child: Column(children: const [
+                       Text('中国', style: TextStyle(color:Colors.grey)),
+                       Text('Coming soon', style: TextStyle(color:Color(0xfffa625f), fontSize: 10)),
+                    ],)
                 ),
               ],
             )

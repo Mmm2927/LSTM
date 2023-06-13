@@ -45,7 +45,7 @@ class _Invitation extends State<Invitation> {
               child: Container(
                   width: double.infinity,
                   margin: const EdgeInsets.all(3),
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.fromLTRB(20,50,20,50),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [

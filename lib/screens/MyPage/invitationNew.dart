@@ -38,7 +38,7 @@ class _InvitationNew extends State<InvitationNew> {
     return Scaffold(
       appBar: renderAppbar('main4_InviteBabysitter'.tr, true),
       body: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(30),
         child: Column(
             children: [
               Expanded(
@@ -52,7 +52,6 @@ class _InvitationNew extends State<InvitationNew> {
                             child: Row(
                               children: [
                                 Expanded(
-                                    flex: 7,
                                     child: TextFormField(
                                       keyboardType: TextInputType.emailAddress,
                                       controller: idController,
@@ -62,12 +61,9 @@ class _InvitationNew extends State<InvitationNew> {
                                       },
                                     )
                                 ),
-                                Expanded(
-                                    flex: 1,
-                                    child: IconButton(
-                                      icon: const Icon(Icons.search),
-                                      onPressed: () => duplicateCheck(),
-                                    )
+                                IconButton(
+                                  icon: const Icon(Icons.search),
+                                  onPressed: () => duplicateCheck(),
                                 )
                               ],
                             )
@@ -77,24 +73,19 @@ class _InvitationNew extends State<InvitationNew> {
                           child: Text(targetID, style: const TextStyle(color: Colors.green)),
                         ),
                         const SizedBox(height: 30),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('selectBaby'.tr),
-                            const SizedBox(height: 10),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5),
-                              child: DropdownButton(
-                                value: selectedBaby,
-                                items: dropdownItems,
-                                onChanged: (String? value) {
-                                  setState(() {
-                                    selectedBaby = value!;
-                                  });
-                                },
-                              ),
-                            )
-                          ],
+                        Text('selectBaby'.tr),
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: DropdownButton(
+                            value: selectedBaby,
+                            items: dropdownItems,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedBaby = value!;
+                              });
+                            },
+                          ),
                         ),
                         const SizedBox(height: 30),
                         SizedBox(
@@ -142,16 +133,20 @@ class _InvitationNew extends State<InvitationNew> {
                                     children: [
                                       Text('invitation2_accY'.tr),
                                       const SizedBox(height: 5),
-                                      Wrap(
-                                          spacing: 1.0,
-                                          children: getWeek()
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 20, right: 20),
+                                        child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: getWeek()
+                                        ),
                                       ),
                                       const SizedBox(height: 20),
                                       Text('invitation2_accT'.tr),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text('$startTime ~ $endTime', style: TextStyle(color:Colors.grey[600] ,fontSize: 20, fontWeight : FontWeight.bold)),
+                                          const SizedBox(width: 0),
+                                          Text('$startTime ~ $endTime', style: TextStyle(color:Colors.grey[600] ,fontSize: 22, fontWeight : FontWeight.bold)),
                                           OutlinedButton(
                                               style: OutlinedButton.styleFrom(
                                                   foregroundColor: const Color(0xffff846d),
@@ -249,7 +244,7 @@ class _InvitationNew extends State<InvitationNew> {
     List<FilterChip> wget = [];
     for(int i=0; i<7; i++){
       wget.add(FilterChip(
-          padding: const EdgeInsets.fromLTRB(7, 0, 7, 0),
+          padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
           selectedColor: const Color(0xffff846d),
           label: Text(week[i], style: TextStyle(color: (selectedWeek[i]=="1"? Colors.white : Colors.grey))),
           showCheckmark: false,
