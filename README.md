@@ -27,7 +27,7 @@
 | 🤢 [홍찬의](https://github.com/hcu55)     | 애플리케이션 개발 with Flutter |
 
 ---
-## 🚀 Technology & System Structure
-[시스템 구조도](https://github.com/Mmm2927/LSTM/assets/87134443/4cde4fd9-a0f0-4705-a1c7-4669910f6345)
-
-[스킬](https://github.com/Mmm2927/LSTM/assets/87134443/1f7de2d7-85a1-4963-b017-c1f6a2770d1a)
+## 🚀 Technology
+![스킬](https://github.com/Mmm2927/LSTM/assets/87134443/1f7de2d7-85a1-4963-b017-c1f6a2770d1a)
+## 📀 System Structure
+![시스템 구조도](https://github.com/Mmm2927/LSTM/assets/87134443/bf2a33a1-a5a2-4532-bb24-cc84ab832d27)
