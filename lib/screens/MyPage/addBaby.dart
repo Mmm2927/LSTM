@@ -105,23 +105,17 @@ class _AddBaby extends State<AddBaby> {
                 )
             ),
             Expanded(
-                flex : 1,
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   width: double.infinity,
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.all(20),
-                        elevation: 0.0,
+                        elevation: 0.5,
                         backgroundColor: Colors.white,
                         foregroundColor: const Color(0xfffa625f),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        side: const BorderSide(
-                          color: Colors.grey,
-                          width: 0.5,
-                        )
+                        minimumSize: const Size.fromHeight(55),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))
                     ),
                     onPressed: (){
                       _registerBaby();

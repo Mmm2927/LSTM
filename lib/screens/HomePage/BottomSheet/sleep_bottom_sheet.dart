@@ -36,7 +36,7 @@ class _SleepBottomSheet extends State<SleepBottomSheet> {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.38,
+        height: MediaQuery.of(context).size.height * 0.35,
         child: Column(
           children: [
             Container(
@@ -54,7 +54,7 @@ class _SleepBottomSheet extends State<SleepBottomSheet> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 20,
             ),
             Column(
               children: [
@@ -122,7 +122,7 @@ class _SleepBottomSheet extends State<SleepBottomSheet> {
                             filled: false, //색 지정
                             enabledBorder:OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(color: Colors.orangeAccent)
+                                borderSide: BorderSide(color: Colors.blue)
                             ),
                             contentPadding: EdgeInsets.all(10)
                         ),
@@ -140,7 +140,7 @@ class _SleepBottomSheet extends State<SleepBottomSheet> {
                   ),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 20,
                 ),
                 GestureDetector(
                   onTap: () {
@@ -159,7 +159,7 @@ class _SleepBottomSheet extends State<SleepBottomSheet> {
                           labelStyle: TextStyle(fontSize: 30),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: BorderSide(color: Colors.orangeAccent)
+                              borderSide: BorderSide(color: Colors.blue)
                           ),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -172,7 +172,7 @@ class _SleepBottomSheet extends State<SleepBottomSheet> {
                   ),
                 ),
                 SizedBox(
-                  height: 8,
+                  height: 15,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -212,7 +212,7 @@ class _SleepBottomSheet extends State<SleepBottomSheet> {
                               borderRadius: BorderRadius.all(Radius.circular(10))
                           ),
                           side: BorderSide(
-                            color: Colors.orangeAccent,
+                            color: Colors.blue,
                           )
                       ),
                     )

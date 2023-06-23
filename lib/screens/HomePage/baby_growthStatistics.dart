@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:bob/models/model.dart';
 import 'package:bob/services/backend.dart';
 import 'package:bob/widgets/appbar.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -72,7 +73,8 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
     print(heightPoints.toString());
     print(weightPoints.toString());
     print(dateList);
-    return 0;
+    print(heightList);
+    return growthRecordList;
   }
   @override
   Widget build(BuildContext context) {
@@ -167,8 +169,16 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
         break;
     }
     for(int i=0; i<heightPoints.length; i++) {
-      if (heightPoints[i] == false) {
-        text = Text(dateList[i], style: style);
+      if (value.toInt() == DateFormat('yyyy-MM-dd').parse(dateList[i]).millisecondsSinceEpoch.toInt()) {
+        text = Text(DateFormat('MM-dd').format(DateFormat('yyyy-MM-dd').parse(dateList[i])), style: style);
+        break;
+      }
+      // else if(value.toInt() != DateFormat('yyyy-MM-dd').parse(dateList[i]).millisecondsSinceEpoch.toInt()) {
+      //   text = Text(DateFormat('MM-dd').format(DateFormat('yyyy-MM-dd').parse(dateList[i])), style: style);
+      //   break;
+      // }
+      else {
+        text = const Text('', style: style,);
       }
     }
       return SideTitleWidget(
@@ -219,14 +229,14 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
                       LineChartData(
                         minX: minD,
                         maxX: maxD,
-                        minY: heightList.first-1,
-                        maxY: heightList.last+0.5,
+                        minY: heightList.reduce((value, element) => value < element? value: element)-0.2,
+                        maxY: heightList.reduce((value, element) => value > element? value: element)+0.1,
                         titlesData: FlTitlesData(
                             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
 
                             bottomTitles: AxisTitles(
                                 sideTitles: SideTitles(
-                                  showTitles: false,
+                                  showTitles: true,
                                   getTitlesWidget: bottomTitleWidgets,
                                   reservedSize: 35,
                                 )
@@ -316,14 +326,14 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
                         LineChartData(
                           minX: minD,
                           maxX: maxD,
-                          minY: weightList.first-0.5,
-                          maxY: weightList.last+0.5,
+                          minY: weightList.reduce((value, element) => value < element? value: element)-0.2,
+                          maxY: weightList.reduce((value, element) => value > element? value: element)+0.1,
                           titlesData: FlTitlesData(
                               topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
 
                               bottomTitles: AxisTitles(
                                   sideTitles: SideTitles(
-                                    showTitles: false,
+                                    showTitles: true,
                                     getTitlesWidget: bottomTitleWidgets,
                                     reservedSize: 35,
                                   )

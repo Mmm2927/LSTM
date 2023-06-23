@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../database/database.dart';
@@ -6,6 +7,13 @@ import '../database/diaryDB.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:bob/widgets/appbar.dart';
+import 'package:easy_localization/easy_localization.dart' hide StringTranslateExtension;
+
+// 앱에서 지원하는 언어 리스트 변수
+final supportedLocales = [
+  const Locale('en', 'US'),
+  const Locale('ko', 'KR')
+];
 
 class MainDiary extends StatefulWidget {
   const MainDiary({super.key});
@@ -15,7 +23,6 @@ class MainDiary extends StatefulWidget {
 
 class MainDiaryState extends State<MainDiary> {
   final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,6 +81,7 @@ class MainDiaryState extends State<MainDiary> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
 
   diaryList() {
+
     return Column(
       children: [
         TableCalendar(
@@ -188,12 +196,12 @@ class MainDiaryState extends State<MainDiary> {
                                     width: 0.5,
                                   )
                               ),
-                                  child: const Text('수정', style: TextStyle(color: Color(0xffdf8570)))),
+                                  child: Text('modify'.tr, style: TextStyle(color: Color(0xffdf8570)))),
                               const SizedBox(width: 10),
                               ElevatedButton(
                                   onPressed: () {
                                     showDialog(context: context, builder: (BuildContext context) => AlertDialog(
-                                      content: const Text('삭제하시겠습니까?'),
+                                      content: Text('q_delete'.tr),
                                       actions: [
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(backgroundColor: Colors.white,
@@ -201,7 +209,7 @@ class MainDiaryState extends State<MainDiary> {
                                           color: Color(0xffdf8570),
                                           width: 0.5,
                                           )),
-                                          onPressed: () => Navigator.of(context).pop(), child: const Text('취소', style: TextStyle(color: Color(0xffdf8570)))),
+                                          onPressed: () => Navigator.of(context).pop(), child: Text('cancel'.tr, style: const TextStyle(color: Color(0xffdf8570)))),
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.white,
@@ -215,7 +223,7 @@ class MainDiaryState extends State<MainDiary> {
                                               });
                                               Navigator.of(context).pop();
                                             }),
-                                            child: const Text('삭제', style: TextStyle(color: Color(0xffdf8570)))),
+                                            child: Text('delete'.tr, style: const TextStyle(color: Color(0xffdf8570)))),
                                       ],
                                     ));
                                   },
@@ -225,7 +233,7 @@ class MainDiaryState extends State<MainDiary> {
                                         color: Color(0xffdf8570),
                                         width: 0.5,
                                       )
-                                  ),child: const Text('삭제', style: TextStyle(color: Color(0xffdf8570)))),
+                                  ),child: Text('delete'.tr, style: const TextStyle(color: Color(0xffdf8570)))),
                             ],
                           ),
                         ]
@@ -243,8 +251,8 @@ class MainDiaryState extends State<MainDiary> {
 
   updateDiary(DateTime selectedDay, Diary? diary) {
     String title = diary!.title;
-    String content = diary!.content;
-    String? image = diary!.image;
+    String content = diary.content;
+    String? image = diary.image;
     String selDay = DateFormat('yyyy.MM.dd').format(selectedDay);
     final ImagePicker picker = ImagePicker();
 
@@ -271,17 +279,17 @@ class MainDiaryState extends State<MainDiary> {
             },
             validator: (value) {
               if (value!.trim().isEmpty) {
-                return '제목을 입력하세요.';
+                return 'enter_title'.tr;
               }
               return null;
             },
-            decoration: const InputDecoration(
-              labelText: '제목',
-              floatingLabelStyle: TextStyle(color: Color(0xffdf8570)),
-              focusedBorder: OutlineInputBorder(
+            decoration: InputDecoration(
+              labelText: 'title'.tr,
+              floatingLabelStyle: const TextStyle(color: Color(0xffdf8570)),
+              focusedBorder: const OutlineInputBorder(
                   borderSide: BorderSide(width:1.5, color: Color(0xffdf8570))
               ),
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
             ),
             style: const TextStyle(fontSize: 15),
           ),
@@ -301,17 +309,17 @@ class MainDiaryState extends State<MainDiary> {
             },
             validator: (value) {
               if (value!.trim().isEmpty) {
-                return '내용을 입력하세요.';
+                return 'enter_content'.tr;
               }
               return null;
             },
-            decoration: const InputDecoration(
-              labelText: '내용',
-              floatingLabelStyle: TextStyle(color: Color(0xffdf8570)),
-              focusedBorder: OutlineInputBorder(
+            decoration: InputDecoration(
+              labelText: 'content'.tr,
+              floatingLabelStyle: const TextStyle(color: Color(0xffdf8570)),
+              focusedBorder: const OutlineInputBorder(
                   borderSide: BorderSide(width:1.5, color: Color(0xffdf8570))
               ),
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
             ),
             style: const TextStyle(fontSize: 15),
           ),
@@ -333,7 +341,7 @@ class MainDiaryState extends State<MainDiary> {
                     width: 0.5,
                   )
               ),
-                  child: Text(image != null? '사진 바꾸기' : '사진 첨부', style: TextStyle(color: Color(0xffdf8570)))),
+                  child: Text(image != null? 'change_image'.tr : 'put_image'.tr, style: TextStyle(color: Color(0xffdf8570)))),
               const SizedBox(width: 10),
               ElevatedButton(
                   onPressed: () {
@@ -343,7 +351,7 @@ class MainDiaryState extends State<MainDiary> {
                       _formKey.currentState?.reset();
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('수정 되었습니다.')),
+                        SnackBar(content: Text('modified'.tr)),
                       );
                     }
                   },
@@ -353,7 +361,7 @@ class MainDiaryState extends State<MainDiary> {
                         color: Color(0xffdf8570),
                         width: 0.5,
                       )
-                  ),child: const Text('수정', style: TextStyle(color: Color(0xffdf8570)))
+                  ),child: Text('modify'.tr, style: const TextStyle(color: Color(0xffdf8570)))
               ),
             ],
           ),
@@ -382,7 +390,7 @@ class MainDiaryState extends State<MainDiary> {
             height: 5.0,
           ),
           TextFormField(
-            cursorColor: Color(0xffdf8570),
+            cursorColor: const Color(0xffdf8570),
             controller: _titleController,
             onSaved: (value) {
               setState(() {
@@ -391,17 +399,17 @@ class MainDiaryState extends State<MainDiary> {
             },
             validator: (value) {
               if (value!.trim().isEmpty) {
-                return '제목을 입력하세요.';
+                return 'enter_title'.tr;
               }
               return null;
             },
-            decoration: const InputDecoration(
-              labelText: '제목',
-              floatingLabelStyle: TextStyle(color: Color(0xffdf8570)),
-              focusedBorder: OutlineInputBorder(
+            decoration: InputDecoration(
+              labelText: 'title'.tr,
+              floatingLabelStyle: const TextStyle(color: Color(0xffdf8570)),
+              focusedBorder: const OutlineInputBorder(
                   borderSide: BorderSide(width:1.5, color: Color(0xffdf8570))
               ),
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
             ),
             style: const TextStyle(fontSize: 15),
           ),
@@ -410,7 +418,7 @@ class MainDiaryState extends State<MainDiary> {
             width: 5000,
           ),
           TextFormField(
-            cursorColor: Color(0xffdf8570),
+            cursorColor: const Color(0xffdf8570),
             maxLines: 15,
             keyboardType: TextInputType.multiline,
             controller: _contentController,
@@ -421,17 +429,17 @@ class MainDiaryState extends State<MainDiary> {
             },
             validator: (value) {
               if (value!.trim().isEmpty) {
-                return '내용을 입력하세요.';
+                return 'enter_content'.tr;
               }
               return null;
             },
-            decoration: const InputDecoration(
-              labelText: '내용',
-              floatingLabelStyle: TextStyle(color: Color(0xffdf8570)),
-              focusedBorder: OutlineInputBorder(
+            decoration: InputDecoration(
+              labelText: 'content'.tr,
+              floatingLabelStyle: const TextStyle(color: Color(0xffdf8570)),
+              focusedBorder: const OutlineInputBorder(
                   borderSide: BorderSide(width:1.5, color: Color(0xffdf8570))
               ),
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
             ),
             style: const TextStyle(fontSize: 15),
           ),
@@ -453,7 +461,7 @@ class MainDiaryState extends State<MainDiary> {
                     width: 0.5,
                   )
               ),
-                  child: Text(image != null? '사진 바꾸기' : '사진 첨부', style: const TextStyle(color: Color(0xffdf8570)))),
+                  child: Text(image != null? 'change_image'.tr : 'put_image'.tr, style: const TextStyle(color: Color(0xffdf8570)))),
               const SizedBox(width: 10),
               ElevatedButton(
                   onPressed: () {
@@ -463,7 +471,7 @@ class MainDiaryState extends State<MainDiary> {
                       _formKey.currentState?.reset();
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('업로드 되었습니다.')),
+                        SnackBar(content: Text('uploaded'.tr)),
                       );
                     }
                   },
@@ -473,7 +481,7 @@ class MainDiaryState extends State<MainDiary> {
                         color: Color(0xffdf8570),
                         width: 0.5,
                       )
-                  ),child: const Text('업로드', style: TextStyle(color: Color(0xffdf8570)))
+                  ),child: Text('upload'.tr, style: const TextStyle(color: Color(0xffdf8570)))
               ),
               if(image != null) Expanded(
                 child: Image.file(File(image!)),

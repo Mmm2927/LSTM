@@ -1,6 +1,4 @@
 import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bob/screens/Login/initPage.dart';
 import 'package:bob/screens/MyPage/manage_baby.dart';
@@ -8,19 +6,18 @@ import 'package:get/get_utils/get_utils.dart';
 import 'package:intl/intl.dart';
 import '../models/model.dart';
 import 'package:bob/screens/MyPage/invitation.dart';
-import 'package:bob/screens/MyPage/switchNotice.dart';
 import 'package:bob/screens/MyPage/withdraw.dart';
 import 'package:bob/screens/MyPage/modifyUser.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:get/get.dart' hide Trans;
-import 'package:bob/services/backend.dart';
 import '../services/storage.dart';
 import 'package:easy_localization/easy_localization.dart' hide StringTranslateExtension;
+import 'package:badges/badges.dart' as badges;
 
 // 앱에서 지원하는 언어 리스트 변수
 final supportedLocales = [
-  Locale('en', 'US'),
-  Locale('ko', 'KR')
+  const Locale('en', 'US'),
+  const Locale('ko', 'KR')
 ];
 class MainMyPage extends StatefulWidget{
   final User userinfo;
@@ -45,7 +42,7 @@ class MainMyPageState extends State<MainMyPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar_with_alarm('bob', context),
+      appBar: renderAppbar_with_alarm('BoB', context),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -62,9 +59,9 @@ class MainMyPageState extends State<MainMyPage>{
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${widget.userinfo.name} 님', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+                          Text('${widget.userinfo.name}${'main4_profileName'.tr}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
                           const SizedBox(height: 5),
-                          const Text('좋은 아침입니다!', style: TextStyle(color: Colors.grey))
+                          Text('main4_profileGreeting'.tr, style: const TextStyle(color: Colors.grey))
                         ],
                       ),
                       Image.asset('assets/images/person.png',scale: 12, color: Colors.grey[800])
@@ -84,7 +81,7 @@ class MainMyPageState extends State<MainMyPage>{
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('나의 아기', style: TextStyle(color: Colors.grey[600])),
+                            Text('main4_profileMyBaby'.tr, style: TextStyle(color: Colors.grey[600])),
                             const SizedBox(height: 5),
                             Center(
                               child: Text(activateBabies.length.toString(), style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
@@ -104,7 +101,7 @@ class MainMyPageState extends State<MainMyPage>{
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('초대 수락 대기 중', style: TextStyle(color: Colors.grey[600])),
+                            Text('main4_profileAwaitingBaby'.tr, style: TextStyle(color: Colors.grey[600])),
                             const SizedBox(height: 5),
                             Center(
                               child: Text(disActivateBabies.length.toString(), style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
@@ -137,7 +134,7 @@ class MainMyPageState extends State<MainMyPage>{
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('main4_manageBaby'.tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color:Color(0xfffa625f))),
+                              Text('main4_manageBaby'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xfffa625f))),
                               const SizedBox(height: 10),
                               SizedBox(
                                   height: 110,
@@ -186,9 +183,6 @@ class MainMyPageState extends State<MainMyPage>{
                         await Get.to(() => Invitation(activateBabies, disActivateBabies));
                         await widget.reloadBabiesFunction();
                       }),
-                      getSettingScreen('main4_switch_Alarm'.tr, const Icon(Icons.notifications_off_outlined),(){
-                        Get.to(() => SwitchNotice(activateBabies));
-                      }),
                       const SizedBox(height: 30),
                       const Text('Common', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.grey)),
                       const SizedBox(height: 10),
@@ -218,7 +212,7 @@ class MainMyPageState extends State<MainMyPage>{
   changeLanguageMode(){
     Get.dialog(
         AlertDialog(
-          title: const Text('언어모드 변경'),
+          title: Center(child: Text('main4_changeLM'.tr, style: const TextStyle(color: Color(0xfffa625f)))),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -230,7 +224,7 @@ class MainMyPageState extends State<MainMyPage>{
                       });
                       Get.back();
                     },
-                    child: const Text('한국어')
+                    child: const Text('한국어', style: TextStyle(color:Colors.black))
                 ),
                 const Divider(thickness: 0.2, color: Colors.grey),
                 TextButton(
@@ -241,17 +235,15 @@ class MainMyPageState extends State<MainMyPage>{
                       });
                       Get.back();
                     },
-                    child: const Text('English')
+                    child: const Text('English', style: TextStyle(color:Colors.black))
                 ),
                 const Divider(thickness: 0.2, color: Colors.grey),
                 TextButton(
-                    onPressed: (){
-                      setState(() {
-                        selectedLanguageMode = '中国';
-                      });
-                      Get.back();
-                    },
-                    child: const Text('中国')
+                    onPressed: (){},
+                    child: Column(children: const [
+                       Text('中国', style: TextStyle(color:Colors.grey)),
+                       Text('Coming soon', style: TextStyle(color:Color(0xfffa625f), fontSize: 10)),
+                    ],)
                 ),
               ],
             )

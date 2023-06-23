@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:bob/widgets/appbar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:bob/screens/Login/initPage.dart';
 import 'package:bob/services/backend.dart';
 import 'package:bob/services/storage.dart';
-import 'package:get/get.dart' as GET;
+import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 
 class WithdrawService extends StatefulWidget{
   const WithdrawService({super.key});
@@ -16,21 +16,19 @@ class _WithdrawService extends State<WithdrawService> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar('서비스 탈퇴', true),
+      appBar: renderAppbar('main4_withdrawal'.tr, true),
       body: Container(
         margin: const EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-              child: Text('회원탈퇴 안내',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26)),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+              child: Text('withdraw_title'.tr,style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 24)),
             ),
-            const Text('지금까지 BoB 서비스를 이용해주셔서 감사합니다.\n회원을 탈퇴하면 BoB 서비스 내 나의 계정 정보 및 근무기록 내역이 삭제되고 복구 할 수 없습니다.',
-                style: TextStyle(fontSize: 24)
-            ),
-            const SizedBox(height: 20),
+            Text('withdraw_content'.tr, style: const TextStyle(fontSize: 18)),
+            const SizedBox(height: 15),
             Row(
               children: [
                 Checkbox(value: _isCheked, onChanged: (val){
@@ -38,20 +36,21 @@ class _WithdrawService extends State<WithdrawService> {
                     _isCheked = val!;
                   });
                 }),
-                const Text('위 내용을 숙지하였으며, 동의합니다.', style: TextStyle(fontSize: 20)),
+                Text('withdraw_checkPhrase'.tr, style: const TextStyle(fontSize: 18)),
               ],
             ),
             const SizedBox(height: 20),
-            Container(
+            SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(15),
                     foregroundColor: Colors.white,
-                    backgroundColor: Colors.grey,
+                    backgroundColor: Colors.grey[300],
+                    elevation: 0
                   ),
-                  onPressed: ()=>_showDlg(),
-                  child: const Text('탈퇴하기', style: TextStyle(fontSize: 20))
+                  onPressed: ()=> _showDlg(),
+                  child: Text('withdraw_btn'.tr, style: const TextStyle(fontSize: 20))
               )
             )
           ],
@@ -60,40 +59,28 @@ class _WithdrawService extends State<WithdrawService> {
     );
   }
   serviceWithdraw() async{
-    print('serviceWithdraw');
     // 1. 삭제 - dio 사용
     if(await deleteUserService() == 204){
       await storage.delete(key: 'login');    // 2. 로컬 DB & secureStorage 삭제
-      GET.Get.offAll(const LoginInit());            // 2. initPage로 이동
+      Get.offAll(const LoginInit());            // 2. initPage로 이동
     }
-    else{
-      GET.Get.snackbar('삭제 실패', '', snackPosition: GET.SnackPosition.TOP, duration: const Duration(seconds: 2));
-    }
-
   }
   void _showDlg(){
     if(!_isCheked){
       return;
     }
-    showDialog(
-        context: context,
-        builder: (BuildContext context){
-          return SizedBox(
-            width: double.infinity,
-            child: AlertDialog(
-              title: const Text('회원 탈퇴'),
-              content: const Text('탈퇴 시 본인 계정의 모든 기록이 삭제됩니다.\n 탈퇴하시겠습니까?'),
-              actions: [
-                TextButton(onPressed: ()=> serviceWithdraw(),
-                    child: const Text('탈퇴하기', style: TextStyle(fontSize: 20))
-                ),
-                TextButton(onPressed: ()=> Navigator.of(context).pop(),
-                    child: const Text('취소', style: TextStyle(fontSize: 20))
-                )
-              ],
-            )
-          );
-        }
+    Get.defaultDialog(
+      contentPadding: const EdgeInsets.only(left: 25, right: 25, bottom: 20),
+      titlePadding:  const EdgeInsets.all(20),
+      confirm: TextButton(onPressed: ()=> serviceWithdraw(),
+          child: Text('withdraw_btn'.tr, style: const TextStyle(fontSize: 14, color: Colors.black))
+      ),
+      cancel: TextButton(onPressed: ()=> Get.back(),
+          child: Text('cancle'.tr, style: const TextStyle(fontSize: 14, color: Colors.black))
+      ),
+      title: 'main4_withdrawal'.tr,
+      titleStyle: TextStyle(fontWeight: FontWeight.bold),
+      content: Text('withdraw_finalchekContent'.tr),
     );
   }
 }

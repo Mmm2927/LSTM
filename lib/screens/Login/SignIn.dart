@@ -1,8 +1,6 @@
-import 'package:bob/screens/MyPage/addBaby.dart';
 import 'package:flutter/material.dart';
 import 'package:bob/widgets/appbar.dart';
 import 'package:dio/dio.dart';
-import 'package:bob/models/model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bob/screens/Login/initPage.dart';
 import 'package:bob/services/backend.dart';
@@ -116,6 +114,22 @@ class _SignUp extends State<SignIn>{
     );
   }
 
+  Widget getLoginForm(contoller, title, isOb, keyType){
+    return CupertinoTextField(
+      keyboardType: keyType,
+      obscureText: isOb,
+      controller: contoller,
+      placeholder: title,
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Color(0xffe8e8e8),
+        borderRadius: BorderRadius.circular(50),
+      ),
+      onChanged: (val){
+        setState(() {});
+      },
+    );
+  }
   renderForm(keyType, ob, hint, validator, onSaved){
     return TextFormField(
       obscureText: ob,

@@ -40,7 +40,7 @@ class _BabyFoodBottomSheet extends State<BabyFoodBottomSheet> {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.47,
+        height: MediaQuery.of(context).size.height * 0.45,
         child: Column(
           children: [
             Container(
@@ -109,7 +109,7 @@ class _BabyFoodBottomSheet extends State<BabyFoodBottomSheet> {
               ),
             ),
             SizedBox(
-              height: 15,
+              height: 20,
             ),
             Column(
               children: [
@@ -195,7 +195,7 @@ class _BabyFoodBottomSheet extends State<BabyFoodBottomSheet> {
                   ),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 20,
                 ),
                 GestureDetector(
                   onTap: () {
@@ -227,7 +227,7 @@ class _BabyFoodBottomSheet extends State<BabyFoodBottomSheet> {
                   ),
                 ),
                 SizedBox(
-                  height: 8,
+                  height: 15,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,

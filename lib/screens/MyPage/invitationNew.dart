@@ -16,7 +16,7 @@ class InvitationNew extends StatefulWidget{
 class _InvitationNew extends State<InvitationNew> {
   late String selectedBaby;
   String targetID = '';
-  final List<String> week = ['월', '화', '수', '목', '금', '토', '일'];
+  final List<String> week = ['week0'.tr, 'week1'.tr, 'week2'.tr, 'week3'.tr, 'week4'.tr, 'week5'.tr, 'week6'.tr];
   // 선택 창
   bool _getAdditionalInfo = false;
   List<String> selectedWeek = ['0','0','0','0','0','0','0'];   // 요일 택
@@ -36,56 +36,46 @@ class _InvitationNew extends State<InvitationNew> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar('초대', true),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.all(10),
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      appBar: renderAppbar('main4_InviteBabysitter'.tr, true),
+      body: Container(
+        padding: const EdgeInsets.all(30),
+        child: Column(
             children: [
-              const Text('초대할 ID'),
-              Padding(
-                  padding : const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                          flex: 7,
-                          child: TextFormField(
-                            keyboardType: TextInputType.emailAddress,
-                            controller: idController,
-                            decoration: formDecoration('아이디를 입력해주세요'),
-                            onChanged: (val){
-                              setState(() {});
-                            },
-                          )
-                      ),
-                      Expanded(
-                          flex: 1,
-                          child: IconButton(
-                            icon: Icon(Icons.search),
-                            onPressed: ()=>duplicateCheck(),
-                          )
-                      )
-                    ],
-                  )
-              ),
-              Visibility(
-                visible: targetID.isNotEmpty,
-                child: Text(targetID, style: const TextStyle(color: Colors.green)),
-              ),
-              const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    height: 100,
+              Expanded(
+                child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('아기 선택'),
-                        const SizedBox(height: 10),
+                        Text('invitation2_id'.tr),
                         Padding(
+                            padding : const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    child: TextFormField(
+                                      keyboardType: TextInputType.emailAddress,
+                                      controller: idController,
+                                      decoration: formDecoration('invitation2_idDeco'.tr),
+                                      onChanged: (val){
+                                        setState(() {});
+                                      },
+                                    )
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.search),
+                                  onPressed: () => duplicateCheck(),
+                                )
+                              ],
+                            )
+                        ),
+                        Visibility(
+                          visible: targetID.isNotEmpty,
+                          child: Text(targetID, style: const TextStyle(color: Colors.green)),
+                        ),
+                        const SizedBox(height: 30),
+                        Text('selectBaby'.tr),
+                        const SizedBox(height: 10),
+                        Container(
                           padding: const EdgeInsets.only(left: 5),
                           child: DropdownButton(
                             value: selectedBaby,
@@ -96,110 +86,112 @@ class _InvitationNew extends State<InvitationNew> {
                               });
                             },
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                      height: 100,
-                      child:Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('관계'),
-                          const SizedBox(height: 10),
-                          Wrap(
-                              spacing: 10.0,
-                              children: List<Widget>
-                                  .generate(3, (int index){
-                                  List<String> gender = ['부모', '가족','베이비시터'];
-                                  return ChoiceChip(
-                                      elevation: 2.0,
-                                      padding: const EdgeInsets.all(10),
-                                      selectedColor: const Color(0xffff846d),
-                                      label: Text(gender[index]),
-                                      selected: selectedRelation == index,
-                                      onSelected: (bool selected){
-                                        setState((){
-                                          selectedRelation = (selected ? index : null)!;
-                                          if(index!=0){
-                                            _getAdditionalInfo = true;
-                                          }else{
-                                            _getAdditionalInfo = false;
-                                          }
-                                        });
-                                      }
-                                  );
-                                }).toList()
-                            ),
-                        ],
-                      )
-                  )
-                ],
-              ),
-              Offstage(
-                  offstage: !_getAdditionalInfo,
-                  child : Card(
-                      elevation: 2,
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('접근 요일 선택', style: TextStyle()),
-                            Wrap(
-                              spacing: 1.0,
-                              children: getWeek()
-                            ),
-                            const SizedBox(height: 15),
-                            const Text('접근 시간 설정'),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('$startTime ~ $endTime', style: TextStyle(color:Colors.grey[600] ,fontSize: 28, fontWeight : FontWeight.bold)),
-                                OutlinedButton(
-                                    style: OutlinedButton.styleFrom(
-                                      foregroundColor: const Color(0xffff846d),
-                                      side : const BorderSide(color: Color(0xffff846d))
-                                    ),
-                                    onPressed: () async{
-                                      TimeRange result = await showTimeRangePicker(
-                                          context: context,
-                                          handlerColor: const Color(0xffff846d),
-                                        strokeColor: const Color(0xffff846d),
-
-                                      );
-                                      setState(() {
-                                        startTime = "${result.startTime.hour}:${result.startTime.minute}";
-                                        endTime = "${result.endTime.hour}:${result.endTime.minute}";
-                                      });
-                                    },
-                                    child: const Text('시간 선택')
-                                )
-                              ],
-                            )
-                          ],
                         ),
-                      )
-                  )
+                        const SizedBox(height: 30),
+                        SizedBox(
+                          height: 100,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('relation'.tr),
+                              const SizedBox(height: 10),
+                              Wrap(
+                                  spacing: 10.0,
+                                  children: List<Widget>
+                                      .generate(3, (int index){
+                                    List<String> gender = ['relation0'.tr, 'relation1'.tr, 'relation2'.tr];
+                                    return ChoiceChip(
+                                        elevation: 2.0,
+                                        padding: const EdgeInsets.all(10),
+                                        selectedColor: const Color(0xffff846d),
+                                        label: Text(gender[index], style: TextStyle(color: (selectedRelation==index? Colors.white : Colors.grey[600]))),
+                                        selected: selectedRelation == index,
+                                        onSelected: (bool selected){
+                                          setState((){
+                                            selectedRelation = (selected ? index : null)!;
+                                            if(index!=0){
+                                              _getAdditionalInfo = true;
+                                            }else{
+                                              _getAdditionalInfo = false;
+                                            }
+                                          });
+                                        }
+                                    );
+                                  }).toList()
+                              )
+                            ],
+                          ),
+                        ),
+                        Offstage(
+                            offstage: !_getAdditionalInfo,
+                            child : Card(
+                                elevation: 2,
+                                child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('invitation2_accY'.tr),
+                                      const SizedBox(height: 5),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 20, right: 20),
+                                        child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: getWeek()
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text('invitation2_accT'.tr),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const SizedBox(width: 0),
+                                          Text('$startTime ~ $endTime', style: TextStyle(color:Colors.grey[600] ,fontSize: 22, fontWeight : FontWeight.bold)),
+                                          OutlinedButton(
+                                              style: OutlinedButton.styleFrom(
+                                                  foregroundColor: const Color(0xffff846d),
+                                                  side : const BorderSide(color: Color(0xffff846d))
+                                              ),
+                                              onPressed: () async{
+                                                TimeRange result = await showTimeRangePicker(
+                                                  context: context,
+                                                  handlerColor: const Color(0xffff846d),
+                                                  strokeColor: const Color(0xffff846d),
+
+                                                );
+                                                setState(() {
+                                                  startTime = "${result.startTime.hour}:${result.startTime.minute}";
+                                                  endTime = "${result.endTime.hour}:${result.endTime.minute}";
+                                                });
+                                              },
+                                              child: Text('invitation2_setT'.tr)
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                )
+                            )
+                        ),
+                      ],
+                    )
+                )
               ),
-              const SizedBox(height: 10),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(50),
-                      padding: const EdgeInsets.all(15),
+                      padding: const EdgeInsets.all(20),
                       elevation: 0.0,
                       backgroundColor: const Color(0xffff846d),
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-
                   ),
                   onPressed: () => invitation(),
-                  child: const Text('등록', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)))
+                  child: Text('registration'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
             ],
           ),
-        )
       )
     );
   }
@@ -244,7 +236,7 @@ class _InvitationNew extends State<InvitationNew> {
   List<DropdownMenuItem<String>> get dropdownItems{
     List<DropdownMenuItem<String>> menuItems = [];
     for(int i=0; i<widget.babies.length; i++){
-      menuItems.add(DropdownMenuItem(child: Text(widget.babies[i].name), value: i.toString()));
+      menuItems.add(DropdownMenuItem(value: i.toString(), child: Text(widget.babies[i].name)));
     }
     return menuItems;
   }
@@ -252,9 +244,9 @@ class _InvitationNew extends State<InvitationNew> {
     List<FilterChip> wget = [];
     for(int i=0; i<7; i++){
       wget.add(FilterChip(
-          padding: const EdgeInsets.fromLTRB(7, 0, 7, 0),
-          selectedColor: const Color(0xfff1421f),
-          label: Text(week[i], style: TextStyle(color: (selectedWeek[i]=="1"?Colors.white:Colors.grey))),
+          padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+          selectedColor: const Color(0xffff846d),
+          label: Text(week[i], style: TextStyle(color: (selectedWeek[i]=="1"? Colors.white : Colors.grey))),
           showCheckmark: false,
           selected: selectedWeek[i]=="1",
           onSelected: (bool notSelected){

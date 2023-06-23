@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mjpeg/flutter_mjpeg.dart';
 import '../models/model.dart';
 import 'package:intl/intl.dart';
+import 'package:get/get.dart';
 
 class Main_Cctv extends StatefulWidget{
   final User userinfo;
@@ -31,7 +32,7 @@ class MainCCTVState extends State<Main_Cctv>{
         backgroundColor: const Color(0xffffeeec),
         elevation: 0.5,
         iconTheme : const IconThemeData(color: Colors.black),
-        title: const Text('홈캠', style:TextStyle(fontSize: 18, color: Color(0xffdf8570))),
+        title: Text('appbar_main2'.tr, style: const TextStyle(fontSize: 18, color: Color(0xffdf8570))),
       ),
       body: viewCCTV(),
     );
@@ -79,7 +80,7 @@ class MainCCTVState extends State<Main_Cctv>{
                 alignment:Alignment.centerRight,
                 padding: EdgeInsets.all(10),
                 margin: const EdgeInsets.fromLTRB(10, 10, 10, 5),
-                child: Text('아이 : ${baby.name}', style:const TextStyle(fontSize: 20, color: Color(0xffdf8570)))),
+                child: Text('${'babyName'.tr} : ${baby.name}', style: const TextStyle(fontSize: 20, color: Color(0xffdf8570)))),
             Column(
               children: [
                 Container(
@@ -89,8 +90,6 @@ class MainCCTVState extends State<Main_Cctv>{
                     child: Mjpeg(
                       isLive: _isPlaying,
                       error: (context, error, stack) {
-                        print(error);
-                        print(stack);
                         return Text(error.toString(),
                             style: const TextStyle(color: Color(0xffdf8570)));
                       },
@@ -198,9 +197,9 @@ class MainCCTVState extends State<Main_Cctv>{
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-            Text('현재 ${baby.name}의 홈캠에 접근할 수 없습니다.\n', style: TextStyle(fontSize: 20)),
-            Text('접근 가능 요일 : ${accessDay}\n', style: TextStyle(fontSize: 20)),
-            Text('접근 가능 시간 : ${baby.relationInfo.Access_startTime} ~ ${baby.relationInfo.Access_endTime}\n', style: TextStyle(fontSize: 20))
+            Text('main2_notAccessTitle'.tr, style: const TextStyle(fontSize: 20)),
+            Text('${'main2_accessWeek'.tr} : $accessDay', style: const TextStyle(fontSize: 20)),
+            Text('${'main2_accessTime'.tr} : ${baby.relationInfo.Access_startTime} ~ ${baby.relationInfo.Access_endTime}', style: const TextStyle(fontSize: 20))
           ]
         ),
       );

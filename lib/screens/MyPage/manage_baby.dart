@@ -9,6 +9,7 @@ import 'package:bob/services/backend.dart';
 import 'package:get/get.dart' as GET;
 import '../../widgets/form.dart';
 import './modifyBaby.dart';
+
 class ManageBabyWidget extends StatefulWidget{
   final List<Baby> babies;
   const ManageBabyWidget(this.babies, {Key?key}):super(key:key);
@@ -54,7 +55,7 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: renderAppbar('아이 관리', true),
+      appBar: renderAppbar('main4_manageBaby'.tr, true),
       body: Column(
         children: [
           Container(
@@ -64,12 +65,12 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
                 Container(
                     height: 35,
                     alignment: Alignment.center,
-                    child: const Text('아이 추가')
+                    child: Text('main4_addBaby'.tr)
                 ),
                 Container(
                     height: 35,
                     alignment: Alignment.center,
-                    child: const Text('아이 수정')
+                    child: Text('main4_modifyBaby'.tr)
                 )
               ],
               labelStyle: const TextStyle(fontWeight: FontWeight.bold),
@@ -99,109 +100,107 @@ class _ManageBabyWidget extends State<ManageBabyWidget> with TickerProviderState
     super.dispose();
   }
   Widget addBaby(){
-    return Column(
-      children: [
-        Expanded(
-            flex : 8,
-            child: SingleChildScrollView(
-                child: Container(
-                    margin: const EdgeInsets.all(15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('최소 한명의 아기는 등록되어 있어야 합니다!', style: TextStyle(color: Colors.pink)),
-                        const SizedBox(height: 50),
-                        const Text('아기 이름'),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          decoration: formDecoration('아기의 이름 또는 별명을 입력해 주세요'),
-                          controller: nameController,
-                        ),
-                        const SizedBox(height: 30),
-                        const Text('생일'),
-                        CupertinoButton(
-                          // Display a CupertinoDatePicker in date picker mode.
-                          onPressed: () => _showDialog(
-                            CupertinoDatePicker(
-                              initialDateTime: birth,
-                              mode: CupertinoDatePickerMode.date,
-                              use24hFormat: true,
-                              // This is called when the user changes the date.
-                              onDateTimeChanged: (DateTime newDate) {
-                                setState(() => birth = newDate);
+    return Container(
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
+      child: Column(
+        children: [
+          Expanded(
+              child: SingleChildScrollView(
+                  child: Container(
+                      margin: const EdgeInsets.all(15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('babyNullErr'.tr, style: const TextStyle(color: Color(0xfffa625f))),
+                          const SizedBox(height: 30),
+                          Text('babyName'.tr),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            decoration: formDecoration('babyNameHint'.tr),
+                            controller: nameController,
+                          ),
+                          const SizedBox(height: 30),
+                          Text('birth'.tr),
+                          CupertinoButton(
+                            // Display a CupertinoDatePicker in date picker mode.
+                            onPressed: () => _showDialog(
+                              CupertinoDatePicker(
+                                initialDateTime: birth,
+                                mode: CupertinoDatePickerMode.date,
+                                use24hFormat: true,
+                                // This is called when the user changes the date.
+                                onDateTimeChanged: (DateTime newDate) {
+                                  setState(() => birth = newDate);
+                                },
+                              ),
+                            ),
+                            child: Text(
+                              '${birth.year}년 ${birth.month}월 ${birth.day}일',
+                              style: const TextStyle(
+                                  fontSize: 22.0,
+                                  color: Colors.black
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 30),
+                          Text('gender'.tr),
+                          const SizedBox(height: 10),
+                          ToggleButtons(
+                              borderRadius: BorderRadius.circular(8.0),
+                              fillColor: const Color(0x98ffd3d2),
+                              selectedColor : const Color(0xfffa625f),
+                              color: Colors.grey,
+                              onPressed: (int idx){
+                                setState(() {
+                                  isSelected = [idx == 0, idx == 1];
+                                });
                               },
-                            ),
+                              isSelected: isSelected,
+                              children: [
+                                SizedBox(
+                                    width: (MediaQuery.of(context).size.width - 36)/5*2,
+                                    child: Center(
+                                        child: Text('genderM'.tr, style: const TextStyle(fontSize: 18))
+                                    )
+                                ),
+                                SizedBox(
+                                    width: (MediaQuery.of(context).size.width - 36)/5*2,
+                                    child: Center(
+                                        child: Text('genderF'.tr, style: const TextStyle(fontSize: 18))
+                                    )
+                                ),
+                              ]
                           ),
-                          child: Text(
-                            '${birth.year}년 ${birth.month}월 ${birth.day}일',
-                            style: const TextStyle(
-                                fontSize: 22.0,
-                                color: Colors.black
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 30),
-                        const Text('성별'),
-                        const SizedBox(height: 10),
-                        ToggleButtons(
-                            borderRadius: BorderRadius.circular(8.0),
-                            fillColor: const Color(0x98ffd3d2),
-                            selectedColor : const Color(0xfffa625f),
-                            color: Colors.grey,
-                            onPressed: (int idx){
-                              setState(() {
-                                isSelected = [idx == 0, idx == 1];
-                              });
-                            },
-                            isSelected: isSelected,
-                            children: [
-                              SizedBox(
-                                  width: (MediaQuery.of(context).size.width - 36)/5*2,
-                                  child: const Center(
-                                      child: Text('남아', style: TextStyle(fontSize: 18))
-                                  )
-                              ),
-                              SizedBox(
-                                  width: (MediaQuery.of(context).size.width - 36)/5*2,
-                                  child: const Center(
-                                      child: Text('여아', style: TextStyle(fontSize: 18))
-                                  )
-                              ),
-                            ]
-                        ),
-                      ],
-                    )
-                )
-            )
-        ),
-        Expanded(
-            flex : 1,
-            child: Container(
-                padding: const EdgeInsets.all(8),
-                width: double.infinity,
-                child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.all(20),
-                        elevation: 0.0,
-                        backgroundColor: Colors.white,
-                        foregroundColor: const Color(0xfffa625f),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        side: const BorderSide(
-                          color: Colors.grey,
-                          width: 0.5,
-                        )
-                    ),
-                    onPressed: (){
-                      _registerBaby();
-                    },
-                    child: const Text('등록', style: TextStyle(fontSize: 18))
-                )
-            )
-        ),
-        const SizedBox(height: 30)
-      ],
+                        ],
+                      )
+                  )
+              )
+          ),
+          Container(
+              padding: const EdgeInsets.all(8),
+              width: double.infinity,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(18),
+                      elevation: 0.0,
+                      backgroundColor: const Color(0xfffa625f),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      side: const BorderSide(
+                        color: Colors.grey,
+                        width: 0.5,
+                      )
+                  ),
+                  onPressed: (){
+                    _registerBaby();
+                  },
+                  child: Text('registration'.tr, style: const TextStyle(fontSize: 18))
+              )
+          )
+        ],
+      )
     );
   }
   void _registerBaby() async{

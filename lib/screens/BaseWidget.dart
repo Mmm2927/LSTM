@@ -38,7 +38,11 @@ class _BaseWidget extends State<BaseWidget>{
     for(int i=0; i<widget.MyBabies.length; i++){
       Baby b = widget.MyBabies[i];
       if(b.relationInfo.active){
+
         activeBabies.add(b);
+        //if(b.relationInfo.relation == 0){
+          //cIdx = i;
+        //}
       }else{
         disactiveBabies.add(b);
       }

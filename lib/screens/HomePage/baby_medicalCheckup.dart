@@ -60,7 +60,7 @@ class _BabyMedicalCheckup extends State<BabyMedicalCheckup> {
                   borderRadius: BorderRadius.circular(30),
                   child: LinearProgressIndicator(
                     backgroundColor: Colors.white,
-                    color: const Color(0xffffc8c7),
+                    color: const Color(0xffffaaa8),
                     value: (finishCheck/12),
                   ),
                 ),
@@ -70,8 +70,8 @@ class _BabyMedicalCheckup extends State<BabyMedicalCheckup> {
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('전체 $finishCheck/12', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                      Text('${((finishCheck/12)*100).round()}% 완료', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))
+                      Text('전체 $finishCheck/12', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                      Text('${((finishCheck/12)*100).round()}% 완료', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15))
                     ]
                 )
               ),
@@ -79,7 +79,7 @@ class _BabyMedicalCheckup extends State<BabyMedicalCheckup> {
                 future: getCheckUpFuture,
                 builder: (BuildContext context, AsyncSnapshot snapshot){
                   if (snapshot.hasData == false) {
-                    return const CircularProgressIndicator(color: Colors.pinkAccent);
+                    return const CircularProgressIndicator(color: Color(0xfffa625f));
                   }
                   else if (snapshot.hasError) {
                     return Padding(
@@ -132,7 +132,7 @@ class _BabyMedicalCheckup extends State<BabyMedicalCheckup> {
   Padding drawDate(String date){
     return Padding(
       padding: const EdgeInsets.only(top:30),
-      child: Text(date, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.grey)),
+      child: Text(date, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey)),
     );
   }
   Widget drawMedicalCheckUpOne(MedicalCheckUp medicalCheckUp){
@@ -145,9 +145,9 @@ class _BabyMedicalCheckup extends State<BabyMedicalCheckup> {
     if(medicalCheckUp.isInoculation){
       return Container(
         decoration: BoxDecoration(
-            color: Colors.pink[50],
+            color: Color(0xffffeeee),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(width: 0.5,color: Colors.pinkAccent)
+            border: Border.all(width: 0.5,color: Color(0xfffa625f))
         ),
         margin: const EdgeInsets.all(5),
         padding: const EdgeInsets.all(25),
@@ -160,21 +160,21 @@ class _BabyMedicalCheckup extends State<BabyMedicalCheckup> {
                   children: [
                     Row(
                       children: [
-                        Text(medicalCheckUp.title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18,color: Colors.pinkAccent)),
+                        Text(medicalCheckUp.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xfffa625f))),
                         const SizedBox(width: 10),
-                        Text(medicalCheckUp.checkTimingToString(), style: TextStyle(color: Colors.grey,fontSize: 16))
+                        Text(medicalCheckUp.checkTimingToString(), style: const TextStyle(color: Colors.grey, fontSize: 14))
                       ],
                     ),
                     const SizedBox(height: 10),
-                    Text('검진 완료일 : ${DateFormat('yyyy.MM.dd').format(medicalCheckUp.checkUpDate)}', style: TextStyle(fontSize: 16))
+                    Text('검진 완료일 : ${DateFormat('yyyy.MM.dd').format(medicalCheckUp.checkUpDate)}', style: const TextStyle(fontSize: 14))
                   ],
                 )
             ),
             Column(
               children: [
-                Image.asset(iconPath, scale: 15, color: Colors.pinkAccent),
+                Image.asset(iconPath, scale: 15, color: const Color(0xfffa625f)),
                 const SizedBox(height: 5),
-                const Text('검진 완료', style: TextStyle(color: Colors.pinkAccent)),
+                const Text('검진 완료', style: TextStyle(color: Color(0xfffa625f))),
               ],
             ),
           ],
@@ -202,13 +202,13 @@ class _BabyMedicalCheckup extends State<BabyMedicalCheckup> {
                           children: [
                             Row(
                               children: [
-                                Text(medicalCheckUp.title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                                SizedBox(width: 10),
-                                Text(medicalCheckUp.checkTimingToString(), style: TextStyle(color: Colors.grey,fontSize: 16))
+                                Text(medicalCheckUp.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                                const SizedBox(width: 10),
+                                Text(medicalCheckUp.checkTimingToString(), style: const TextStyle(color: Colors.grey,fontSize: 14))
                               ],
                             ),
                             const SizedBox(height: 10),
-                            Text('검진기간 : ${medicalCheckUp.checkPeriod}', style: TextStyle(fontSize: 16))
+                            Text('검진기간 : ${medicalCheckUp.checkPeriod}', style: const TextStyle(fontSize: 14))
                           ],
                         )
                     )
@@ -250,7 +250,7 @@ class _BabyMedicalCheckup extends State<BabyMedicalCheckup> {
                               child: Container(
                                   width: double.infinity,
                                   child: ToggleButtons(
-                                    selectedBorderColor: Colors.pinkAccent,
+                                    selectedBorderColor: Color(0xfffa625f),
                                     selectedColor: Colors.black,
                                     constraints: BoxConstraints(minWidth: (MediaQuery.of(context).size.width - 36) / 3, maxHeight: 80),
                                     direction: Axis.horizontal,
@@ -273,13 +273,13 @@ class _BabyMedicalCheckup extends State<BabyMedicalCheckup> {
                                           )
                                       ),
                                       Container(
-                                          padding: EdgeInsets.all(8),
+                                          padding: const EdgeInsets.all(8),
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              Image.asset(iconPath,scale: 15,color: Colors.blue),
+                                              Image.asset(iconPath,scale: 15,color: const Color(0xfffa625f)),
                                               const SizedBox(height: 5,),
-                                              const Text('검진', style: TextStyle(color: Colors.blue))
+                                              const Text('검진', style: TextStyle(color: Color(0xfffa625f)))
                                             ],
                                           )
                                       )
@@ -287,6 +287,7 @@ class _BabyMedicalCheckup extends State<BabyMedicalCheckup> {
                                   )
                               )
                           ),
+                          const SizedBox(height: 10),
                           Text('검진시기 : ${checkUp.checkTimingToString()}', style: TextStyle(fontSize: 18)),
                           Text('권장기간 : ${checkUp.checkPeriod}', style: TextStyle(fontSize: 18)),
                           const SizedBox(height: 20,),

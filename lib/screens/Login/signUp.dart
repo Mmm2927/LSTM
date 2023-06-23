@@ -35,17 +35,20 @@ class _SignUp extends State<SignUp>{
     return Scaffold(
       appBar: renderAppbar('이메일 로그인', true),
       body: Container(
-        margin: const EdgeInsets.all(30),
+        margin: const EdgeInsets.all(20),
         child:
             SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 20),
-                  getLoginForm(idController, "아이디", false, TextInputType.emailAddress),
-                  const SizedBox(height: 15),
-                  getLoginForm(passController, "패스워드", true, TextInputType.text),
+                  Text('Sign In', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 10),
+                  Text('서비스 사용을 위해 로그인 해주세요'),
                   const SizedBox(height: 30),
+                  getLoginForm(idController, "ID(email)", false, TextInputType.emailAddress),
+                  const SizedBox(height: 10),
+                  getLoginForm(passController, "Password", true, TextInputType.text),
+                  const SizedBox(height: 40),
                   CupertinoButton(
                       color:Colors.black,
                       borderRadius: BorderRadius.circular(12),
@@ -83,8 +86,8 @@ class _SignUp extends State<SignUp>{
       placeholder: title,
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(width: 0.5)
+        color: Color(0xffe8e8e8),
+          borderRadius: BorderRadius.circular(50),
       ),
       onChanged: (val){
           setState(() {});
