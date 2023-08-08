@@ -7,7 +7,7 @@
 > 시연 영상: [https://youtu.be/jzI-M2u7arE](https://youtu.be/jzI-M2u7arE) <br>
 > 발표 자료: [최종 발표(LSTM)](./%EC%B5%9C%EC%A2%85%20%EB%B0%9C%ED%91%9C.pptx)
 
-<img src = https://github.com/Mmm2927/LSTM/assets/75023467/7cb46e1d-89d1-4ede-9365-0125dece83a4" style="width:250px">
+<img width="232" alt="image" src="https://github.com/Mmm2927/LSTM/assets/75023467/1d32b0a7-2817-42b4-80e0-1ae43f1a9f61">
 
 ## 개요
 
