@@ -73,8 +73,7 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
     print(heightPoints.toString());
     print(weightPoints.toString());
     print(dateList);
-    print(heightList);
-    return growthRecordList;
+    return 0;
   }
   @override
   Widget build(BuildContext context) {
@@ -233,7 +232,6 @@ class _BabyGrowthStatisticsState extends State<BabyGrowthStatistics> with Ticker
                         maxY: heightList.reduce((value, element) => value > element? value: element)+0.1,
                         titlesData: FlTitlesData(
                             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-
                             bottomTitles: AxisTitles(
                                 sideTitles: SideTitles(
                                   showTitles: true,
